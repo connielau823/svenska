@@ -699,12 +699,13 @@ updateKeyStatus();
 
 // ── AI EXPAND (Gemini) ──
 let expandedData=null;
+let expandedData=null;
 async function doExpand(){
   const input=document.getElementById('ai-input').value.trim();
   if(!input)return;
   const key=localStorage.getItem('sv_ai_key');
   if(!key){
-    document.getElementById('ai-result').textContent='Please save your OpenRouter API key first (see section above).';
+    document.getElementById('ai-result').textContent='Please save your Gemini API key first (from Google AI Studio).';
     document.getElementById('ai-result').classList.add('show');
     return;
   }
@@ -716,8 +717,9 @@ async function doExpand(){
   spin.style.display='inline-block';lbl.textContent='Analysing…';
   res.classList.remove('show');prev.classList.remove('show');saveBtn.style.display='none';
   expandedData=null;
+
   const prompt=`You are a Swedish language expert. The user entered: "${input}"
-Respond ONLY with a JSON object, no markdown, no explanation:
+Respond ONLY with a valid JSON object, no markdown, no explanation, no backticks:
 {
   "sv": "canonical Swedish form",
   "pron": "pronunciation guide in simple English phonetics (CAPS for stress)",
@@ -727,27 +729,36 @@ Respond ONLY with a JSON object, no markdown, no explanation:
   "notes": "one short grammar tip (max 15 words)"
 }
 If input is a phrase or sentence, set forms to empty string.`;
+
   try{
-    const r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'HTTP-Referer':'https://svenska-vocab.github.io','X-Title':'Svenska Vocab'},
-      body:JSON.stringify({model:'google/gemini-2.0-flash-lite-001:free',max_tokens:400,temperature:0.1,messages:[{role:'user',content:prompt}]})    });
-    const data=await r.json();
-    if(data.error){throw new Error(data.error.message||JSON.stringify(data.error));}
-    let text=data.choices[0].message.content.replace(/```json|```/g,'').trim();
-    expandedData=JSON.parse(text);
-    document.getElementById('fp-sv').textContent=expandedData.sv;
-    document.getElementById('fp-pron').textContent=expandedData.pron;
-    document.getElementById('fp-en').textContent=expandedData.en;
-    document.getElementById('fp-forms').textContent=expandedData.forms+(expandedData.notes?'\n💡 '+expandedData.notes:'');
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+    const r = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { responseMimeType: "application/json" }
+      })
+    });
+
+    const data = await r.json();
+    if(data.error){ throw new Error(data.error.message || JSON.stringify(data.error)); }
+
+    let text = data.candidates[0].content.parts[0].text.trim();
+    expandedData = JSON.parse(text);
+
+    document.getElementById('fp-sv').textContent = expandedData.sv;
+    document.getElementById('fp-pron').textContent = expandedData.pron;
+    document.getElementById('fp-en').textContent = expandedData.en;
+    document.getElementById('fp-forms').textContent = expandedData.forms + (expandedData.notes ? '\n💡 ' + expandedData.notes : '');
     prev.classList.add('show');
-    res.textContent='';res.classList.remove('show');
-    saveBtn.style.display='block';
+    res.textContent = ''; res.classList.remove('show');
+    saveBtn.style.display = 'block';
   }catch(e){
-    res.textContent='Error: '+e.message+'. Check your API key or internet connection.';
+    res.textContent = 'Error: ' + e.message + '. Check your Gemini API key or connection.';
     res.classList.add('show');
   }
-  spin.style.display='none';lbl.textContent='Expand & generate forms';
+  spin.style.display = 'none'; lbl.textContent = 'Expand & generate forms';
 }
 function saveExpanded(){
   if(!expandedData)return;
