@@ -725,7 +725,7 @@ Respond ONLY with a JSON object, no markdown, no explanation:
 }
 If input is a phrase or sentence, set forms to empty string.`;
   try{
-    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+    const url=`https://generativelanguage.googleapis.com/v1beta/gemini-2.5-flash-lite:generateContent?key=${key}`;
     const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:400}})});
     const data=await r.json();
     if(data.error){throw new Error(data.error.message);}
