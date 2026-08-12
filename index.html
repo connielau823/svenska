@@ -2,630 +2,837 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Svenska">
 <meta name="theme-color" content="#1a1a2e">
-<title>Svenska · My Vocab</title>
+<title>Svenska</title>
 <style>
-  :root {
-    --bg: #0f0f1a;
-    --surface: #1a1a2e;
-    --surface2: #22223a;
-    --border: #2e2e4a;
-    --text: #f0eef8;
-    --text2: #a09cc0;
-    --text3: #6a6888;
-    --accent: #7c6fe0;
-    --accent2: #a594f9;
-    --green: #34c988;
-    --coral: #e07060;
-    --gold: #f0b429;
-    --babbel: #4a9fd4;
-    --podcast: #52b788;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+:root{
+  --bg:#0f0f1a;--sur:#1a1a2e;--sur2:#22223a;--bdr:#2e2e4a;
+  --txt:#f0eef8;--txt2:#a09cc0;--txt3:#6a6888;
+  --acc:#7c6fe0;--acc2:#a594f9;
+  --grn:#34c988;--red:#e07060;--gold:#f0b429;--blu:#4a9fd4;--pod:#52b788;
+  --rad:12px;--rad2:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;background:var(--bg);color:var(--txt);overflow:hidden}
 
-  /* ── HEADER ── */
-  .header { display: flex; align-items: center; justify-content: space-between; padding: 52px 16px 12px; background: var(--surface); border-bottom: 1px solid var(--border); position: relative; z-index: 10; }
-  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
-  .header h1 span { color: var(--accent2); }
-  .stats-row { display: flex; gap: 12px; }
-  .stat-chip { font-size: 11px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; color: var(--text2); }
-  .stat-chip b { color: var(--text); }
+/* layout */
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+.header{padding:52px 16px 10px;background:var(--sur);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.header h1{font-size:20px;font-weight:700}
+.header h1 span{color:var(--acc2)}
+.hstats{display:flex;gap:8px}
+.chip{font-size:11px;background:var(--sur2);border:1px solid var(--bdr);border-radius:20px;padding:3px 10px;color:var(--txt2)}
+.chip b{color:var(--txt)}
+.tabs{display:flex;background:var(--sur);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.tab{flex:1;padding:11px 4px;font-size:13px;font-weight:600;color:var(--txt3);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent}
+.tab.on{color:var(--acc2);border-bottom-color:var(--acc2)}
+.screen{display:none;flex-direction:column;flex:1;overflow:hidden}
+.screen.on{display:flex}
 
-  /* ── TABS ── */
-  .tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); }
-  .tab { flex: 1; padding: 11px 8px; font-size: 13px; font-weight: 600; color: var(--text3); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
-  .tab.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+/* filters & search */
+.search-bar{padding:10px 14px 6px;background:var(--sur);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.search-bar input{width:100%;background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rad2);padding:9px 14px;font-size:15px;color:var(--txt);outline:none}
+.search-bar input::placeholder{color:var(--txt3)}
+.fscroll{display:flex;gap:7px;overflow-x:auto;padding:8px 14px 10px;background:var(--sur);border-bottom:1px solid var(--bdr);scrollbar-width:none;flex-shrink:0}
+.fscroll::-webkit-scrollbar{display:none}
+.pill{flex-shrink:0;font-size:12px;font-weight:600;padding:5px 13px;border-radius:20px;border:1.5px solid var(--bdr);color:var(--txt2);background:transparent;cursor:pointer;white-space:nowrap}
+.pill.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.pill.pr{background:var(--red);border-color:var(--red);color:#fff}
+.pill.nw{background:var(--grn);border-color:var(--grn);color:#000}
+.pill.ba{background:var(--blu);border-color:var(--blu);color:#fff}
+.pill.po{background:var(--pod);border-color:var(--pod);color:#fff}
+.srow{display:flex;align-items:center;gap:8px;padding:6px 14px 8px;background:var(--sur);border-bottom:1px solid var(--bdr);font-size:12px;color:var(--txt2);flex-shrink:0}
+.spd{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:1.5px solid var(--bdr);color:var(--txt2);background:transparent;cursor:pointer}
+.spd.on{border-color:var(--acc2);color:var(--acc2)}
+#vlabel{font-size:11px;color:var(--txt3);margin-left:4px}
 
-  /* ── SEARCH + FILTERS ── */
-  .search-bar { padding: 10px 14px 6px; background: var(--surface); border-bottom: 1px solid var(--border); }
-  .search-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 14px; font-size: 15px; color: var(--text); outline: none; }
-  .search-input::placeholder { color: var(--text3); }
-  .filter-scroll { display: flex; gap: 7px; overflow-x: auto; padding: 8px 14px 10px; background: var(--surface); border-bottom: 1px solid var(--border); scrollbar-width: none; }
-  .filter-scroll::-webkit-scrollbar { display: none; }
-  .filter-pill { flex-shrink: 0; font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 20px; border: 1.5px solid var(--border); color: var(--text2); background: transparent; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
-  .filter-pill.on { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .filter-pill.pr-on { background: var(--coral); border-color: var(--coral); color: #fff; }
-  .filter-pill.new-on { background: var(--green); border-color: var(--green); color: #000; }
-  .filter-pill.babbel-on { background: var(--babbel); border-color: var(--babbel); color: #fff; }
-  .filter-pill.podcast-on { background: var(--podcast); border-color: var(--podcast); color: #fff; }
+/* list */
+.list-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.lshow{font-size:11px;color:var(--txt3);padding:8px 14px 4px}
+.card{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--bdr)}
+.card.pr{border-left:3px solid var(--red)}
+.card.nw{border-left:3px solid var(--grn)}
+.cbody{flex:1;min-width:0}
+.csv{font-size:16px;font-weight:600;color:var(--txt);line-height:1.3}
+.cpron{font-size:12px;color:var(--acc2);font-style:italic;margin-top:2px}
+.cen{font-size:13px;color:var(--txt2);margin-top:3px}
+.forms-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.form-chip{font-size:10px;background:var(--sur2);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;color:var(--txt3)}
+.form-chip b{color:var(--acc2)}
+.cmeta{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;align-items:center}
+.stag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.sbabbel{background:rgba(74,159,212,.15);color:var(--blu)}
+.spodcast{background:rgba(82,183,136,.15);color:var(--pod)}
+.ctag{font-size:10px;color:var(--txt3)}
+.bdg{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.bdg-pr{background:rgba(224,112,96,.15);color:var(--red)}
+.bdg-nw{background:rgba(52,201,136,.15);color:var(--grn)}
+.spkbtn{flex-shrink:0;width:40px;height:40px;border-radius:50%;background:var(--sur2);border:1.5px solid var(--bdr);color:var(--txt2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.spkbtn.playing{background:var(--acc);border-color:var(--acc);color:#fff}
+.empty{padding:60px 24px;text-align:center;color:var(--txt3);font-size:15px}
 
-  /* ── SPEED ROW ── */
-  .speed-row { display: flex; align-items: center; gap: 8px; padding: 6px 14px 8px; background: var(--surface); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text2); }
-  .speed-btn { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; border: 1.5px solid var(--border); color: var(--text2); background: transparent; cursor: pointer; }
-  .speed-btn.on { border-color: var(--accent2); color: var(--accent2); }
+/* ── ADD SCREEN ── */
+.add-wrap{flex:1;overflow-y:auto;padding:16px}
+.add-section{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:16px;margin-bottom:14px}
+.add-section h3{font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
+.add-row{margin-bottom:12px}
+.add-row label{font-size:12px;color:var(--txt3);display:block;margin-bottom:5px}
+.add-row input,.add-row select,.add-row textarea{width:100%;background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rad2);padding:10px 12px;font-size:14px;color:var(--txt);outline:none;font-family:inherit}
+.add-row textarea{min-height:70px;resize:none}
+.add-row select option{background:var(--sur)}
+.add-btn{width:100%;padding:14px;border-radius:var(--rad2);border:none;font-size:15px;font-weight:700;cursor:pointer;background:var(--acc);color:#fff;margin-top:4px}
+.add-btn:active{opacity:.8}
+.ai-btn{width:100%;padding:12px;border-radius:var(--rad2);border:1.5px solid var(--acc);font-size:14px;font-weight:600;cursor:pointer;background:transparent;color:var(--acc2);margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.ai-btn:active{opacity:.8}
+.ai-result{background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rad2);padding:12px;margin-top:10px;font-size:13px;color:var(--txt2);min-height:60px;white-space:pre-wrap;display:none}
+.ai-result.show{display:block}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--bdr);border-top-color:var(--acc2);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.form-preview{background:var(--sur2);border:1px solid var(--acc);border-radius:var(--rad2);padding:12px;margin-top:10px;display:none}
+.form-preview.show{display:block}
+.fp-sv{font-size:18px;font-weight:700;color:var(--txt)}
+.fp-pron{font-size:12px;color:var(--acc2);font-style:italic;margin-top:2px}
+.fp-en{font-size:13px;color:var(--txt2);margin-top:4px}
+.fp-forms{margin-top:8px;font-size:12px;color:var(--txt3)}
+.custom-tag{display:inline-block;font-size:10px;background:rgba(124,111,224,.2);color:var(--acc2);border-radius:20px;padding:2px 8px;margin-left:4px}
 
-  /* ── LIST ── */
-  .list-wrap { flex: 1; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
-  .list-showing { font-size: 11px; color: var(--text3); padding: 8px 14px 4px; }
-  .vocab-card { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--border); position: relative; }
-  .vocab-card.pr { border-left: 3px solid var(--coral); }
-  .vocab-card.nw { border-left: 3px solid var(--green); }
-  .card-body { flex: 1; min-width: 0; }
-  .card-sv { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.3; }
-  .card-pron { font-size: 12px; color: var(--accent2); font-style: italic; margin-top: 2px; }
-  .card-en { font-size: 13px; color: var(--text2); margin-top: 3px; }
-  .card-meta { display: flex; gap: 6px; margin-top: 5px; align-items: center; flex-wrap: wrap; }
-  .src-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
-  .src-babbel { background: rgba(74,159,212,0.15); color: var(--babbel); }
-  .src-podcast { background: rgba(82,183,136,0.15); color: var(--podcast); }
-  .cat-tag { font-size: 10px; color: var(--text3); }
-  .badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
-  .badge-pr { background: rgba(224,112,96,0.15); color: var(--coral); }
-  .badge-new { background: rgba(52,201,136,0.15); color: var(--green); }
-  .speak-btn { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--surface2); border: 1.5px solid var(--border); color: var(--text2); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-  .speak-btn.playing { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .speak-btn:active { transform: scale(0.9); }
-  .empty { padding: 60px 24px; text-align: center; color: var(--text3); font-size: 15px; }
+/* ── FLASHCARD QUIZ ── */
+.quiz-wrap{flex:1;overflow-y:auto;padding:16px 16px 100px}
+.qmode-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.qmode{font-size:12px;font-weight:600;padding:7px 14px;border-radius:20px;border:1.5px solid var(--bdr);color:var(--txt2);background:transparent;cursor:pointer}
+.qmode.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.qprog{display:flex;gap:3px;margin-bottom:16px}
+.qpip{flex:1;height:4px;border-radius:2px;background:var(--bdr)}
+.qpip.done{background:var(--grn)}
+.qpip.cur{background:var(--acc2)}
+.qstats{display:flex;gap:8px;margin-bottom:14px}
+.qstat{flex:1;background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad2);padding:10px;text-align:center}
+.qstat-n{font-size:22px;font-weight:700}
+.qstat-l{font-size:11px;color:var(--txt3);margin-top:2px}
 
-  /* ── QUIZ ── */
-  .quiz-wrap { flex: 1; overflow-y: auto; padding: 20px 16px 100px; }
-  .quiz-progress { display: flex; gap: 3px; margin-bottom: 20px; }
-  .quiz-pip { flex: 1; height: 4px; border-radius: 2px; background: var(--border); }
-  .quiz-pip.done { background: var(--green); }
-  .quiz-pip.current { background: var(--accent2); }
-  .quiz-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 20px; margin-bottom: 16px; }
-  .quiz-q-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-bottom: 8px; }
-  .quiz-q { font-size: 24px; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: 6px; }
-  .quiz-hint { font-size: 12px; color: var(--text3); }
-  .quiz-input { width: 100%; background: var(--surface2); border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; font-size: 18px; color: var(--text); outline: none; margin-top: 16px; transition: border-color 0.15s; }
-  .quiz-input:focus { border-color: var(--accent); }
-  .quiz-input.correct { border-color: var(--green); background: rgba(52,201,136,0.08); }
-  .quiz-input.wrong { border-color: var(--coral); background: rgba(224,112,96,0.08); }
-  .quiz-feedback { margin-top: 12px; padding: 12px 16px; border-radius: var(--radius-sm); font-size: 14px; display: none; }
-  .quiz-feedback.correct { background: rgba(52,201,136,0.12); color: var(--green); display: block; }
-  .quiz-feedback.wrong { background: rgba(224,112,96,0.12); color: var(--coral); display: block; }
-  .quiz-actions { display: flex; gap: 10px; margin-top: 14px; }
-  .quiz-btn { flex: 1; padding: 14px; border-radius: var(--radius-sm); border: none; font-size: 15px; font-weight: 700; cursor: pointer; }
-  .quiz-btn.check { background: var(--accent); color: #fff; }
-  .quiz-btn.next { background: var(--surface2); color: var(--text); border: 1.5px solid var(--border); }
-  .quiz-btn.speak { background: transparent; border: 1.5px solid var(--border); color: var(--text2); flex: 0 0 auto; padding: 14px 18px; }
-  .quiz-score { text-align: center; padding: 40px 20px; }
-  .score-num { font-size: 64px; font-weight: 800; color: var(--accent2); line-height: 1; }
-  .score-label { font-size: 16px; color: var(--text2); margin-top: 8px; }
-  .score-sub { font-size: 13px; color: var(--text3); margin-top: 4px; }
-  .restart-btn { margin-top: 28px; display: inline-block; background: var(--accent); color: #fff; padding: 14px 32px; border-radius: var(--radius-sm); font-size: 16px; font-weight: 700; cursor: pointer; border: none; }
-
-  /* ── LAYOUT ── */
-  .screen { display: none; flex-direction: column; height: 100%; }
-  .screen.active { display: flex; }
-
-  /* ── BOTTOM NAV ── */
-  .bottom-nav { display: flex; background: var(--surface); border-top: 1px solid var(--border); padding: 8px 0 calc(8px + env(safe-area-inset-bottom)); position: fixed; bottom: 0; left: 0; right: 0; z-index: 20; }
-  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 4px; background: none; border: none; cursor: pointer; color: var(--text3); font-size: 10px; font-weight: 600; transition: color 0.15s; }
-  .nav-btn.active { color: var(--accent2); }
-  .nav-icon { font-size: 22px; }
+/* flashcard */
+.flashcard{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:28px 20px;text-align:center;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:16px;cursor:pointer;transition:transform .15s;position:relative;overflow:hidden}
+.flashcard:active{transform:scale(.98)}
+.fc-hint{font-size:11px;color:var(--txt3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
+.fc-q{font-size:26px;font-weight:700;color:var(--txt);line-height:1.3;margin-bottom:8px}
+.fc-sub{font-size:13px;color:var(--txt3)}
+.fc-reveal{display:none;width:100%;border-top:1px solid var(--bdr);margin-top:16px;padding-top:16px}
+.fc-reveal.show{display:block}
+.fc-ans{font-size:20px;font-weight:600;color:var(--grn);margin-bottom:6px}
+.fc-pron{font-size:13px;color:var(--acc2);font-style:italic;margin-bottom:6px}
+.fc-forms-fc{font-size:12px;color:var(--txt3);margin-top:6px}
+.tap-hint{font-size:12px;color:var(--txt3);margin-top:12px}
+.fc-actions{display:flex;gap:10px;margin-top:4px}
+.fc-btn{flex:1;padding:16px;border-radius:var(--rad2);border:none;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .1s}
+.fc-btn:active{opacity:.7}
+.fc-no{background:rgba(224,112,96,.2);color:var(--red)}
+.fc-yes{background:rgba(52,201,136,.2);color:var(--grn)}
+.fc-skip{background:var(--sur2);color:var(--txt2);border:1px solid var(--bdr)!important;flex:0 0 auto;padding:16px 18px}
+.qscore-screen{text-align:center;padding:40px 20px}
+.qscore-n{font-size:72px;font-weight:800;color:var(--acc2);line-height:1}
+.qscore-l{font-size:17px;color:var(--txt2);margin-top:10px}
+.qscore-s{font-size:13px;color:var(--txt3);margin-top:4px}
+.qrestart{margin-top:28px;background:var(--acc);color:#fff;padding:14px 32px;border-radius:var(--rad2);font-size:16px;font-weight:700;cursor:pointer;border:none}
+/* bottom nav */
+.bnav{display:flex;background:var(--sur);border-top:1px solid var(--bdr);padding:8px 0 calc(8px + env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;z-index:20}
+.nbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;background:none;border:none;cursor:pointer;color:var(--txt3);font-size:10px;font-weight:600}
+.nbtn.on{color:var(--acc2)}
+.nicon{font-size:22px}
 </style>
 </head>
 <body>
+<div class="app">
 
-<!-- ── BROWSE SCREEN ── -->
-<div id="screen-browse" class="screen active">
-  <div class="header">
-    <div>
-      <h1>🇸🇪 <span>Svenska</span></h1>
-    </div>
-    <div class="stats-row">
-      <div class="stat-chip"><b id="stat-total">0</b> words</div>
-      <div class="stat-chip" style="color:var(--coral)"><b id="stat-pr">0</b> review</div>
-    </div>
-  </div>
-  <div class="search-bar">
-    <input class="search-input" type="search" placeholder="Search Swedish or English..." oninput="doSearch(this.value)" id="search-in">
-  </div>
-  <div class="filter-scroll" id="src-filters">
-    <button class="filter-pill babbel-on" onclick="setSrc('all',this)">All sources</button>
-    <button class="filter-pill" onclick="setSrc('Babbel',this)">Babbel</button>
-    <button class="filter-pill" onclick="setSrc('Podcast',this)">Podcast PDF</button>
-  </div>
-  <div class="filter-scroll" id="cat-filters">
-    <button class="filter-pill on" onclick="setCat('all',this)">All</button>
-    <button class="filter-pill pr-on" onclick="setCat('priority',this)">⚑ Review</button>
-    <button class="filter-pill new-on" onclick="setCat('new',this)">✦ New</button>
-    <button class="filter-pill" onclick="setCat('Greetings',this)">Greetings</button>
-    <button class="filter-pill" onclick="setCat('Family',this)">Family</button>
-    <button class="filter-pill" onclick="setCat('People',this)">People</button>
-    <button class="filter-pill" onclick="setCat('Daily life',this)">Daily life</button>
-    <button class="filter-pill" onclick="setCat('Weather',this)">Weather</button>
-    <button class="filter-pill" onclick="setCat('Restaurant',this)">Restaurant</button>
-    <button class="filter-pill" onclick="setCat('Questions',this)">Questions</button>
-    <button class="filter-pill" onclick="setCat('Directions',this)">Directions</button>
-    <button class="filter-pill" onclick="setCat('Transport',this)">Transport</button>
-    <button class="filter-pill" onclick="setCat('Social',this)">Social</button>
-    <button class="filter-pill" onclick="setCat('Pronouns',this)">Pronouns</button>
-    <button class="filter-pill" onclick="setCat('Pronunciation',this)">Pronunciation</button>
-  </div>
-  <div class="speed-row">
-    🔊 Speed:
-    <button class="speed-btn" onclick="setSpeed(0.6,this)">Slow</button>
-    <button class="speed-btn on" onclick="setSpeed(0.85,this)">Normal</button>
-    <button class="speed-btn" onclick="setSpeed(1.1,this)">Fast</button>
-    <span id="voice-label" style="margin-left:4px;font-size:11px;color:var(--text3)">loading voice...</span>
-  </div>
-  <div class="list-wrap" id="list-wrap">
-    <div class="list-showing" id="list-showing"></div>
-    <div id="list"></div>
+<div class="header">
+  <h1>🇸🇪 <span>Svenska</span></h1>
+  <div class="hstats">
+    <div class="chip"><b id="sn-total">249</b> words</div>
+    <div class="chip" style="color:var(--red)"><b id="sn-pr">0</b> review</div>
   </div>
 </div>
 
-<!-- ── QUIZ SCREEN ── -->
+<div class="tabs">
+  <button class="tab on" onclick="showScreen('browse',this)">Browse</button>
+  <button class="tab" onclick="showScreen('quiz',this)">Flashcards</button>
+  <button class="tab" onclick="showScreen('add',this)">+ Add</button>
+</div>
+
+<!-- ── BROWSE ── -->
+<div id="screen-browse" class="screen on">
+  <div class="search-bar"><input type="search" placeholder="Search Swedish or English..." oninput="doSearch(this.value)" id="search-in"></div>
+  <div class="fscroll" id="src-row">
+    <button class="pill ba" onclick="setSrc('all',this)">All sources</button>
+    <button class="pill" onclick="setSrc('Babbel',this)" style="--c:var(--blu)">Babbel</button>
+    <button class="pill" onclick="setSrc('Podcast',this)" style="--c:var(--pod)">Podcast PDF</button>
+    <button class="pill" onclick="setSrc('Custom',this)">My words</button>
+  </div>
+  <div class="fscroll" id="cat-row">
+    <button class="pill on" onclick="setCat('all',this)">All</button>
+    <button class="pill pr" onclick="setCat('priority',this)">Review</button>
+    <button class="pill nw" onclick="setCat('new',this)">New</button>
+    <button class="pill" onclick="setCat('Greetings',this)">Greetings</button>
+    <button class="pill" onclick="setCat('Family',this)">Family</button>
+    <button class="pill" onclick="setCat('People',this)">People</button>
+    <button class="pill" onclick="setCat('Daily life',this)">Daily life</button>
+    <button class="pill" onclick="setCat('Weather',this)">Weather</button>
+    <button class="pill" onclick="setCat('Restaurant',this)">Restaurant</button>
+    <button class="pill" onclick="setCat('Questions',this)">Questions</button>
+    <button class="pill" onclick="setCat('Directions',this)">Directions</button>
+    <button class="pill" onclick="setCat('Transport',this)">Transport</button>
+    <button class="pill" onclick="setCat('Social',this)">Social</button>
+    <button class="pill" onclick="setCat('Pronouns',this)">Pronouns</button>
+    <button class="pill" onclick="setCat('Pronunciation',this)">Pronunciation</button>
+  </div>
+  <div class="fscroll" id="type-row">
+    <button class="pill on" onclick="setType('all',this)">All types</button>
+    <button class="pill" onclick="setType('word',this)">Words &amp; phrases</button>
+    <button class="pill" onclick="setType('sentence',this)">Sentences</button>
+  </div>
+  <div class="srow">🔊 Speed:
+    <button class="spd" onclick="setSpd(0.6,this)">Slow</button>
+    <button class="spd on" onclick="setSpd(0.85,this)">Normal</button>
+    <button class="spd" onclick="setSpd(1.1,this)">Fast</button>
+    <span id="vlabel">loading voice…</span>
+  </div>
+  <div class="list-wrap">
+    <div class="lshow" id="lshow"></div>
+    <div id="vlist"></div>
+  </div>
+</div>
+
+<!-- ── FLASHCARD QUIZ ── -->
 <div id="screen-quiz" class="screen">
-  <div class="header">
-    <h1>🎯 <span>Quiz</span></h1>
-    <div class="stats-row">
-      <div class="stat-chip"><b id="q-score">0</b> correct</div>
-      <div class="stat-chip"><b id="q-of">0</b> left</div>
+  <div class="quiz-wrap" id="quiz-wrap">
+    <div class="qmode-row">
+      <button class="qmode on" onclick="setQMode('all',this)">All words</button>
+      <button class="qmode" onclick="setQMode('priority',this)">Review only</button>
+      <button class="qmode" onclick="setQMode('new',this)">New only</button>
+      <button class="qmode" onclick="setQMode('custom',this)">My words</button>
     </div>
+    <div id="qcontent"></div>
   </div>
-  <div class="filter-scroll" style="background:var(--surface);border-bottom:1px solid var(--border)">
-    <button class="filter-pill on" onclick="setQuizMode('priority',this)">⚑ Review words</button>
-    <button class="filter-pill" onclick="setQuizMode('new',this)">✦ New words</button>
-    <button class="filter-pill" onclick="setQuizMode('all',this)">All words</button>
-  </div>
-  <div class="quiz-wrap" id="quiz-wrap"></div>
 </div>
 
-<nav class="bottom-nav">
-  <button class="nav-btn active" id="nav-browse" onclick="showScreen('browse')">
-    <span class="nav-icon">📚</span>Browse
-  </button>
-  <button class="nav-btn" id="nav-quiz" onclick="showScreen('quiz')">
-    <span class="nav-icon">🎯</span>Quiz
-  </button>
+<!-- ── ADD VOCAB ── -->
+<div id="screen-add" class="screen">
+  <div class="add-wrap">
+
+    <div class="add-section">
+      <h3>✨ Smart expand</h3>
+      <div class="add-row">
+        <label>Enter any Swedish word or sentence</label>
+        <input type="text" id="ai-input" placeholder="e.g. att äta, äpplet, jag går…" autocorrect="off" autocapitalize="off">
+      </div>
+      <button class="ai-btn" onclick="doExpand()">
+        <span id="ai-spin" style="display:none" class="spinner"></span>
+        <span id="ai-label">Expand &amp; generate forms</span>
+      </button>
+      <div class="ai-result" id="ai-result"></div>
+      <div class="form-preview" id="form-preview">
+        <div class="fp-sv" id="fp-sv"></div>
+        <div class="fp-pron" id="fp-pron"></div>
+        <div class="fp-en" id="fp-en"></div>
+        <div class="fp-forms" id="fp-forms"></div>
+      </div>
+      <button class="add-btn" id="save-expanded-btn" style="display:none;margin-top:12px" onclick="saveExpanded()">Add to my vocab</button>
+    </div>
+
+    <div class="add-section">
+      <h3>Manual add</h3>
+      <div class="add-row"><label>Swedish word / phrase</label><input type="text" id="m-sv" placeholder="e.g. en hund" autocorrect="off" autocapitalize="off"></div>
+      <div class="add-row"><label>Pronunciation guide</label><input type="text" id="m-pron" placeholder="e.g. en hoond" autocorrect="off" autocapitalize="off"></div>
+      <div class="add-row"><label>English meaning</label><input type="text" id="m-en" placeholder="e.g. a dog"></div>
+      <div class="add-row"><label>Extra forms (optional)</label><textarea id="m-forms" placeholder="e.g. plural: hundar · definite: hunden · past: åt"></textarea></div>
+      <div class="add-row"><label>Category</label>
+        <select id="m-cat">
+          <option>Greetings</option><option>Family</option><option>People</option>
+          <option>Daily life</option><option>Weather</option><option>Restaurant</option>
+          <option>Questions</option><option>Directions</option><option>Transport</option>
+          <option selected>Social</option><option>Pronouns</option><option>Pronunciation</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:12px;align-items:center">
+        <label style="font-size:12px;color:var(--txt3)">Mark as review:</label>
+        <input type="checkbox" id="m-pr" style="width:20px;height:20px;cursor:pointer">
+      </div>
+      <button class="add-btn" onclick="manualAdd()">Add word</button>
+    </div>
+
+    <div class="add-section">
+      <h3>🔄 Expand existing words</h3>
+      <p style="font-size:12px;color:var(--txt3);margin-bottom:12px">Auto-generate grammatical forms for words that don't have them yet. Runs in your browser using Claude AI.</p>
+      <div id="bulk-progress" style="display:none;margin-bottom:10px">
+        <div style="font-size:12px;color:var(--txt2)" id="bulk-status">Starting...</div>
+        <div style="height:6px;background:var(--bdr);border-radius:3px;margin-top:6px;overflow:hidden">
+          <div id="bulk-bar" style="height:100%;background:var(--acc);border-radius:3px;width:0%;transition:width .3s"></div>
+        </div>
+      </div>
+      <button class="add-btn" id="bulk-btn" onclick="bulkExpand()" style="background:var(--sur2);border:1.5px solid var(--acc);color:var(--acc2)">Generate forms for all words</button>
+    </div>
+    <div class="add-section" id="custom-list-section" style="display:none">
+      <h3>My added words (<span id="custom-count">0</span>)</h3>
+      <div id="custom-list"></div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- end .app -->
+
+<nav class="bnav">
+  <button class="nbtn on" id="nav-browse" onclick="showScreen('browse',this)"><span class="nicon">📚</span>Browse</button>
+  <button class="nbtn" id="nav-quiz" onclick="showScreen('quiz',this)"><span class="nicon">🃏</span>Flashcards</button>
+  <button class="nbtn" id="nav-add" onclick="showScreen('add',this)"><span class="nicon">➕</span>Add</button>
 </nav>
 
 <script>
 const VOCAB=[
-  {sv:'Gott!',pron:'yot',en:'Good! / Tasty!',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Jag vill ha något att äta',pron:'yag vil hah NAW-got at EH-ta',en:'I want something to eat',src:'Babbel',cat:'Restaurant',p:0,n:0},
-  {sv:'En smörgås',pron:'en SMUR-gaws',en:'A sandwich',src:'Babbel',cat:'Restaurant',p:0,n:0},
-  {sv:'Jag dricker hellre en juice',pron:'yag DRIK-er HEL-reh en joos',en:"I'd rather drink a juice",src:'Babbel',cat:'Restaurant',p:0,n:0},
-  {sv:'Kan jag få en öl i stället för?',pron:'kan yag faw en URL ee STEL-et fur',en:'Can I have a beer instead?',src:'Babbel',cat:'Restaurant',p:0,n:0},
-  {sv:'Ja, visst',pron:'yah vist',en:'Yes, of course',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Jag kommer strax ut med...',pron:'yag KOM-er straks oot meh',en:"I'll be right out with...",src:'Babbel',cat:'Daily life',p:0,n:0},
-  {sv:'Smörgåsen dröjer lite',pron:'SMUR-gaw-sen DRUR-yer LEE-teh',en:'The sandwich will be a moment',src:'Babbel',cat:'Restaurant',p:0,n:0},
-  {sv:'Ingen fara!',pron:'ING-en FAH-ra',en:'No worries!',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Vet du vad?',pron:'veht doo vah',en:'You know what?',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Hur kommer jag dit?',pron:'hoor KOM-er yag deet',en:'How do I get there?',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Kan ni rekommendera en restaurang?',pron:'kan nee reh-kom-en-DEH-ra en res-taw-RANG',en:'Can you recommend a restaurant?',src:'Babbel',cat:'Restaurant',p:0,n:0},
-  {sv:'I närheten av',pron:'ee NEHR-heh-ten av',en:'Near / in the vicinity of',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Är du här med bil?',pron:'ehr doo hehr meh beel',en:'Are you here by car?',src:'Babbel',cat:'Transport',p:0,n:0},
-  {sv:'Finns det en buss som man kan ta?',pron:'fins deh en boos som man kan tah',en:'Is there a bus one can take?',src:'Babbel',cat:'Transport',p:0,n:0},
-  {sv:'Det finns det',pron:'deh fins deh',en:'Yes there is',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Var ligger stranden?',pron:'vahr LIG-er STRAN-den',en:'Where is the beach?',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Den ligger till höger',pron:'den LIG-er til HUR-ger',en:"It's to the right",src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Det regnar i Skåne',pron:'deh REG-nar ee SKAW-neh',en:"It's raining in Skåne",src:'Babbel',cat:'Weather',p:0,n:0},
-  {sv:'Det är varmt och soligt',pron:'deh ehr varmt ok SOO-lit',en:"It's warm and sunny",src:'Babbel',cat:'Weather',p:0,n:0},
-  {sv:'Vart går tåget?',pron:'vart gawr TAW-get',en:'Where is the train going? (direction)',src:'Babbel',cat:'Transport',p:0,n:0},
-  {sv:'Var är bilen?',pron:'vahr ehr BEE-len',en:'Where is the car? (location)',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Det blåser mycket vid kusten',pron:'deh BLAW-ser MYK-eh veed KOOS-ten',en:"It's very windy at the coast",src:'Babbel',cat:'Weather',p:0,n:0},
-  {sv:'Jag vill åka till...',pron:'yag vil AW-ka til',en:'I want to go to...',src:'Babbel',cat:'Transport',p:0,n:0},
-  {sv:'Det låter bra. Tack för hjälpen!',pron:'deh LAW-ter brah. tak fur YELL-pen',en:'That sounds good. Thanks for the help!',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Jag har ett par frågor',pron:'yag hahr et pahr FRAW-gor',en:'I have a couple of questions',src:'Babbel',cat:'Questions',p:0,n:0},
-  {sv:'Massiv!',pron:'ma-SEEV',en:'Awesome! (slang)',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Ingen orsak',pron:'ING-en OOR-sak',en:"You're welcome / No problem",src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Jag reser i Sverige',pron:'yag REH-ser ee SVEH-ree-yeh',en:'I am travelling in Sweden',src:'Babbel',cat:'Transport',p:0,n:0},
-  {sv:'Med tåg',pron:'meh tawg',en:'By train',src:'Babbel',cat:'Transport',p:0,n:0},
-  {sv:'Vad kul!',pron:'vah kool',en:'How fun!',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Ha en trevlig semester!',pron:'hah en TREV-lig seh-MES-ter',en:'Have a lovely holiday!',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Just det',pron:'yoost deh',en:"That's right / Oh yes",src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Finns det ett hotell i närheten?',pron:'fins deh et hoo-TEL ee NEHR-heh-ten',en:'Is there a hotel nearby?',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Gå till höger här ute',pron:'gaw til HUR-ger hehr OO-teh',en:'Turn right out here',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Sedan rakt fram',pron:'SEH-dan rakt fram',en:'Then straight ahead',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Det är en kilometer',pron:'deh ehr en SHEE-loh-meh-ter',en:'It is one kilometre',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Hen',pron:'hen',en:'They/them (gender-neutral singular)',src:'Babbel',cat:'Pronouns',p:0,n:0},
-  {sv:'Hen är gullig',pron:'hen ehr GUL-ig',en:'They are cute',src:'Babbel',cat:'Pronouns',p:0,n:0},
-  {sv:'Känner du...?',pron:'CHEN-er doo',en:'Do you know...? (a person)',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Han är rolig',pron:'han ehr ROO-lig',en:'He is funny',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Hur säger man det på svenska?',pron:'hoor SEH-yer man deh paw SVEN-ska',en:'How do you say that in Swedish?',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Man får inte...',pron:'man fawr IN-teh',en:"One is not allowed to... / You can't...",src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Kan man bada här?',pron:'kan man BAH-da hehr',en:'Can one swim here?',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Här får man inte röka!',pron:'hehr fawr man IN-teh RUR-ka',en:"You can't smoke here!",src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Jag saknar',pron:'yag SAK-nar',en:'I miss (someone/something)',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Jag kan verkligen rekommendera det',pron:'yag kan VEHR-kli-gen reh-kom-en-DEH-ra deh',en:'I can really recommend it',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Man lär sig mycket',pron:'man lehr say MYK-eh',en:'You learn a lot',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Ta till vänster',pron:'tah til VEN-ster',en:'Turn to the left',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Gå rakt fram',pron:'gaw rakt fram',en:'Go straight ahead',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Sväng höger vid statyn',pron:'sveng HUR-ger veed STAH-tewn',en:'Turn right at the statue',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Fortsätt längs den här gatan',pron:'FORT-set lengs den hehr GAH-tan',en:'Continue along this street',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Så är du framme',pron:'saw ehr doo FRAM-eh',en:"Then you're there / arrived",src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Vi hörs!',pron:'vee hurrs',en:"Talk soon!",src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Ha det bra!',pron:'hah deh brah',en:'Take care!',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'God natt',pron:'good nat',en:'Good night',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'God kväll',pron:'good kvel',en:'Good evening',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Ses imorgon!',pron:'sehs ee-MOR-on',en:'See you tomorrow!',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Ha en bra dag!',pron:'hah en brah dahg',en:'Have a great day!',src:'Babbel',cat:'Greetings',p:0,n:0},
-  {sv:'Bibliotek',pron:'bib-lio-TEHK',en:'Library',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Postkontor',pron:'POST-kon-toor',en:'Post office',src:'Babbel',cat:'Directions',p:0,n:0},
-  {sv:'Naturen är fantastisk',pron:'nah-TOO-ren ehr fan-TAS-tisk',en:'The scenery is fantastic',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Hoppas att du är nöjd',pron:'HOP-as at doo ehr noyd',en:'Hope you are satisfied',src:'Babbel',cat:'Social',p:0,n:0},
-  // Podcast PDF
-  {sv:'Hej!',pron:'yay',en:'Hey!',src:'Podcast',cat:'Greetings',p:0,n:0},
-  {sv:'Hejsan!',pron:'YAY-san',en:'Hello there!',src:'Podcast',cat:'Greetings',p:0,n:0},
-  {sv:'Hallå!',pron:'ha-LAW',en:'Hello!',src:'Podcast',cat:'Greetings',p:0,n:0},
-  {sv:'Flytande',pron:'FLEW-tan-deh',en:'Fluent',src:'Podcast',cat:'Greetings',p:1,n:0},
-  {sv:'år',pron:'awr',en:'year(s)',src:'Podcast',cat:'Greetings',p:1,n:0},
-  {sv:'gammal',pron:'GAM-al',en:'old',src:'Podcast',cat:'Greetings',p:1,n:0},
-  {sv:'Jag pratar',pron:'yag PRAH-tar',en:'I speak',src:'Podcast',cat:'Greetings',p:0,n:0},
-  {sv:'Jag snackar (slang)',pron:'yag SNAK-ar',en:'I speak (slang)',src:'Podcast',cat:'Greetings',p:1,n:0},
-  {sv:'Att fika',pron:'at FEE-ka',en:'To have coffee & a pastry',src:'Podcast',cat:'Daily life',p:0,n:0},
-  {sv:'Pussel',pron:'PUS-el',en:'Puzzles',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Att läsa',pron:'at LEH-sa',en:'To read',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Föräldrar',pron:'fur-EL-drar',en:'Parents',src:'Podcast',cat:'Family',p:1,n:0},
-  {sv:'Bröder',pron:'BRUR-der',en:'Brothers',src:'Podcast',cat:'Family',p:1,n:0},
-  {sv:'Systrar',pron:'SEWS-trar',en:'Sisters',src:'Podcast',cat:'Family',p:1,n:0},
-  {sv:'Genomsnittlig',pron:'yeh-nom-SNIT-lig',en:'Average',src:'Podcast',cat:'Family',p:1,n:0},
-  {sv:'Barnfri',pron:'BARN-free',en:'Childfree',src:'Podcast',cat:'Family',p:1,n:0},
-  {sv:'Ensam',pron:'EN-sam',en:'Alone',src:'Podcast',cat:'Family',p:1,n:0},
-  {sv:'En släkt',pron:'en slekt',en:'Family (relatives)',src:'Podcast',cat:'Family',p:1,n:0},
-  {sv:'Släktingar',pron:'SLEK-ting-ar',en:'Relatives',src:'Podcast',cat:'Family',p:1,n:0},
-  {sv:'En mormor',pron:'en MOR-mor',en:'Maternal grandma',src:'Podcast',cat:'Family',p:0,n:0},
-  {sv:'En morfar',pron:'en MOR-far',en:'Maternal grandpa',src:'Podcast',cat:'Family',p:0,n:0},
-  {sv:'En farmor',pron:'en FAR-mor',en:'Paternal grandma',src:'Podcast',cat:'Family',p:0,n:0},
-  {sv:'En farfar',pron:'en FAR-far',en:'Paternal grandpa',src:'Podcast',cat:'Family',p:0,n:0},
-  {sv:'En moster',pron:'en MOS-ter',en:'Maternal aunt',src:'Podcast',cat:'Family',p:0,n:0},
-  {sv:'En morbror',pron:'en MOR-broor',en:'Maternal uncle',src:'Podcast',cat:'Family',p:0,n:0},
-  {sv:'En faster',pron:'en FAS-ter',en:'Paternal aunt',src:'Podcast',cat:'Family',p:0,n:0},
-  {sv:'En farbror',pron:'en FAR-broor',en:'Paternal uncle',src:'Podcast',cat:'Family',p:0,n:0},
-  {sv:'Ett syskonbarn',pron:'et SEWS-kon-barn',en:'A niece/nephew',src:'Podcast',cat:'Family',p:1,n:0},
-  {sv:'En kvinna',pron:'en KVIN-a',en:'A woman',src:'Podcast',cat:'People',p:1,n:0},
-  {sv:'En cykel',pron:'en SEW-kel',en:'A bicycle',src:'Podcast',cat:'People',p:1,n:0},
-  {sv:'En dator',pron:'en DAH-tor',en:'A computer',src:'Podcast',cat:'People',p:1,n:0},
-  {sv:'Snäll / snällt',pron:'snell / snelt',en:'Kind',src:'Podcast',cat:'People',p:1,n:0},
-  {sv:'Dum / dumt',pron:'doom / domt',en:'Mean / stupid',src:'Podcast',cat:'People',p:1,n:0},
-  {sv:'Fin / fint',pron:'feen / feent',en:'Pretty / nice',src:'Podcast',cat:'People',p:1,n:0},
-  {sv:'Ful / fult',pron:'fool / foolt',en:'Ugly',src:'Podcast',cat:'People',p:1,n:0},
-  {sv:'Hon, hennes',pron:'hoon, HEN-es',en:'She, her',src:'Podcast',cat:'People',p:1,n:0},
-  {sv:'De, deras',pron:'dom, DEH-ras',en:'They, their',src:'Podcast',cat:'People',p:1,n:0},
-  {sv:'Ni, er',pron:'nee, ehr',en:'You (plural), your',src:'Podcast',cat:'People',p:1,n:0},
-  {sv:'På morgonen',pron:'paw MOR-on-en',en:'In the morning',src:'Podcast',cat:'Daily life',p:0,n:0},
-  {sv:'På förmiddagen',pron:'paw fur-MID-ah-gen',en:'Before lunch',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'På eftermiddagen',pron:'paw EF-ter-mid-ah-gen',en:'In the afternoon',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'På kvällen',pron:'paw KVEL-en',en:'In the evening',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'På natten',pron:'paw NAT-en',en:'At night',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Att vakna',pron:'at VAK-na',en:'To wake up',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Att äta',pron:'at EH-ta',en:'To eat',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Att jobba',pron:'at YOB-a',en:'To work',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Att träna',pron:'at TREH-na',en:'To exercise',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Att laga',pron:'at LAH-ga',en:'To cook',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Att somna',pron:'at SOM-na',en:'To fall asleep',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Alltid',pron:'AL-teed',en:'Always',src:'Podcast',cat:'Daily life',p:0,n:0},
-  {sv:'Aldrig',pron:'AL-drig',en:'Never',src:'Podcast',cat:'Daily life',p:0,n:0},
-  {sv:'Oftast',pron:'OF-tast',en:'Usually',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Ungefär',pron:'OON-geh-fehr',en:'Approximately',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Morgontrött',pron:'MOR-on-trot',en:'Tired in the morning',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Morgonpigg',pron:'MOR-on-pig',en:'Energized in the morning',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Jag slappnar av',pron:'yag SLAP-nar av',en:'I relax',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Jag skrollar på mobilen',pron:'yag SKROL-ar paw moo-BEE-len',en:'I scroll on my phone',src:'Podcast',cat:'Daily life',p:1,n:0},
-  {sv:'Jo',pron:'yoo',en:'Actually, yes',src:'Podcast',cat:'Questions',p:0,n:0},
-  {sv:'Faktiskt',pron:'FAK-tiskt',en:'Actually',src:'Podcast',cat:'Questions',p:1,n:0},
-  {sv:'Visst',pron:'vist',en:'Certainly',src:'Podcast',cat:'Questions',p:1,n:0},
-  {sv:'Heller',pron:'HEL-er',en:'Either (in negatives)',src:'Podcast',cat:'Questions',p:1,n:0},
-  {sv:'Alls',pron:'als',en:'At all',src:'Podcast',cat:'Questions',p:1,n:0},
-  {sv:'Vem',pron:'vem',en:'Who/whom',src:'Podcast',cat:'Questions',p:1,n:0},
-  {sv:'Vilken/vilket/vilka',pron:'VIL-ken/VIL-ket/VIL-ka',en:'Which',src:'Podcast',cat:'Questions',p:1,n:0},
-  {sv:'Därför att',pron:'DEHR-fur at',en:'Because',src:'Podcast',cat:'Questions',p:1,n:0},
-  {sv:'För att',pron:'fur at',en:'Because / in order to',src:'Podcast',cat:'Questions',p:1,n:0},
-  {sv:'På grund av',pron:'paw grond av',en:'Because of',src:'Podcast',cat:'Questions',p:1,n:0},
-  {sv:'En vinter',pron:'en VIN-ter',en:'A winter',src:'Podcast',cat:'Weather',p:0,n:0},
-  {sv:'En sommar',pron:'en SOM-ar',en:'A summer',src:'Podcast',cat:'Weather',p:0,n:0},
-  {sv:'En höst',pron:'en hurst',en:'Autumn/fall',src:'Podcast',cat:'Weather',p:0,n:0},
-  {sv:'Solig/soligt',pron:'SOO-lig/SOO-ligt',en:'Sunny',src:'Podcast',cat:'Weather',p:0,n:0},
-  {sv:'Blåsig/blåsigt',pron:'BLAW-sig/BLAW-sigt',en:'Windy',src:'Podcast',cat:'Weather',p:0,n:0},
-  {sv:'Molnig/molnigt',pron:'MOL-nig/MOL-nigt',en:'Cloudy',src:'Podcast',cat:'Weather',p:0,n:0},
-  {sv:'Kall/kallare/kallast',pron:'kal/KAL-areh/KAL-ast',en:'Cold/colder/coldest',src:'Podcast',cat:'Weather',p:0,n:0},
-  {sv:'Varm/varmare/varmast',pron:'varm/VAR-mareh/VAR-mast',en:'Warm/warmer/warmest',src:'Podcast',cat:'Weather',p:0,n:0},
-  {sv:'Inomhus',pron:'IN-om-hoos',en:'Indoors',src:'Podcast',cat:'Weather',p:0,n:0},
-  {sv:'Utomhus',pron:'OOT-om-hoos',en:'Outdoors',src:'Podcast',cat:'Weather',p:0,n:0},
-  {sv:'Välkomna!',pron:'VEL-kom-na',en:'Welcome!',src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Har ni bokat bord?',pron:'har nee BOO-kat boord',en:'Have you booked a table?',src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Vill ni sitta inne eller ute?',pron:'vil nee SIT-a IN-eh EL-er OO-teh',en:'Inside or outside?',src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Följ med mig',pron:'fuly meh mig',en:'Follow me',src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Jag vill gärna öva min svenska',pron:'yag vil YEHR-na UR-va min SVEN-ska',en:"I'd like to practise my Swedish",src:'Podcast',cat:'Greetings',p:0,n:0},
-  {sv:'Är ni redo att beställa?',pron:'ehr nee REH-do at beh-STEL-a',en:'Are you ready to order?',src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Jag tar köttbullarna, tack',pron:'yag tahr CHET-bul-arna tak',en:"I'll take the meatballs, thanks",src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Ingår påtår?',pron:'IN-gawr PAW-tawr',en:'Is a refill included?',src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Vad rekommenderar du?',pron:'vah reh-kom-en-DEH-rar doo',en:'What do you recommend?',src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Jag skulle vilja ha...',pron:'yag SKOOL-eh VIL-ya hah',en:'I would like to have...',src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Smaklig måltid!',pron:'SMAHK-lig MAWL-teed',en:'Enjoy your meal!',src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Tusen tack!',pron:'TOO-sen tak',en:'Thank you so much!',src:'Podcast',cat:'Greetings',p:0,n:0},
-  {sv:'Kan vi få notan, tack?',pron:'kan vee faw NOO-tan tak',en:'Can we get the bill please?',src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Det var supergott!',pron:'deh var SOO-per-yot',en:'That was delicious!',src:'Podcast',cat:'Restaurant',p:0,n:0},
-  {sv:'Tack, hejdå!',pron:'tak HAY-daw',en:'Thank you, goodbye!',src:'Podcast',cat:'Greetings',p:0,n:0},
-  {sv:'Mat / Matt',pron:'maht / mat',en:'Food (long) / Dull (short vowel)',src:'Podcast',cat:'Pronunciation',p:0,n:0},
-  {sv:'Glas / Glass',pron:'glahs / glas',en:'Glass / Ice cream',src:'Podcast',cat:'Pronunciation',p:0,n:0},
-  {sv:'Skål!',pron:'skawl',en:'Cheers!',src:'Podcast',cat:'Pronunciation',p:0,n:0},
-  {sv:'Gift',pron:'yift',en:'Married / Poison (same spelling!)',src:'Podcast',cat:'Pronunciation',p:0,n:0},
-  {sv:'Kär',pron:'chehr',en:'In love',src:'Podcast',cat:'Pronunciation',p:0,n:0},
-  // ── BABBEL batch 3 — plans & languages ──
-  {sv:'Vill du göra något i kväll?',pron:'vil doo YUR-a NAW-got ee kvel',en:'Do you want to do something this evening?',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Gärna',pron:'YEHR-na',en:"I'd love to / gladly",src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Jag måste hem',pron:'yag MOS-teh hem',en:'I have to go home',src:'Babbel',cat:'Daily life',p:0,n:0},
-  {sv:'Tvätta',pron:'TVET-a',en:'To do laundry / to wash',src:'Babbel',cat:'Daily life',p:0,n:0},
-  {sv:'Ska vi ta en öl runt åtta?',pron:'skah vee tah en URL roont OT-a',en:'Shall we grab a beer around eight?',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Gå ut och äta',pron:'gaw oot ok EH-ta',en:'Go out and eat',src:'Babbel',cat:'Restaurant',p:0,n:0},
-  {sv:'Kanske',pron:'KAN-sheh',en:'Maybe / perhaps',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Vad finns det där du bor?',pron:'vah fins deh dehr doo boor',en:'What is there where you live?',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'En pizzeria',pron:'en pit-seh-REE-a',en:'A pizzeria',src:'Babbel',cat:'Restaurant',p:0,n:0},
-  {sv:'En sushirestaurang',pron:'en SOO-shee-res-taw-RANG',en:'A sushi restaurant',src:'Babbel',cat:'Restaurant',p:0,n:0},
-  {sv:'Inget kebabställe',pron:'IN-get keh-BAB-stel-eh',en:'No kebab place',src:'Babbel',cat:'Restaurant',p:0,n:0},
-  {sv:'Var i världen',pron:'vahr ee VEHR-lden',en:'Where in the world',src:'Babbel',cat:'Questions',p:0,n:0},
-  {sv:'Förutom',pron:'fur-OO-tom',en:'Besides / except for',src:'Babbel',cat:'Questions',p:0,n:0},
-  {sv:'Ingenstans',pron:'ING-en-stans',en:'Nowhere',src:'Babbel',cat:'Questions',p:0,n:0},
-  {sv:'Jag lär mig',pron:'yag lehr may',en:'I am learning',src:'Babbel',cat:'Daily life',p:0,n:0},
-  {sv:'Det är min läxa',pron:'deh ehr min LEK-sa',en:"That's my homework",src:'Babbel',cat:'Daily life',p:0,n:0},
-  {sv:'Vad mycket du kan!',pron:'vah MYK-eh doo kan',en:'You know so much!',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Fast',pron:'fast',en:'But / though / however',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Precis som',pron:'preh-SEES som',en:'Just like / exactly as',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Jag vet',pron:'yag veht',en:'I know',src:'Babbel',cat:'Social',p:0,n:0},
-  // Countries & languages
-  {sv:'Storbritannien',pron:'stor-BRIT-an-yen',en:'Great Britain',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Australien',pron:'aw-STRAH-lee-en',en:'Australia',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Nya Zeeland',pron:'newa ZEH-land',en:'New Zealand',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Kanada',pron:'KAN-a-da',en:'Canada',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Irland',pron:'EER-land',en:'Ireland',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Malta',pron:'MAL-ta',en:'Malta',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Spanien',pron:'SPAH-nee-en',en:'Spain',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Latinamerika',pron:'lah-teen-ah-MEH-ree-ka',en:'Latin America',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Brasilien',pron:'bra-SEE-lee-en',en:'Brasil',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Portugal',pron:'POR-too-gal',en:'Portugal',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Kinesiska',pron:'shee-NEH-siska',en:'Chinese (language)',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Spanska',pron:'SPAN-ska',en:'Spanish (language)',src:'Babbel',cat:'Social',p:0,n:0},
-  {sv:'Portugisiska',pron:'por-too-YEE-siska',en:'Portuguese (language)',src:'Babbel',cat:'Social',p:0,n:0},
-  // ── BABBEL batch 4 — family positions, making plans, cinema ──
-  {sv:'Tvillingar',pron:'TVIL-ing-ar',en:'Twins',src:'Babbel',cat:'Family',p:0,n:1},
-  {sv:'Bredvid',pron:'breh-VEED',en:'Next to / beside',src:'Babbel',cat:'Directions',p:0,n:1},
-  {sv:'Min farfar står bredvid henne',pron:'min FAR-far stawr breh-VEED HEN-eh',en:'My paternal grandpa is standing next to her',src:'Babbel',cat:'Family',p:0,n:1},
-  {sv:'Det här / den här',pron:'deh hehr / den hehr',en:'This (ett-word) / this (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:1},
-  {sv:'Det där / den där',pron:'deh dehr / den dehr',en:'That (ett-word) / that (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:1},
-  {sv:'Dina föräldrar',pron:'DEE-na fur-EL-drar',en:'Your parents',src:'Babbel',cat:'Family',p:0,n:1},
-  {sv:'Min kompis',pron:'min KOM-pis',en:'My friend (informal)',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Mina föräldrar bor vid havet',pron:'MEE-na fur-EL-drar boor veed HAH-vet',en:'My parents live by the sea',src:'Babbel',cat:'Family',p:0,n:1},
-  {sv:'Vid havet',pron:'veed HAH-vet',en:'By the sea',src:'Babbel',cat:'Directions',p:0,n:1},
-  {sv:'En utbytesstudent',pron:'en OOT-bewt-es-stoo-DENT',en:'An exchange student',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'I vår klass',pron:'ee vawr klas',en:'In our class',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Två stycken',pron:'tvaw STEW-ken',en:'Two of them / two pieces',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Just nu',pron:'yoost noo',en:'Right now',src:'Babbel',cat:'Daily life',p:0,n:1},
-  {sv:'Jaså?',pron:'yah-SAW',en:'Oh really? / Is that so?',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Väldigt trevlig',pron:'VEL-digt TREV-lig',en:'Very nice / pleasant',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Jag borde prata med honom',pron:'yag BOO-reh PRAH-ta meh HON-om',en:'I should talk to him',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Man träffar sällan folk',pron:'man TREF-ar SEL-an folk',en:'You rarely meet people',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Åtminstone',pron:'awt-MIN-sto-neh',en:'At least',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Vänta',pron:'VEN-ta',en:'Wait',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Hur så?',pron:'hoor saw',en:'How so? / What do you mean?',src:'Babbel',cat:'Questions',p:0,n:1},
-  {sv:'Va?',pron:'vah',en:'What? / Huh? (informal)',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Vilket sammanträffande!',pron:'VIL-ket SAM-an-tref-an-deh',en:'What a coincidence!',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Ja, verkligen',pron:'yah VEHR-kli-gen',en:'Yes, really / indeed',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Okej, fortsätt',pron:'oh-KAY FORT-set',en:'Okay, continue / go on',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Bakom',pron:'BAH-kom',en:'Behind',src:'Babbel',cat:'Directions',p:0,n:1},
-  {sv:'Tillsammans med',pron:'til-SAM-ans meh',en:'Together with',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Jag är förvirrad',pron:'yag ehr fur-VIR-ad',en:'I am confused',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Gå på bio',pron:'gaw paw BEE-oo',en:'Go to the cinema',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Jag skulle gärna gå på bio',pron:'yag SKOOL-eh YEHR-na gaw paw BEE-oo',en:"I'd love to go to the cinema",src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Jag brukar ofta',pron:'yag BROO-kar OF-ta',en:'I often tend to / I usually',src:'Babbel',cat:'Daily life',p:0,n:1},
-  {sv:'Nationalmuseet',pron:'nat-see-oh-NAHL-moo-SEH-et',en:'The National Museum',src:'Babbel',cat:'Directions',p:0,n:1},
-  {sv:'Har du lust att...?',pron:'har doo loost at',en:'Do you feel like...? / Fancy...?',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Äta middag',pron:'EH-ta MID-ag',en:'To eat dinner',src:'Babbel',cat:'Restaurant',p:0,n:1},
-  {sv:'I helgen',pron:'ee HEL-yen',en:'At the weekend',src:'Babbel',cat:'Daily life',p:0,n:1},
-  {sv:'Stora torget',pron:'STOO-ra TOR-yet',en:'The main square',src:'Babbel',cat:'Directions',p:0,n:1},
-  {sv:'Tyvärr',pron:'tew-VEHR',en:'Unfortunately',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Har du tid på lördag kväll?',pron:'har doo teed paw LUR-dag kvel',en:'Are you free Saturday evening?',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Då gör vi det!',pron:'daw yur vee deh',en:"Then we'll do that! / It's a plan!",src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'När slutar du?',pron:'nehr SLOO-tar doo',en:'When do you finish?',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Det funkar',pron:'deh FOON-kar',en:'That works / that fits',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Det hinner jag inte',pron:'deh HIN-er yag IN-teh',en:"I can't make that / not enough time",src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Det tar en halvtimme',pron:'deh tahr en HALV-tim-eh',en:'It takes half an hour',src:'Babbel',cat:'Transport',p:0,n:1},
-  {sv:'Från jobbet till stan',pron:'frawn YOB-et til stahn',en:'From work to the city centre',src:'Babbel',cat:'Transport',p:0,n:1},
-  {sv:'En föreställning',pron:'en fur-eh-STEL-ning',en:'A screening / performance / show',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Den sena föreställningen',pron:'den SEH-na fur-eh-STEL-ning-en',en:'The late screening',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Ska vi ta den?',pron:'skah vee tah den',en:"Shall we see that one?",src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Innan',pron:'IN-an',en:'Before / beforehand',src:'Babbel',cat:'Daily life',p:0,n:1},
-  {sv:'Det blir perfekt!',pron:'deh bleer pehr-FEKT',en:"That'll be perfect!",src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Jag messar dig',pron:'yag MES-ar day',en:"I'll message you",src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Puss!',pron:'poos',en:'Bye! / Kiss! (casual sign-off)',src:'Babbel',cat:'Greetings',p:0,n:1},
-  {sv:'Slutsåld',pron:'SLOOT-sawld',en:'Sold out',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Hinner du till klockan...?',pron:'HIN-er doo til KLOK-an',en:'Can you make it by...?',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'I så fall',pron:'ee saw fal',en:'In that case',src:'Babbel',cat:'Social',p:0,n:1},
-  {sv:'Nära bion',pron:'NEH-ra BEE-on',en:'Close to the cinema',src:'Babbel',cat:'Directions',p:0,n:1},
-  {sv:'Popcorn och godis',pron:'POP-korn ok GOO-dis',en:'Popcorn and sweets',src:'Babbel',cat:'Restaurant',p:0,n:1},
-  {sv:'Ring när du har slutat jobbet!',pron:'ring nehr doo har SLOO-tat YOB-et',en:'Call when you finish work!',src:'Babbel',cat:'Social',p:0,n:1},
-];
 
-// ── STATE ──
-let catF='all', srcF='all', searchQ='', svVoice=null, curBtn=null, rate=0.85;
-let quizItems=[], quizIdx=0, quizScore=0, quizMode='priority', answered=false;
+  {sv:'Gott!',pron:'yot',en:'Good! / Tasty!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Jag vill ha något att äta',pron:'yag vil hah NAW-got at EH-ta',en:'I want something to eat',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence'},
+  {sv:'En smörgås',pron:'en SMUR-gaws',en:'A sandwich',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word'},
+  {sv:'Jag dricker hellre en juice',pron:'yag DRIK-er HEL-reh en joos',en:"I'd rather drink a juice",src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence'},
+  {sv:'Kan jag få en öl i stället för?',pron:'kan yag faw en URL ee STEL-et fur',en:'Can I have a beer instead?',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence'},
+  {sv:'Ja, visst',pron:'yah vist',en:'Yes, of course',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Jag kommer strax ut med...',pron:'yag KOM-er straks oot meh',en:"I'll be right out with...",src:'Babbel',cat:'Daily life',p:0,n:0,t:'sentence'},
+  {sv:'Smörgåsen dröjer lite',pron:'SMUR-gaw-sen DRUR-yer LEE-teh',en:'The sandwich will be a moment',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word'},
+  {sv:'Ingen fara!',pron:'ING-en FAH-ra',en:'No worries!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Vet du vad?',pron:'veht doo vah',en:'You know what?',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Hur kommer jag dit?',pron:'hoor KOM-er yag deet',en:'How do I get there?',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
+  {sv:'Kan ni rekommendera en restaurang?',pron:'kan nee reh-kom-en-DEH-ra en res-taw-RANG',en:'Can you recommend a restaurant?',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence'},
+  {sv:'I närheten av',pron:'ee NEHR-heh-ten av',en:'Near / in the vicinity of',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
+  {sv:'Är du här med bil?',pron:'ehr doo hehr meh beel',en:'Are you here by car?',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence'},
+  {sv:'Finns det en buss som man kan ta?',pron:'fins deh en boos som man kan tah',en:'Is there a bus one can take?',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence'},
+  {sv:'Det finns det',pron:'deh fins deh',en:'Yes there is',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Var ligger stranden?',pron:'vahr LIG-er STRAN-den',en:'Where is the beach?',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
+  {sv:'Den ligger till höger',pron:'den LIG-er til HUR-ger',en:"It's to the right",src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
+  {sv:'Det regnar i Skåne',pron:'deh REG-nar ee SKAW-neh',en:"It's raining in Skåne",src:'Babbel',cat:'Weather',p:0,n:0,t:'sentence'},
+  {sv:'Det är varmt och soligt',pron:'deh ehr varmt ok SOO-lit',en:"It's warm and sunny",src:'Babbel',cat:'Weather',p:0,n:0,t:'sentence'},
+  {sv:'Vart går tåget?',pron:'vart gawr TAW-get',en:'Where is the train going? (direction)',src:'Babbel',cat:'Transport',p:0,n:0,t:'word'},
+  {sv:'Var är bilen?',pron:'vahr ehr BEE-len',en:'Where is the car? (location)',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
+  {sv:'Det blåser mycket vid kusten',pron:'deh BLAW-ser MYK-eh veed KOOS-ten',en:"It's very windy at the coast",src:'Babbel',cat:'Weather',p:0,n:0,t:'sentence'},
+  {sv:'Jag vill åka till...',pron:'yag vil AW-ka til',en:'I want to go to...',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence'},
+  {sv:'Det låter bra. Tack för hjälpen!',pron:'deh LAW-ter brah. tak fur YELL-pen',en:'That sounds good. Thanks for the help!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'sentence'},
+  {sv:'Jag har ett par frågor',pron:'yag hahr et pahr FRAW-gor',en:'I have a couple of questions',src:'Babbel',cat:'Questions',p:0,n:0,t:'sentence'},
+  {sv:'Massiv!',pron:'ma-SEEV',en:'Awesome! (slang)',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Ingen orsak',pron:'ING-en OOR-sak',en:"You're welcome / No problem",src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Jag reser i Sverige',pron:'yag REH-ser ee SVEH-ree-yeh',en:'I am travelling in Sweden',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence'},
+  {sv:'Med tåg',pron:'meh tawg',en:'By train',src:'Babbel',cat:'Transport',p:0,n:0,t:'word'},
+  {sv:'Vad kul!',pron:'vah kool',en:'How fun!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Ha en trevlig semester!',pron:'hah en TREV-lig seh-MES-ter',en:'Have a lovely holiday!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'sentence'},
+  {sv:'Just det',pron:'yoost deh',en:"That's right / Oh yes",src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Finns det ett hotell i närheten?',pron:'fins deh et hoo-TEL ee NEHR-heh-ten',en:'Is there a hotel nearby?',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
+  {sv:'Gå till höger här ute',pron:'gaw til HUR-ger hehr OO-teh',en:'Turn right out here',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
+  {sv:'Sedan rakt fram',pron:'SEH-dan rakt fram',en:'Then straight ahead',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
+  {sv:'Det är en kilometer',pron:'deh ehr en SHEE-loh-meh-ter',en:'It is one kilometre',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
+  {sv:'Hen',pron:'hen',en:'They/them (gender-neutral singular)',src:'Babbel',cat:'Pronouns',p:0,n:0,t:'word'},
+  {sv:'Hen är gullig',pron:'hen ehr GUL-ig',en:'They are cute',src:'Babbel',cat:'Pronouns',p:0,n:0,t:'word'},
+  {sv:'Känner du...?',pron:'CHEN-er doo',en:'Do you know...? (a person)',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Han är rolig',pron:'han ehr ROO-lig',en:'He is funny',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Hur säger man det på svenska?',pron:'hoor SEH-yer man deh paw SVEN-ska',en:'How do you say that in Swedish?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
+  {sv:'Man får inte...',pron:'man fawr IN-teh',en:"One is not allowed to... / You can't...",src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Kan man bada här?',pron:'kan man BAH-da hehr',en:'Can one swim here?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
+  {sv:'Här får man inte röka!',pron:'hehr fawr man IN-teh RUR-ka',en:"You can't smoke here!",src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
+  {sv:'Jag saknar',pron:'yag SAK-nar',en:'I miss (someone/something)',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Jag kan verkligen rekommendera det',pron:'yag kan VEHR-kli-gen reh-kom-en-DEH-ra deh',en:'I can really recommend it',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
+  {sv:'Man lär sig mycket',pron:'man lehr say MYK-eh',en:'You learn a lot',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
+  {sv:'Ta till vänster',pron:'tah til VEN-ster',en:'Turn to the left',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
+  {sv:'Gå rakt fram',pron:'gaw rakt fram',en:'Go straight ahead',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
+  {sv:'Sväng höger vid statyn',pron:'sveng HUR-ger veed STAH-tewn',en:'Turn right at the statue',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
+  {sv:'Fortsätt längs den här gatan',pron:'FORT-set lengs den hehr GAH-tan',en:'Continue along this street',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
+  {sv:'Så är du framme',pron:'saw ehr doo FRAM-eh',en:"Then you're there / arrived",src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
+  {sv:'Vi hörs!',pron:'vee hurrs',en:"Talk soon!",src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Ha det bra!',pron:'hah deh brah',en:'Take care!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'God natt',pron:'good nat',en:'Good night',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'God kväll',pron:'good kvel',en:'Good evening',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Ses imorgon!',pron:'sehs ee-MOR-on',en:'See you tomorrow!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Ha en bra dag!',pron:'hah en brah dahg',en:'Have a great day!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'sentence'},
+  {sv:'Bibliotek',pron:'bib-lio-TEHK',en:'Library',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
+  {sv:'Postkontor',pron:'POST-kon-toor',en:'Post office',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
+  {sv:'Naturen är fantastisk',pron:'nah-TOO-ren ehr fan-TAS-tisk',en:'The scenery is fantastic',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Hoppas att du är nöjd',pron:'HOP-as at doo ehr noyd',en:'Hope you are satisfied',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
+  // Podcast PDF
+  {sv:'Hej!',pron:'yay',en:'Hey!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Hejsan!',pron:'YAY-san',en:'Hello there!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Hallå!',pron:'ha-LAW',en:'Hello!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Flytande',pron:'FLEW-tan-deh',en:'Fluent',src:'Podcast',cat:'Greetings',p:1,n:0,t:'word'},
+  {sv:'år',pron:'awr',en:'year(s)',src:'Podcast',cat:'Greetings',p:1,n:0,t:'word'},
+  {sv:'gammal',pron:'GAM-al',en:'old',src:'Podcast',cat:'Greetings',p:1,n:0,t:'word'},
+  {sv:'Jag pratar',pron:'yag PRAH-tar',en:'I speak',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Jag snackar (slang)',pron:'yag SNAK-ar',en:'I speak (slang)',src:'Podcast',cat:'Greetings',p:1,n:0,t:'word'},
+  {sv:'Att fika',pron:'at FEE-ka',en:'To have coffee & a pastry',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word'},
+  {sv:'Pussel',pron:'PUS-el',en:'Puzzles',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Att läsa',pron:'at LEH-sa',en:'To read',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Föräldrar',pron:'fur-EL-drar',en:'Parents',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
+  {sv:'Bröder',pron:'BRUR-der',en:'Brothers',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
+  {sv:'Systrar',pron:'SEWS-trar',en:'Sisters',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
+  {sv:'Genomsnittlig',pron:'yeh-nom-SNIT-lig',en:'Average',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
+  {sv:'Barnfri',pron:'BARN-free',en:'Childfree',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
+  {sv:'Ensam',pron:'EN-sam',en:'Alone',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
+  {sv:'En släkt',pron:'en slekt',en:'Family (relatives)',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
+  {sv:'Släktingar',pron:'SLEK-ting-ar',en:'Relatives',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
+  {sv:'En mormor',pron:'en MOR-mor',en:'Maternal grandma',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
+  {sv:'En morfar',pron:'en MOR-far',en:'Maternal grandpa',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
+  {sv:'En farmor',pron:'en FAR-mor',en:'Paternal grandma',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
+  {sv:'En farfar',pron:'en FAR-far',en:'Paternal grandpa',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
+  {sv:'En moster',pron:'en MOS-ter',en:'Maternal aunt',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
+  {sv:'En morbror',pron:'en MOR-broor',en:'Maternal uncle',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
+  {sv:'En faster',pron:'en FAS-ter',en:'Paternal aunt',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
+  {sv:'En farbror',pron:'en FAR-broor',en:'Paternal uncle',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
+  {sv:'Ett syskonbarn',pron:'et SEWS-kon-barn',en:'A niece/nephew',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
+  {sv:'En kvinna',pron:'en KVIN-a',en:'A woman',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
+  {sv:'En cykel',pron:'en SEW-kel',en:'A bicycle',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
+  {sv:'En dator',pron:'en DAH-tor',en:'A computer',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
+  {sv:'Snäll / snällt',pron:'snell / snelt',en:'Kind',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
+  {sv:'Dum / dumt',pron:'doom / domt',en:'Mean / stupid',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
+  {sv:'Fin / fint',pron:'feen / feent',en:'Pretty / nice',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
+  {sv:'Ful / fult',pron:'fool / foolt',en:'Ugly',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
+  {sv:'Hon, hennes',pron:'hoon, HEN-es',en:'She, her',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
+  {sv:'De, deras',pron:'dom, DEH-ras',en:'They, their',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
+  {sv:'Ni, er',pron:'nee, ehr',en:'You (plural), your',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
+  {sv:'På morgonen',pron:'paw MOR-on-en',en:'In the morning',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word'},
+  {sv:'På förmiddagen',pron:'paw fur-MID-ah-gen',en:'Before lunch',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'På eftermiddagen',pron:'paw EF-ter-mid-ah-gen',en:'In the afternoon',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'På kvällen',pron:'paw KVEL-en',en:'In the evening',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'På natten',pron:'paw NAT-en',en:'At night',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Att vakna',pron:'at VAK-na',en:'To wake up',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Att äta',pron:'at EH-ta',en:'To eat',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Att jobba',pron:'at YOB-a',en:'To work',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Att träna',pron:'at TREH-na',en:'To exercise',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Att laga',pron:'at LAH-ga',en:'To cook',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Att somna',pron:'at SOM-na',en:'To fall asleep',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Alltid',pron:'AL-teed',en:'Always',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word'},
+  {sv:'Aldrig',pron:'AL-drig',en:'Never',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word'},
+  {sv:'Oftast',pron:'OF-tast',en:'Usually',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Ungefär',pron:'OON-geh-fehr',en:'Approximately',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Morgontrött',pron:'MOR-on-trot',en:'Tired in the morning',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Morgonpigg',pron:'MOR-on-pig',en:'Energized in the morning',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Jag slappnar av',pron:'yag SLAP-nar av',en:'I relax',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
+  {sv:'Jag skrollar på mobilen',pron:'yag SKROL-ar paw moo-BEE-len',en:'I scroll on my phone',src:'Podcast',cat:'Daily life',p:1,n:0,t:'sentence'},
+  {sv:'Jo',pron:'yoo',en:'Actually, yes',src:'Podcast',cat:'Questions',p:0,n:0,t:'word'},
+  {sv:'Faktiskt',pron:'FAK-tiskt',en:'Actually',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
+  {sv:'Visst',pron:'vist',en:'Certainly',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
+  {sv:'Heller',pron:'HEL-er',en:'Either (in negatives)',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
+  {sv:'Alls',pron:'als',en:'At all',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
+  {sv:'Vem',pron:'vem',en:'Who/whom',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
+  {sv:'Vilken/vilket/vilka',pron:'VIL-ken/VIL-ket/VIL-ka',en:'Which',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
+  {sv:'Därför att',pron:'DEHR-fur at',en:'Because',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
+  {sv:'För att',pron:'fur at',en:'Because / in order to',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
+  {sv:'På grund av',pron:'paw grond av',en:'Because of',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
+  {sv:'En vinter',pron:'en VIN-ter',en:'A winter',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
+  {sv:'En sommar',pron:'en SOM-ar',en:'A summer',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
+  {sv:'En höst',pron:'en hurst',en:'Autumn/fall',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
+  {sv:'Solig/soligt',pron:'SOO-lig/SOO-ligt',en:'Sunny',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
+  {sv:'Blåsig/blåsigt',pron:'BLAW-sig/BLAW-sigt',en:'Windy',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
+  {sv:'Molnig/molnigt',pron:'MOL-nig/MOL-nigt',en:'Cloudy',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
+  {sv:'Kall/kallare/kallast',pron:'kal/KAL-areh/KAL-ast',en:'Cold/colder/coldest',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
+  {sv:'Varm/varmare/varmast',pron:'varm/VAR-mareh/VAR-mast',en:'Warm/warmer/warmest',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
+  {sv:'Inomhus',pron:'IN-om-hoos',en:'Indoors',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
+  {sv:'Utomhus',pron:'OOT-om-hoos',en:'Outdoors',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
+  {sv:'Välkomna!',pron:'VEL-kom-na',en:'Welcome!',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
+  {sv:'Har ni bokat bord?',pron:'har nee BOO-kat boord',en:'Have you booked a table?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
+  {sv:'Vill ni sitta inne eller ute?',pron:'vil nee SIT-a IN-eh EL-er OO-teh',en:'Inside or outside?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
+  {sv:'Följ med mig',pron:'fuly meh mig',en:'Follow me',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
+  {sv:'Jag vill gärna öva min svenska',pron:'yag vil YEHR-na UR-va min SVEN-ska',en:"I'd like to practise my Swedish",src:'Podcast',cat:'Greetings',p:0,n:0,t:'sentence'},
+  {sv:'Är ni redo att beställa?',pron:'ehr nee REH-do at beh-STEL-a',en:'Are you ready to order?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
+  {sv:'Jag tar köttbullarna, tack',pron:'yag tahr CHET-bul-arna tak',en:"I'll take the meatballs, thanks",src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
+  {sv:'Ingår påtår?',pron:'IN-gawr PAW-tawr',en:'Is a refill included?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
+  {sv:'Vad rekommenderar du?',pron:'vah reh-kom-en-DEH-rar doo',en:'What do you recommend?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
+  {sv:'Jag skulle vilja ha...',pron:'yag SKOOL-eh VIL-ya hah',en:'I would like to have...',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
+  {sv:'Smaklig måltid!',pron:'SMAHK-lig MAWL-teed',en:'Enjoy your meal!',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
+  {sv:'Tusen tack!',pron:'TOO-sen tak',en:'Thank you so much!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Kan vi få notan, tack?',pron:'kan vee faw NOO-tan tak',en:'Can we get the bill please?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
+  {sv:'Det var supergott!',pron:'deh var SOO-per-yot',en:'That was delicious!',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
+  {sv:'Tack, hejdå!',pron:'tak HAY-daw',en:'Thank you, goodbye!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
+  {sv:'Mat / Matt',pron:'maht / mat',en:'Food (long) / Dull (short vowel)',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word'},
+  {sv:'Glas / Glass',pron:'glahs / glas',en:'Glass / Ice cream',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word'},
+  {sv:'Skål!',pron:'skawl',en:'Cheers!',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word'},
+  {sv:'Gift',pron:'yift',en:'Married / Poison (same spelling!)',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word'},
+  {sv:'Kär',pron:'chehr',en:'In love',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word'},
+  // ── BABBEL batch 3 — plans & languages ──
+  {sv:'Vill du göra något i kväll?',pron:'vil doo YUR-a NAW-got ee kvel',en:'Do you want to do something this evening?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
+  {sv:'Gärna',pron:'YEHR-na',en:"I'd love to / gladly",src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Jag måste hem',pron:'yag MOS-teh hem',en:'I have to go home',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word'},
+  {sv:'Tvätta',pron:'TVET-a',en:'To do laundry / to wash',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word'},
+  {sv:'Ska vi ta en öl runt åtta?',pron:'skah vee tah en URL roont OT-a',en:'Shall we grab a beer around eight?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
+  {sv:'Gå ut och äta',pron:'gaw oot ok EH-ta',en:'Go out and eat',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence'},
+  {sv:'Kanske',pron:'KAN-sheh',en:'Maybe / perhaps',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Vad finns det där du bor?',pron:'vah fins deh dehr doo boor',en:'What is there where you live?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
+  {sv:'En pizzeria',pron:'en pit-seh-REE-a',en:'A pizzeria',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word'},
+  {sv:'En sushirestaurang',pron:'en SOO-shee-res-taw-RANG',en:'A sushi restaurant',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word'},
+  {sv:'Inget kebabställe',pron:'IN-get keh-BAB-stel-eh',en:'No kebab place',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word'},
+  {sv:'Var i världen',pron:'vahr ee VEHR-lden',en:'Where in the world',src:'Babbel',cat:'Questions',p:0,n:0,t:'word'},
+  {sv:'Förutom',pron:'fur-OO-tom',en:'Besides / except for',src:'Babbel',cat:'Questions',p:0,n:0,t:'word'},
+  {sv:'Ingenstans',pron:'ING-en-stans',en:'Nowhere',src:'Babbel',cat:'Questions',p:0,n:0,t:'word'},
+  {sv:'Jag lär mig',pron:'yag lehr may',en:'I am learning',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word'},
+  {sv:'Det är min läxa',pron:'deh ehr min LEK-sa',en:"That's my homework",src:'Babbel',cat:'Daily life',p:0,n:0,t:'sentence'},
+  {sv:'Vad mycket du kan!',pron:'vah MYK-eh doo kan',en:'You know so much!',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
+  {sv:'Fast',pron:'fast',en:'But / though / however',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Precis som',pron:'preh-SEES som',en:'Just like / exactly as',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Jag vet',pron:'yag veht',en:'I know',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  // Countries & languages
+  {sv:'Storbritannien',pron:'stor-BRIT-an-yen',en:'Great Britain',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Australien',pron:'aw-STRAH-lee-en',en:'Australia',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Nya Zeeland',pron:'newa ZEH-land',en:'New Zealand',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Kanada',pron:'KAN-a-da',en:'Canada',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Irland',pron:'EER-land',en:'Ireland',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Malta',pron:'MAL-ta',en:'Malta',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Spanien',pron:'SPAH-nee-en',en:'Spain',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Latinamerika',pron:'lah-teen-ah-MEH-ree-ka',en:'Latin America',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Brasilien',pron:'bra-SEE-lee-en',en:'Brasil',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Portugal',pron:'POR-too-gal',en:'Portugal',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Kinesiska',pron:'shee-NEH-siska',en:'Chinese (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Spanska',pron:'SPAN-ska',en:'Spanish (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  {sv:'Portugisiska',pron:'por-too-YEE-siska',en:'Portuguese (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
+  // ── BABBEL batch 4 — family positions, making plans, cinema ──
+  {sv:'Tvillingar',pron:'TVIL-ing-ar',en:'Twins',src:'Babbel',cat:'Family',p:0,n:1,t:'word'},
+  {sv:'Bredvid',pron:'breh-VEED',en:'Next to / beside',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
+  {sv:'Min farfar står bredvid henne',pron:'min FAR-far stawr breh-VEED HEN-eh',en:'My paternal grandpa is standing next to her',src:'Babbel',cat:'Family',p:0,n:1,t:'sentence'},
+  {sv:'Det här / den här',pron:'deh hehr / den hehr',en:'This (ett-word) / this (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:1,t:'sentence'},
+  {sv:'Det där / den där',pron:'deh dehr / den dehr',en:'That (ett-word) / that (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:1,t:'sentence'},
+  {sv:'Dina föräldrar',pron:'DEE-na fur-EL-drar',en:'Your parents',src:'Babbel',cat:'Family',p:0,n:1,t:'word'},
+  {sv:'Min kompis',pron:'min KOM-pis',en:'My friend (informal)',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Mina föräldrar bor vid havet',pron:'MEE-na fur-EL-drar boor veed HAH-vet',en:'My parents live by the sea',src:'Babbel',cat:'Family',p:0,n:1,t:'sentence'},
+  {sv:'Vid havet',pron:'veed HAH-vet',en:'By the sea',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
+  {sv:'En utbytesstudent',pron:'en OOT-bewt-es-stoo-DENT',en:'An exchange student',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'I vår klass',pron:'ee vawr klas',en:'In our class',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Två stycken',pron:'tvaw STEW-ken',en:'Two of them / two pieces',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Just nu',pron:'yoost noo',en:'Right now',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word'},
+  {sv:'Jaså?',pron:'yah-SAW',en:'Oh really? / Is that so?',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Väldigt trevlig',pron:'VEL-digt TREV-lig',en:'Very nice / pleasant',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Jag borde prata med honom',pron:'yag BOO-reh PRAH-ta meh HON-om',en:'I should talk to him',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
+  {sv:'Man träffar sällan folk',pron:'man TREF-ar SEL-an folk',en:'You rarely meet people',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
+  {sv:'Åtminstone',pron:'awt-MIN-sto-neh',en:'At least',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Vänta',pron:'VEN-ta',en:'Wait',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Hur så?',pron:'hoor saw',en:'How so? / What do you mean?',src:'Babbel',cat:'Questions',p:0,n:1,t:'word'},
+  {sv:'Va?',pron:'vah',en:'What? / Huh? (informal)',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Vilket sammanträffande!',pron:'VIL-ket SAM-an-tref-an-deh',en:'What a coincidence!',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Ja, verkligen',pron:'yah VEHR-kli-gen',en:'Yes, really / indeed',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Okej, fortsätt',pron:'oh-KAY FORT-set',en:'Okay, continue / go on',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Bakom',pron:'BAH-kom',en:'Behind',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
+  {sv:'Tillsammans med',pron:'til-SAM-ans meh',en:'Together with',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Jag är förvirrad',pron:'yag ehr fur-VIR-ad',en:'I am confused',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Gå på bio',pron:'gaw paw BEE-oo',en:'Go to the cinema',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Jag skulle gärna gå på bio',pron:'yag SKOOL-eh YEHR-na gaw paw BEE-oo',en:"I'd love to go to the cinema",src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
+  {sv:'Jag brukar ofta',pron:'yag BROO-kar OF-ta',en:'I often tend to / I usually',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word'},
+  {sv:'Nationalmuseet',pron:'nat-see-oh-NAHL-moo-SEH-et',en:'The National Museum',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
+  {sv:'Har du lust att...?',pron:'har doo loost at',en:'Do you feel like...? / Fancy...?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
+  {sv:'Äta middag',pron:'EH-ta MID-ag',en:'To eat dinner',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word'},
+  {sv:'I helgen',pron:'ee HEL-yen',en:'At the weekend',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word'},
+  {sv:'Stora torget',pron:'STOO-ra TOR-yet',en:'The main square',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
+  {sv:'Tyvärr',pron:'tew-VEHR',en:'Unfortunately',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Har du tid på lördag kväll?',pron:'har doo teed paw LUR-dag kvel',en:'Are you free Saturday evening?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
+  {sv:'Då gör vi det!',pron:'daw yur vee deh',en:"Then we'll do that! / It's a plan!",src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
+  {sv:'När slutar du?',pron:'nehr SLOO-tar doo',en:'When do you finish?',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Det funkar',pron:'deh FOON-kar',en:'That works / that fits',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Det hinner jag inte',pron:'deh HIN-er yag IN-teh',en:"I can't make that / not enough time",src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
+  {sv:'Det tar en halvtimme',pron:'deh tahr en HALV-tim-eh',en:'It takes half an hour',src:'Babbel',cat:'Transport',p:0,n:1,t:'sentence'},
+  {sv:'Från jobbet till stan',pron:'frawn YOB-et til stahn',en:'From work to the city centre',src:'Babbel',cat:'Transport',p:0,n:1,t:'sentence'},
+  {sv:'En föreställning',pron:'en fur-eh-STEL-ning',en:'A screening / performance / show',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Den sena föreställningen',pron:'den SEH-na fur-eh-STEL-ning-en',en:'The late screening',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Ska vi ta den?',pron:'skah vee tah den',en:"Shall we see that one?",src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
+  {sv:'Innan',pron:'IN-an',en:'Before / beforehand',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word'},
+  {sv:'Det blir perfekt!',pron:'deh bleer pehr-FEKT',en:"That'll be perfect!",src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Jag messar dig',pron:'yag MES-ar day',en:"I'll message you",src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Puss!',pron:'poos',en:'Bye! / Kiss! (casual sign-off)',src:'Babbel',cat:'Greetings',p:0,n:1,t:'word'},
+  {sv:'Slutsåld',pron:'SLOOT-sawld',en:'Sold out',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Hinner du till klockan...?',pron:'HIN-er doo til KLOK-an',en:'Can you make it by...?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
+  {sv:'I så fall',pron:'ee saw fal',en:'In that case',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
+  {sv:'Nära bion',pron:'NEH-ra BEE-on',en:'Close to the cinema',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
+  {sv:'Popcorn och godis',pron:'POP-korn ok GOO-dis',en:'Popcorn and sweets',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word'},
+  {sv:'Ring när du har slutat jobbet!',pron:'ring nehr doo har SLOO-tat YOB-et',en:'Call when you finish work!',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
+
+];
+</script>
+<script>
+// ── CUSTOM VOCAB (localStorage) ──
+function loadCustom(){
+  try{ return JSON.parse(localStorage.getItem('sv_custom')||'[]'); }catch(e){return [];}
+}
+function saveCustom(arr){ localStorage.setItem('sv_custom',JSON.stringify(arr)); }
+let CUSTOM = loadCustom();
+
+function allVocab(){ return [...VOCAB, ...CUSTOM.map(c=>({...c,src:'Custom',n:0}))]; }
 
 // ── VOICE ──
+let svVoice=null, spRate=0.85, curBtn=null;
 function loadVoice(){
   const vv=window.speechSynthesis.getVoices();
   svVoice=vv.find(v=>v.lang.startsWith('sv'))||null;
-  document.getElementById('voice-label').textContent=svVoice?'('+svVoice.name+')':'(no Swedish voice — try Chrome)';
+  document.getElementById('vlabel').textContent=svVoice?'('+svVoice.name+')':'(no sv voice — use Chrome)';
 }
 if(window.speechSynthesis){window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();}
-
 function speak(text,btn){
   if(!window.speechSynthesis)return;
   window.speechSynthesis.cancel();
   if(curBtn&&curBtn!==btn){curBtn.classList.remove('playing');curBtn.textContent='🔊';}
   const u=new SpeechSynthesisUtterance(text);
   if(svVoice)u.voice=svVoice;
-  u.lang='sv-SE';u.rate=rate;
-  btn.classList.add('playing');btn.textContent='⏸';
-  curBtn=btn;
+  u.lang='sv-SE';u.rate=spRate;
+  btn.classList.add('playing');btn.textContent='⏸';curBtn=btn;
   u.onend=()=>{btn.classList.remove('playing');btn.textContent='🔊';curBtn=null;};
   window.speechSynthesis.speak(u);
 }
+function setSpd(r,btn){spRate=r;document.querySelectorAll('.spd').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
 
-function setSpeed(r,btn){
-  rate=r;
-  document.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-}
-
-// ── BROWSE ──
+// ── BROWSE STATE ──
+let catF='all',srcF='all',typeF='all',searchQ='';
 function filtered(){
-  let items=VOCAB;
+  let items=allVocab();
   if(catF==='priority') items=items.filter(v=>v.p);
   else if(catF==='new') items=items.filter(v=>v.n);
   else if(catF!=='all') items=items.filter(v=>v.cat===catF);
   if(srcF!=='all') items=items.filter(v=>v.src===srcF);
+  if(typeF!=='all') items=items.filter(v=>(v.t||'word')===typeF);
   if(searchQ){const q=searchQ.toLowerCase();items=items.filter(v=>v.sv.toLowerCase().includes(q)||v.en.toLowerCase().includes(q));}
   return items;
 }
-
 function renderList(){
   const items=filtered();
-  document.getElementById('list-showing').textContent=`Showing ${items.length} of ${VOCAB.length} entries`;
-  const list=document.getElementById('list');
+  document.getElementById('lshow').textContent=`Showing ${items.length} of ${allVocab().length} entries`;
+  document.getElementById('sn-total').textContent=allVocab().length;
+  document.getElementById('sn-pr').textContent=allVocab().filter(v=>v.p).length;
+  const list=document.getElementById('vlist');
   list.innerHTML='';
   if(!items.length){list.innerHTML='<div class="empty">No entries found</div>';return;}
-  items.forEach((v,i)=>{
+  items.forEach(v=>{
     const d=document.createElement('div');
-    d.className='vocab-card'+(v.p?' pr':v.n?' nw':'');
-    const badge=v.p?'<span class="badge badge-pr">review</span>':v.n?'<span class="badge badge-new">new</span>':'';
-    const srcCls=v.src==='Babbel'?'src-babbel':'src-podcast';
-    d.innerHTML=`<div class="card-body"><div class="card-sv">${v.sv} ${badge}</div><div class="card-pron">${v.pron}</div><div class="card-en">${v.en}</div><div class="card-meta"><span class="src-tag ${srcCls}">${v.src}</span><span class="cat-tag">${v.cat}</span></div></div><button class="speak-btn" onclick="speak('${v.sv.replace(/'/g,"\\'")}',this)">🔊</button>`;
+    d.className='card'+(v.p?' pr':v.n?' nw':'');
+    const sc=v.src==='Babbel'?'sbabbel':v.src==='Podcast'?'spodcast':'sbabbel';
+    const scl=v.src==='Custom'?'background:rgba(124,111,224,.15);color:var(--acc2)':'';
+    const badge=v.p?'<span class="bdg bdg-pr">review</span>':v.n?'<span class="bdg bdg-nw">new</span>':'';
+    const formsHtml=v.forms?`<div class="forms-row">${v.forms.split('·').map(f=>f.trim()).filter(Boolean).map(f=>{const parts=f.split(':');return parts.length===2?`<span class="form-chip"><b>${parts[0].trim()}</b>: ${parts[1].trim()}</span>`:`<span class="form-chip">${f}</span>`;}).join('')}</div>`:'';
+    const safe=v.sv.replace(/'/g,"\\'");
+    d.innerHTML=`<div class="cbody"><div class="csv">${v.sv} ${badge}</div><div class="cpron">${v.pron||''}</div><div class="cen">${v.en}</div>${formsHtml}<div class="cmeta"><span class="stag ${sc}" style="${scl}">${v.src}</span><span class="ctag">${v.cat}</span></div></div><button class="spkbtn" onclick="speak('${safe}',this)">🔊</button>`;
     list.appendChild(d);
   });
 }
-
-function setCat(f,btn){
-  catF=f;
-  document.querySelectorAll('#cat-filters .filter-pill').forEach(b=>b.classList.remove('on','pr-on','new-on'));
-  btn.classList.add(f==='priority'?'pr-on':f==='new'?'new-on':'on');
-  renderList();
-}
-
-function setSrc(f,btn){
-  srcF=f;
-  document.querySelectorAll('#src-filters .filter-pill').forEach(b=>b.classList.remove('babbel-on','podcast-on'));
-  btn.classList.add(f==='Podcast'?'podcast-on':'babbel-on');
-  renderList();
-}
-
+function setCat(f,btn){catF=f;document.querySelectorAll('#cat-row .pill').forEach(b=>b.classList.remove('on','pr','nw'));btn.classList.add(f==='priority'?'pr':f==='new'?'nw':'on');renderList();}
+function setSrc(f,btn){srcF=f;document.querySelectorAll('#src-row .pill').forEach(b=>b.classList.remove('on','ba','po'));btn.classList.add(f==='Podcast'?'po':'ba');renderList();}
 function doSearch(q){searchQ=q;renderList();}
+function setType(f,btn){typeF=f;document.querySelectorAll('#type-row .pill').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderList();}
 
-// ── QUIZ ──
-function setQuizMode(mode,btn){
-  quizMode=mode;
-  document.querySelectorAll('#screen-quiz .filter-scroll .filter-pill').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  startQuiz();
-}
-
+// ── FLASHCARDS ──
+let qItems=[],qIdx=0,qCorrect=0,qWrong=0,qMode='all',qRevealed=false;
+function setQMode(m,btn){qMode=m;document.querySelectorAll('.qmode').forEach(b=>b.classList.remove('on'));btn.classList.add('on');startQuiz();}
 function startQuiz(){
-  let pool=VOCAB;
-  if(quizMode==='priority') pool=VOCAB.filter(v=>v.p);
-  else if(quizMode==='new') pool=VOCAB.filter(v=>v.n);
-  quizItems=[...pool].sort(()=>Math.random()-0.5);
-  quizIdx=0; quizScore=0;
-  renderQuiz();
+  let pool=allVocab();
+  if(qMode==='priority') pool=pool.filter(v=>v.p);
+  else if(qMode==='new') pool=pool.filter(v=>v.n);
+  else if(qMode==='custom') pool=CUSTOM;
+  qItems=[...pool].sort(()=>Math.random()-.5);
+  qIdx=0;qCorrect=0;qWrong=0;renderCard();
 }
-
-function renderQuiz(){
-  updateQStats();
-  const wrap=document.getElementById('quiz-wrap');
-  if(quizIdx>=quizItems.length){
-    const pct=Math.round(quizScore/quizItems.length*100);
-    wrap.innerHTML=`<div class="quiz-score"><div class="score-num">${pct}%</div><div class="score-label">${quizScore} of ${quizItems.length} correct</div><div class="score-sub">${pct>=80?'Excellent! 🎉':pct>=60?'Good work! 💪':'Keep practising! 📚'}</div><button class="restart-btn" onclick="startQuiz()">Try again</button></div>`;
+function renderCard(){
+  const wrap=document.getElementById('qcontent');
+  if(!qItems.length){wrap.innerHTML='<div class="empty" style="padding:40px">No words in this set yet.</div>';return;}
+  if(qIdx>=qItems.length){
+    const pct=qItems.length?Math.round(qCorrect/qItems.length*100):0;
+    wrap.innerHTML=`<div class="qscore-screen"><div class="qscore-n">${pct}%</div><div class="qscore-l">${qCorrect} / ${qItems.length} known</div><div class="qscore-s">${pct>=80?'Excellent! 🎉':pct>=60?'Good work! 💪':'Keep going! 📚'}</div><button class="qrestart" onclick="startQuiz()">Try again</button></div>`;
     return;
   }
-  const v=quizItems[quizIdx];
-  answered=false;
-  const pips=quizItems.map((_,i)=>`<div class="quiz-pip${i<quizIdx?' done':i===quizIdx?' current':''}"></div>`).join('');
-  wrap.innerHTML=`<div class="quiz-progress">${pips}</div>
-  <div class="quiz-card">
-    <div class="quiz-q-label">Translate to Swedish</div>
-    <div class="quiz-q">${v.en}</div>
-    <div class="quiz-hint">Category: ${v.cat} · ${v.src}</div>
-    <input class="quiz-input" id="quiz-in" type="text" placeholder="Type in Swedish..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkAnswer()">
-    <div class="quiz-feedback" id="quiz-fb"></div>
+  qRevealed=false;
+  const v=qItems[qIdx];
+  const pips=qItems.slice(0,Math.min(qItems.length,30)).map((_,i)=>`<div class="qpip${i<qIdx?' done':i===qIdx?' cur':''}"></div>`).join('');
+  const formsHtml=v.forms?`<div class="fc-forms-fc">${v.forms}</div>`:'';
+  wrap.innerHTML=`
+  <div class="qstats">
+    <div class="qstat"><div class="qstat-n" style="color:var(--grn)">${qCorrect}</div><div class="qstat-l">known</div></div>
+    <div class="qstat"><div class="qstat-n" style="color:var(--txt3)">${qItems.length-qIdx}</div><div class="qstat-l">left</div></div>
+    <div class="qstat"><div class="qstat-n" style="color:var(--red)">${qWrong}</div><div class="qstat-l">missed</div></div>
   </div>
-  <div class="quiz-actions">
-    <button class="quiz-btn check" onclick="checkAnswer()">Check</button>
-    <button class="quiz-btn next" onclick="nextQ()">Skip →</button>
-    <button class="quiz-btn speak" onclick="speakCurrent()">🔊</button>
+  <div class="qprog">${pips}</div>
+  <div class="flashcard" onclick="revealCard()" id="fc-card">
+    <div class="fc-hint">Translate to Swedish</div>
+    <div class="fc-q">${v.en}</div>
+    <div class="fc-sub">${v.cat} · ${v.src}</div>
+    <div class="tap-hint">Tap to reveal</div>
+    <div class="fc-reveal" id="fc-reveal">
+      <div class="fc-ans">${v.sv}</div>
+      <div class="fc-pron">${v.pron||''}</div>
+      ${formsHtml}
+      <button onclick="event.stopPropagation();speak('${v.sv.replace(/'/g,"\\'")}',this)" style="margin-top:10px;background:var(--sur2);border:1px solid var(--bdr);border-radius:20px;padding:6px 16px;color:var(--txt2);cursor:pointer;font-size:13px">🔊 Listen</button>
+    </div>
+  </div>
+  <div class="fc-actions" id="fc-actions" style="display:none">
+    <button class="fc-btn fc-no" onclick="markCard(false)">✗ Didn't know</button>
+    <button class="fc-btn fc-yes" onclick="markCard(true)">✓ Got it</button>
   </div>`;
-  setTimeout(()=>{ const el=document.getElementById('quiz-in'); if(el) el.focus(); },100);
+}
+function revealCard(){
+  if(qRevealed)return;
+  qRevealed=true;
+  document.getElementById('fc-reveal').classList.add('show');
+  document.getElementById('fc-actions').style.display='flex';
+  const card=document.getElementById('fc-card');
+  card.querySelector('.tap-hint').style.display='none';
+}
+function markCard(knew){
+  if(knew)qCorrect++;else qWrong++;
+  qIdx++;renderCard();
 }
 
-function checkAnswer(){
-  if(answered)return;
-  const v=quizItems[quizIdx];
-  const inp=document.getElementById('quiz-in');
-  const fb=document.getElementById('quiz-fb');
-  const raw=inp.value.trim();
-  if(!raw)return;
-  answered=true;
-  const norm=s=>s.toLowerCase().replace(/[!?.]/g,'').trim();
-  const correct=norm(raw)===norm(v.sv);
-  inp.classList.add(correct?'correct':'wrong');
-  if(correct){
-    quizScore++;
-    fb.className='quiz-feedback correct';
-    fb.textContent='✓ Correct!';
-  } else {
-    fb.className='quiz-feedback wrong';
-    fb.innerHTML=`✗ Answer: <strong>${v.sv}</strong> · ${v.pron}`;
+// ── AI EXPAND ──
+let expandedData=null;
+async function doExpand(){
+  const input=document.getElementById('ai-input').value.trim();
+  if(!input)return;
+  const spin=document.getElementById('ai-spin');
+  const lbl=document.getElementById('ai-label');
+  const res=document.getElementById('ai-result');
+  const prev=document.getElementById('form-preview');
+  const saveBtn=document.getElementById('save-expanded-btn');
+  spin.style.display='inline-block';lbl.textContent='Analysing…';
+  res.classList.remove('show');prev.classList.remove('show');saveBtn.style.display='none';
+  expandedData=null;
+  const prompt=`You are a Swedish language expert. The user entered: "${input}"
+Respond ONLY with a JSON object, no markdown, no explanation:
+{
+  "sv": "canonical Swedish form",
+  "pron": "pronunciation guide in simple English phonetics (CAPS for stress)",
+  "en": "English translation",
+  "cat": "one of: Greetings|Family|People|Daily life|Weather|Restaurant|Questions|Directions|Transport|Social|Pronouns|Pronunciation",
+  "forms": "key grammatical forms separated by · e.g. plural: hundar · definite: hunden · past tense: åt · present: äter · infinitive: att äta",
+  "notes": "one short grammar tip (max 15 words)"
+}
+If input is a phrase/sentence, set forms to "" and give a usage note instead.`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:400,messages:[{role:'user',content:prompt}]})});
+    const data=await r.json();
+    const text=data.content[0].text.replace(/```json|```/g,'').trim();
+    expandedData=JSON.parse(text);
+    document.getElementById('fp-sv').textContent=expandedData.sv;
+    document.getElementById('fp-pron').textContent=expandedData.pron;
+    document.getElementById('fp-en').textContent=expandedData.en;
+    document.getElementById('fp-forms').textContent=expandedData.forms+(expandedData.notes?'\n💡 '+expandedData.notes:'');
+    prev.classList.add('show');
+    res.textContent='';res.classList.remove('show');
+    saveBtn.style.display='block';
+  }catch(e){
+    res.textContent='Could not connect to Claude API. Check your internet connection.';
+    res.classList.add('show');
   }
-  updateQStats();
+  spin.style.display='none';lbl.textContent='Expand & generate forms';
 }
-
-function nextQ(){quizIdx++;renderQuiz();}
-
-function speakCurrent(){
-  if(quizIdx<quizItems.length){
-    const v=quizItems[quizIdx];
-    const dummy=document.createElement('button');
-    speak(v.sv,dummy);
-  }
+function saveExpanded(){
+  if(!expandedData)return;
+  const entry={sv:expandedData.sv,pron:expandedData.pron,en:expandedData.en,cat:expandedData.cat||'Social',forms:expandedData.forms||'',p:0,n:1,src:'Custom'};
+  CUSTOM.push(entry);saveCustom(CUSTOM);
+  document.getElementById('ai-input').value='';
+  document.getElementById('form-preview').classList.remove('show');
+  document.getElementById('save-expanded-btn').style.display='none';
+  expandedData=null;
+  renderCustomList();
+  document.getElementById('sn-total').textContent=allVocab().length;
+  alert('Added: '+entry.sv);
 }
-
-function updateQStats(){
-  document.getElementById('q-score').textContent=quizScore;
-  document.getElementById('q-of').textContent=Math.max(0,quizItems.length-quizIdx);
+function manualAdd(){
+  const sv=document.getElementById('m-sv').value.trim();
+  const en=document.getElementById('m-en').value.trim();
+  if(!sv||!en){alert('Please fill in at least Swedish and English fields.');return;}
+  const entry={
+    sv,pron:document.getElementById('m-pron').value.trim(),
+    en,cat:document.getElementById('m-cat').value,
+    forms:document.getElementById('m-forms').value.trim(),
+    p:document.getElementById('m-pr').checked?1:0,n:1,src:'Custom'
+  };
+  CUSTOM.push(entry);saveCustom(CUSTOM);
+  ['m-sv','m-pron','m-en','m-forms'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('m-pr').checked=false;
+  renderCustomList();
+  document.getElementById('sn-total').textContent=allVocab().length;
+  alert('Added: '+sv);
+}
+function deleteCustom(i){
+  if(!confirm('Remove "'+CUSTOM[i].sv+'"?'))return;
+  CUSTOM.splice(i,1);saveCustom(CUSTOM);renderCustomList();
+  document.getElementById('sn-total').textContent=allVocab().length;
+}
+function renderCustomList(){
+  const sec=document.getElementById('custom-list-section');
+  const list=document.getElementById('custom-list');
+  document.getElementById('custom-count').textContent=CUSTOM.length;
+  if(!CUSTOM.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  list.innerHTML=CUSTOM.map((v,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bdr)"><div style="flex:1"><div style="font-weight:600;font-size:14px">${v.sv}</div><div style="font-size:12px;color:var(--txt3)">${v.en}</div></div><button onclick="deleteCustom(${i})" style="background:rgba(224,112,96,.15);border:none;border-radius:var(--rad2);padding:6px 12px;color:var(--red);cursor:pointer;font-size:13px">Remove</button></div>`).join('');
 }
 
 // ── NAV ──
-function showScreen(name){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('screen-'+name).classList.add('active');
-  document.getElementById('nav-'+name).classList.add('active');
-  if(name==='quiz'&&quizItems.length===0) startQuiz();
+function showScreen(name,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('screen-'+name).classList.add('on');
+  if(btn){
+    btn.classList.add('on');
+    const nb=document.getElementById('nav-'+name);
+    if(nb)nb.classList.add('on');
+  }
+  if(name==='quiz'&&!qItems.length)startQuiz();
+}
+
+// ── BULK EXPAND ──
+const formsCache = JSON.parse(localStorage.getItem('sv_forms') || '{}');
+// Apply cached forms to VOCAB on load
+VOCAB.forEach(v => { if(formsCache[v.sv]) v.forms = formsCache[v.sv]; });
+
+async function bulkExpand(){
+  const btn = document.getElementById('bulk-btn');
+  const prog = document.getElementById('bulk-progress');
+  const status = document.getElementById('bulk-status');
+  const bar = document.getElementById('bulk-bar');
+  
+  const toExpand = VOCAB.filter(v => (v.t||'word')==='word' && !v.forms);
+  if(!toExpand.length){ alert('All words already have forms!'); return; }
+  
+  btn.disabled = true; btn.textContent = 'Running...';
+  prog.style.display = 'block';
+  let done = 0;
+  
+  // Process in batches of 20
+  const BATCH = 20;
+  for(let i = 0; i < toExpand.length; i += BATCH){
+    const batch = toExpand.slice(i, i + BATCH);
+    const items = batch.map((v,j) => `${j+1}. sv="${v.sv}" en="${v.en}"`).join('\n');
+    const prompt = `Swedish language expert. For each word/phrase return ONLY a JSON array, no markdown:\n[{"sv":"exact input","forms":"forms separated by · e.g. plural: hundar · definite: hunden · past: åt"}]\nRules: nouns→plural+definite, verbs→present+past+supine, adjectives→neuter+plural, interjections→"". Max 70 chars.\n${items}`;
+    
+    try {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:800,messages:[{role:'user',content:prompt}]})
+      });
+      const data = await r.json();
+      const text = data.content[0].text.replace(/\`\`\`json|\`\`\`/g,'').trim();
+      const results = JSON.parse(text);
+      results.forEach(item => {
+        const v = VOCAB.find(x => x.sv === item.sv);
+        if(v && item.forms){ v.forms = item.forms; formsCache[v.sv] = item.forms; }
+      });
+      localStorage.setItem('sv_forms', JSON.stringify(formsCache));
+    } catch(e) { console.error('Batch error:', e); }
+    
+    done += batch.length;
+    const pct = Math.round(done / toExpand.length * 100);
+    bar.style.width = pct + '%';
+    status.textContent = `${done} / ${toExpand.length} words processed (${pct}%)`;
+    await new Promise(r => setTimeout(r, 300));
+  }
+  
+  btn.disabled = false; btn.textContent = 'Done! ✓ Reload browse tab to see forms';
+  renderList();
 }
 
 // ── INIT ──
-document.getElementById('stat-total').textContent=VOCAB.length;
-document.getElementById('stat-pr').textContent=VOCAB.filter(v=>v.p).length;
+document.getElementById('sn-total').textContent=allVocab().length;
+document.getElementById('sn-pr').textContent=allVocab().filter(v=>v.p).length;
 renderList();
+renderCustomList();
 </script>
 </body>
 </html>
