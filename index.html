@@ -223,17 +223,20 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
   <div class="add-wrap">
 
     <div class="add-section">
-      <h3>🔑 Gemini API key</h3>
+      <h3>🔑 AI API key (free)</h3>
       <div class="add-row">
-        <label>Paste your Google Gemini API key (saved to this device only)</label>
-        <input type="password" id="gemini-key-input" placeholder="AIza..." autocorrect="off" autocapitalize="off" autocomplete="off">
+        <label>Paste your OpenRouter API key (free, no credit card needed)</label>
+        <input type="password" id="ai-key-input" placeholder="sk-or-..." autocorrect="off" autocapitalize="off" autocomplete="off">
       </div>
       <div style="display:flex;gap:8px">
-        <button class="add-btn" onclick="saveGeminiKey()" style="background:var(--sur2);border:1.5px solid var(--acc);color:var(--acc2)">Save key</button>
-        <button class="add-btn" onclick="clearGeminiKey()" style="background:var(--sur2);border:1.5px solid var(--bdr);color:var(--txt3)">Clear</button>
+        <button class="add-btn" onclick="saveAIKey()" style="background:var(--sur2);border:1.5px solid var(--acc);color:var(--acc2)">Save key</button>
+        <button class="add-btn" onclick="clearAIKey()" style="background:var(--sur2);border:1.5px solid var(--bdr);color:var(--txt3)">Clear</button>
       </div>
       <div id="key-status" style="font-size:12px;color:var(--txt3);margin-top:8px">No key saved yet.</div>
-      <p style="font-size:11px;color:var(--txt3);margin-top:8px">Get a free key at <strong>aistudio.google.com</strong> → Get API key. Key stays on your device only.</p>
+      <p style="font-size:11px;color:var(--txt3);margin-top:8px">
+        Get a free key at <strong>openrouter.ai</strong> → Sign in → Keys → Create key.<br>
+        Free tier: ~200 requests/day. Key stays on your device only.
+      </p>
     </div>
 
     <div class="add-section">
@@ -674,21 +677,21 @@ function markCard(knew){
   qIdx++;renderCard();
 }
 
-// ── GEMINI KEY ──
-function saveGeminiKey(){
-  const k=document.getElementById('gemini-key-input').value.trim();
+// ── AI KEY (OpenRouter) ──
+function saveAIKey(){
+  const k=document.getElementById('ai-key-input').value.trim();
   if(!k){alert('Please paste your API key first.');return;}
-  localStorage.setItem('sv_gemini_key',k);
-  document.getElementById('gemini-key-input').value='';
+  localStorage.setItem('sv_ai_key',k);
+  document.getElementById('ai-key-input').value='';
   updateKeyStatus();
   alert('Key saved! You can now use Smart Expand.');
 }
-function clearGeminiKey(){
-  localStorage.removeItem('sv_gemini_key');
+function clearAIKey(){
+  localStorage.removeItem('sv_ai_key');
   updateKeyStatus();
 }
 function updateKeyStatus(){
-  const k=localStorage.getItem('sv_gemini_key');
+  const k=localStorage.getItem('sv_ai_key');
   const el=document.getElementById('key-status');
   if(el) el.textContent=k?'✓ API key saved ('+k.slice(0,8)+'…)':'No key saved yet.';
 }
@@ -699,9 +702,9 @@ let expandedData=null;
 async function doExpand(){
   const input=document.getElementById('ai-input').value.trim();
   if(!input)return;
-  const key=localStorage.getItem('sv_gemini_key');
+  const key=localStorage.getItem('sv_ai_key');
   if(!key){
-    document.getElementById('ai-result').textContent='Please save your Gemini API key first (see section above).';
+    document.getElementById('ai-result').textContent='Please save your OpenRouter API key first (see section above).';
     document.getElementById('ai-result').classList.add('show');
     return;
   }
@@ -725,11 +728,14 @@ Respond ONLY with a JSON object, no markdown, no explanation:
 }
 If input is a phrase or sentence, set forms to empty string.`;
   try{
-    const url=`https://generativelanguage.googleapis.com/v1beta/gemini-2.5-flash-lite:generateContent?key=${key}`;
-    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:400}})});
+    const r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'HTTP-Referer':'https://svenska-vocab.github.io','X-Title':'Svenska Vocab'},
+      body:JSON.stringify({model:'deepseek/deepseek-v4-flash:free',max_tokens:400,temperature:0.1,messages:[{role:'user',content:prompt}]})
+    });
     const data=await r.json();
-    if(data.error){throw new Error(data.error.message);}
-    let text=data.candidates[0].content.parts[0].text.replace(/```json|```/g,'').trim();
+    if(data.error){throw new Error(data.error.message||JSON.stringify(data.error));}
+    let text=data.choices[0].message.content.replace(/```json|```/g,'').trim();
     expandedData=JSON.parse(text);
     document.getElementById('fp-sv').textContent=expandedData.sv;
     document.getElementById('fp-pron').textContent=expandedData.pron;
