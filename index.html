@@ -223,6 +223,20 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
   <div class="add-wrap">
 
     <div class="add-section">
+      <h3>🔑 Gemini API key</h3>
+      <div class="add-row">
+        <label>Paste your Google Gemini API key (saved to this device only)</label>
+        <input type="password" id="gemini-key-input" placeholder="AIza..." autocorrect="off" autocapitalize="off" autocomplete="off">
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="add-btn" onclick="saveGeminiKey()" style="background:var(--sur2);border:1.5px solid var(--acc);color:var(--acc2)">Save key</button>
+        <button class="add-btn" onclick="clearGeminiKey()" style="background:var(--sur2);border:1.5px solid var(--bdr);color:var(--txt3)">Clear</button>
+      </div>
+      <div id="key-status" style="font-size:12px;color:var(--txt3);margin-top:8px">No key saved yet.</div>
+      <p style="font-size:11px;color:var(--txt3);margin-top:8px">Get a free key at <strong>aistudio.google.com</strong> → Get API key. Key stays on your device only.</p>
+    </div>
+
+    <div class="add-section">
       <h3>✨ Smart expand</h3>
       <div class="add-row">
         <label>Enter any Swedish word or sentence</label>
@@ -263,17 +277,6 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
       <button class="add-btn" onclick="manualAdd()">Add word</button>
     </div>
 
-    <div class="add-section">
-      <h3>🔄 Expand existing words</h3>
-      <p style="font-size:12px;color:var(--txt3);margin-bottom:12px">Auto-generate grammatical forms for words that don't have them yet. Runs in your browser using Claude AI.</p>
-      <div id="bulk-progress" style="display:none;margin-bottom:10px">
-        <div style="font-size:12px;color:var(--txt2)" id="bulk-status">Starting...</div>
-        <div style="height:6px;background:var(--bdr);border-radius:3px;margin-top:6px;overflow:hidden">
-          <div id="bulk-bar" style="height:100%;background:var(--acc);border-radius:3px;width:0%;transition:width .3s"></div>
-        </div>
-      </div>
-      <button class="add-btn" id="bulk-btn" onclick="bulkExpand()" style="background:var(--sur2);border:1.5px solid var(--acc);color:var(--acc2)">Generate forms for all words</button>
-    </div>
     <div class="add-section" id="custom-list-section" style="display:none">
       <h3>My added words (<span id="custom-count">0</span>)</h3>
       <div id="custom-list"></div>
@@ -292,261 +295,255 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
 
 <script>
 const VOCAB=[
-
-  {sv:'Gott!',pron:'yot',en:'Good! / Tasty!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Jag vill ha något att äta',pron:'yag vil hah NAW-got at EH-ta',en:'I want something to eat',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence'},
-  {sv:'En smörgås',pron:'en SMUR-gaws',en:'A sandwich',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word'},
-  {sv:'Jag dricker hellre en juice',pron:'yag DRIK-er HEL-reh en joos',en:"I'd rather drink a juice",src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence'},
-  {sv:'Kan jag få en öl i stället för?',pron:'kan yag faw en URL ee STEL-et fur',en:'Can I have a beer instead?',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence'},
-  {sv:'Ja, visst',pron:'yah vist',en:'Yes, of course',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Jag kommer strax ut med...',pron:'yag KOM-er straks oot meh',en:"I'll be right out with...",src:'Babbel',cat:'Daily life',p:0,n:0,t:'sentence'},
-  {sv:'Smörgåsen dröjer lite',pron:'SMUR-gaw-sen DRUR-yer LEE-teh',en:'The sandwich will be a moment',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word'},
-  {sv:'Ingen fara!',pron:'ING-en FAH-ra',en:'No worries!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Vet du vad?',pron:'veht doo vah',en:'You know what?',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Hur kommer jag dit?',pron:'hoor KOM-er yag deet',en:'How do I get there?',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
-  {sv:'Kan ni rekommendera en restaurang?',pron:'kan nee reh-kom-en-DEH-ra en res-taw-RANG',en:'Can you recommend a restaurant?',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence'},
-  {sv:'I närheten av',pron:'ee NEHR-heh-ten av',en:'Near / in the vicinity of',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
-  {sv:'Är du här med bil?',pron:'ehr doo hehr meh beel',en:'Are you here by car?',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence'},
-  {sv:'Finns det en buss som man kan ta?',pron:'fins deh en boos som man kan tah',en:'Is there a bus one can take?',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence'},
-  {sv:'Det finns det',pron:'deh fins deh',en:'Yes there is',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Var ligger stranden?',pron:'vahr LIG-er STRAN-den',en:'Where is the beach?',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
-  {sv:'Den ligger till höger',pron:'den LIG-er til HUR-ger',en:"It's to the right",src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
-  {sv:'Det regnar i Skåne',pron:'deh REG-nar ee SKAW-neh',en:"It's raining in Skåne",src:'Babbel',cat:'Weather',p:0,n:0,t:'sentence'},
-  {sv:'Det är varmt och soligt',pron:'deh ehr varmt ok SOO-lit',en:"It's warm and sunny",src:'Babbel',cat:'Weather',p:0,n:0,t:'sentence'},
-  {sv:'Vart går tåget?',pron:'vart gawr TAW-get',en:'Where is the train going? (direction)',src:'Babbel',cat:'Transport',p:0,n:0,t:'word'},
-  {sv:'Var är bilen?',pron:'vahr ehr BEE-len',en:'Where is the car? (location)',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
-  {sv:'Det blåser mycket vid kusten',pron:'deh BLAW-ser MYK-eh veed KOOS-ten',en:"It's very windy at the coast",src:'Babbel',cat:'Weather',p:0,n:0,t:'sentence'},
-  {sv:'Jag vill åka till...',pron:'yag vil AW-ka til',en:'I want to go to...',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence'},
-  {sv:'Det låter bra. Tack för hjälpen!',pron:'deh LAW-ter brah. tak fur YELL-pen',en:'That sounds good. Thanks for the help!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'sentence'},
-  {sv:'Jag har ett par frågor',pron:'yag hahr et pahr FRAW-gor',en:'I have a couple of questions',src:'Babbel',cat:'Questions',p:0,n:0,t:'sentence'},
-  {sv:'Massiv!',pron:'ma-SEEV',en:'Awesome! (slang)',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Ingen orsak',pron:'ING-en OOR-sak',en:"You're welcome / No problem",src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Jag reser i Sverige',pron:'yag REH-ser ee SVEH-ree-yeh',en:'I am travelling in Sweden',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence'},
-  {sv:'Med tåg',pron:'meh tawg',en:'By train',src:'Babbel',cat:'Transport',p:0,n:0,t:'word'},
-  {sv:'Vad kul!',pron:'vah kool',en:'How fun!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Ha en trevlig semester!',pron:'hah en TREV-lig seh-MES-ter',en:'Have a lovely holiday!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'sentence'},
-  {sv:'Just det',pron:'yoost deh',en:"That's right / Oh yes",src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Finns det ett hotell i närheten?',pron:'fins deh et hoo-TEL ee NEHR-heh-ten',en:'Is there a hotel nearby?',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
-  {sv:'Gå till höger här ute',pron:'gaw til HUR-ger hehr OO-teh',en:'Turn right out here',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
-  {sv:'Sedan rakt fram',pron:'SEH-dan rakt fram',en:'Then straight ahead',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
-  {sv:'Det är en kilometer',pron:'deh ehr en SHEE-loh-meh-ter',en:'It is one kilometre',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
-  {sv:'Hen',pron:'hen',en:'They/them (gender-neutral singular)',src:'Babbel',cat:'Pronouns',p:0,n:0,t:'word'},
-  {sv:'Hen är gullig',pron:'hen ehr GUL-ig',en:'They are cute',src:'Babbel',cat:'Pronouns',p:0,n:0,t:'word'},
-  {sv:'Känner du...?',pron:'CHEN-er doo',en:'Do you know...? (a person)',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Han är rolig',pron:'han ehr ROO-lig',en:'He is funny',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Hur säger man det på svenska?',pron:'hoor SEH-yer man deh paw SVEN-ska',en:'How do you say that in Swedish?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
-  {sv:'Man får inte...',pron:'man fawr IN-teh',en:"One is not allowed to... / You can't...",src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Kan man bada här?',pron:'kan man BAH-da hehr',en:'Can one swim here?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
-  {sv:'Här får man inte röka!',pron:'hehr fawr man IN-teh RUR-ka',en:"You can't smoke here!",src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
-  {sv:'Jag saknar',pron:'yag SAK-nar',en:'I miss (someone/something)',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Jag kan verkligen rekommendera det',pron:'yag kan VEHR-kli-gen reh-kom-en-DEH-ra deh',en:'I can really recommend it',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
-  {sv:'Man lär sig mycket',pron:'man lehr say MYK-eh',en:'You learn a lot',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
-  {sv:'Ta till vänster',pron:'tah til VEN-ster',en:'Turn to the left',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
-  {sv:'Gå rakt fram',pron:'gaw rakt fram',en:'Go straight ahead',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
-  {sv:'Sväng höger vid statyn',pron:'sveng HUR-ger veed STAH-tewn',en:'Turn right at the statue',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
-  {sv:'Fortsätt längs den här gatan',pron:'FORT-set lengs den hehr GAH-tan',en:'Continue along this street',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
-  {sv:'Så är du framme',pron:'saw ehr doo FRAM-eh',en:"Then you're there / arrived",src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence'},
-  {sv:'Vi hörs!',pron:'vee hurrs',en:"Talk soon!",src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Ha det bra!',pron:'hah deh brah',en:'Take care!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'God natt',pron:'good nat',en:'Good night',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'God kväll',pron:'good kvel',en:'Good evening',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Ses imorgon!',pron:'sehs ee-MOR-on',en:'See you tomorrow!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Ha en bra dag!',pron:'hah en brah dahg',en:'Have a great day!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'sentence'},
-  {sv:'Bibliotek',pron:'bib-lio-TEHK',en:'Library',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
-  {sv:'Postkontor',pron:'POST-kon-toor',en:'Post office',src:'Babbel',cat:'Directions',p:0,n:0,t:'word'},
-  {sv:'Naturen är fantastisk',pron:'nah-TOO-ren ehr fan-TAS-tisk',en:'The scenery is fantastic',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Hoppas att du är nöjd',pron:'HOP-as at doo ehr noyd',en:'Hope you are satisfied',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
-  // Podcast PDF
-  {sv:'Hej!',pron:'yay',en:'Hey!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Hejsan!',pron:'YAY-san',en:'Hello there!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Hallå!',pron:'ha-LAW',en:'Hello!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Flytande',pron:'FLEW-tan-deh',en:'Fluent',src:'Podcast',cat:'Greetings',p:1,n:0,t:'word'},
-  {sv:'år',pron:'awr',en:'year(s)',src:'Podcast',cat:'Greetings',p:1,n:0,t:'word'},
-  {sv:'gammal',pron:'GAM-al',en:'old',src:'Podcast',cat:'Greetings',p:1,n:0,t:'word'},
-  {sv:'Jag pratar',pron:'yag PRAH-tar',en:'I speak',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Jag snackar (slang)',pron:'yag SNAK-ar',en:'I speak (slang)',src:'Podcast',cat:'Greetings',p:1,n:0,t:'word'},
-  {sv:'Att fika',pron:'at FEE-ka',en:'To have coffee & a pastry',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word'},
-  {sv:'Pussel',pron:'PUS-el',en:'Puzzles',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Att läsa',pron:'at LEH-sa',en:'To read',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Föräldrar',pron:'fur-EL-drar',en:'Parents',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
-  {sv:'Bröder',pron:'BRUR-der',en:'Brothers',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
-  {sv:'Systrar',pron:'SEWS-trar',en:'Sisters',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
-  {sv:'Genomsnittlig',pron:'yeh-nom-SNIT-lig',en:'Average',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
-  {sv:'Barnfri',pron:'BARN-free',en:'Childfree',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
-  {sv:'Ensam',pron:'EN-sam',en:'Alone',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
-  {sv:'En släkt',pron:'en slekt',en:'Family (relatives)',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
-  {sv:'Släktingar',pron:'SLEK-ting-ar',en:'Relatives',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
-  {sv:'En mormor',pron:'en MOR-mor',en:'Maternal grandma',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
-  {sv:'En morfar',pron:'en MOR-far',en:'Maternal grandpa',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
-  {sv:'En farmor',pron:'en FAR-mor',en:'Paternal grandma',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
-  {sv:'En farfar',pron:'en FAR-far',en:'Paternal grandpa',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
-  {sv:'En moster',pron:'en MOS-ter',en:'Maternal aunt',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
-  {sv:'En morbror',pron:'en MOR-broor',en:'Maternal uncle',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
-  {sv:'En faster',pron:'en FAS-ter',en:'Paternal aunt',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
-  {sv:'En farbror',pron:'en FAR-broor',en:'Paternal uncle',src:'Podcast',cat:'Family',p:0,n:0,t:'word'},
-  {sv:'Ett syskonbarn',pron:'et SEWS-kon-barn',en:'A niece/nephew',src:'Podcast',cat:'Family',p:1,n:0,t:'word'},
-  {sv:'En kvinna',pron:'en KVIN-a',en:'A woman',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
-  {sv:'En cykel',pron:'en SEW-kel',en:'A bicycle',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
-  {sv:'En dator',pron:'en DAH-tor',en:'A computer',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
-  {sv:'Snäll / snällt',pron:'snell / snelt',en:'Kind',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
-  {sv:'Dum / dumt',pron:'doom / domt',en:'Mean / stupid',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
-  {sv:'Fin / fint',pron:'feen / feent',en:'Pretty / nice',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
-  {sv:'Ful / fult',pron:'fool / foolt',en:'Ugly',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
-  {sv:'Hon, hennes',pron:'hoon, HEN-es',en:'She, her',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
-  {sv:'De, deras',pron:'dom, DEH-ras',en:'They, their',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
-  {sv:'Ni, er',pron:'nee, ehr',en:'You (plural), your',src:'Podcast',cat:'People',p:1,n:0,t:'word'},
-  {sv:'På morgonen',pron:'paw MOR-on-en',en:'In the morning',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word'},
-  {sv:'På förmiddagen',pron:'paw fur-MID-ah-gen',en:'Before lunch',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'På eftermiddagen',pron:'paw EF-ter-mid-ah-gen',en:'In the afternoon',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'På kvällen',pron:'paw KVEL-en',en:'In the evening',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'På natten',pron:'paw NAT-en',en:'At night',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Att vakna',pron:'at VAK-na',en:'To wake up',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Att äta',pron:'at EH-ta',en:'To eat',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Att jobba',pron:'at YOB-a',en:'To work',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Att träna',pron:'at TREH-na',en:'To exercise',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Att laga',pron:'at LAH-ga',en:'To cook',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Att somna',pron:'at SOM-na',en:'To fall asleep',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Alltid',pron:'AL-teed',en:'Always',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word'},
-  {sv:'Aldrig',pron:'AL-drig',en:'Never',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word'},
-  {sv:'Oftast',pron:'OF-tast',en:'Usually',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Ungefär',pron:'OON-geh-fehr',en:'Approximately',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Morgontrött',pron:'MOR-on-trot',en:'Tired in the morning',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Morgonpigg',pron:'MOR-on-pig',en:'Energized in the morning',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Jag slappnar av',pron:'yag SLAP-nar av',en:'I relax',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word'},
-  {sv:'Jag skrollar på mobilen',pron:'yag SKROL-ar paw moo-BEE-len',en:'I scroll on my phone',src:'Podcast',cat:'Daily life',p:1,n:0,t:'sentence'},
-  {sv:'Jo',pron:'yoo',en:'Actually, yes',src:'Podcast',cat:'Questions',p:0,n:0,t:'word'},
-  {sv:'Faktiskt',pron:'FAK-tiskt',en:'Actually',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
-  {sv:'Visst',pron:'vist',en:'Certainly',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
-  {sv:'Heller',pron:'HEL-er',en:'Either (in negatives)',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
-  {sv:'Alls',pron:'als',en:'At all',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
-  {sv:'Vem',pron:'vem',en:'Who/whom',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
-  {sv:'Vilken/vilket/vilka',pron:'VIL-ken/VIL-ket/VIL-ka',en:'Which',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
-  {sv:'Därför att',pron:'DEHR-fur at',en:'Because',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
-  {sv:'För att',pron:'fur at',en:'Because / in order to',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
-  {sv:'På grund av',pron:'paw grond av',en:'Because of',src:'Podcast',cat:'Questions',p:1,n:0,t:'word'},
-  {sv:'En vinter',pron:'en VIN-ter',en:'A winter',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
-  {sv:'En sommar',pron:'en SOM-ar',en:'A summer',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
-  {sv:'En höst',pron:'en hurst',en:'Autumn/fall',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
-  {sv:'Solig/soligt',pron:'SOO-lig/SOO-ligt',en:'Sunny',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
-  {sv:'Blåsig/blåsigt',pron:'BLAW-sig/BLAW-sigt',en:'Windy',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
-  {sv:'Molnig/molnigt',pron:'MOL-nig/MOL-nigt',en:'Cloudy',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
-  {sv:'Kall/kallare/kallast',pron:'kal/KAL-areh/KAL-ast',en:'Cold/colder/coldest',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
-  {sv:'Varm/varmare/varmast',pron:'varm/VAR-mareh/VAR-mast',en:'Warm/warmer/warmest',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
-  {sv:'Inomhus',pron:'IN-om-hoos',en:'Indoors',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
-  {sv:'Utomhus',pron:'OOT-om-hoos',en:'Outdoors',src:'Podcast',cat:'Weather',p:0,n:0,t:'word'},
-  {sv:'Välkomna!',pron:'VEL-kom-na',en:'Welcome!',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
-  {sv:'Har ni bokat bord?',pron:'har nee BOO-kat boord',en:'Have you booked a table?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
-  {sv:'Vill ni sitta inne eller ute?',pron:'vil nee SIT-a IN-eh EL-er OO-teh',en:'Inside or outside?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
-  {sv:'Följ med mig',pron:'fuly meh mig',en:'Follow me',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
-  {sv:'Jag vill gärna öva min svenska',pron:'yag vil YEHR-na UR-va min SVEN-ska',en:"I'd like to practise my Swedish",src:'Podcast',cat:'Greetings',p:0,n:0,t:'sentence'},
-  {sv:'Är ni redo att beställa?',pron:'ehr nee REH-do at beh-STEL-a',en:'Are you ready to order?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
-  {sv:'Jag tar köttbullarna, tack',pron:'yag tahr CHET-bul-arna tak',en:"I'll take the meatballs, thanks",src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
-  {sv:'Ingår påtår?',pron:'IN-gawr PAW-tawr',en:'Is a refill included?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
-  {sv:'Vad rekommenderar du?',pron:'vah reh-kom-en-DEH-rar doo',en:'What do you recommend?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
-  {sv:'Jag skulle vilja ha...',pron:'yag SKOOL-eh VIL-ya hah',en:'I would like to have...',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
-  {sv:'Smaklig måltid!',pron:'SMAHK-lig MAWL-teed',en:'Enjoy your meal!',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
-  {sv:'Tusen tack!',pron:'TOO-sen tak',en:'Thank you so much!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Kan vi få notan, tack?',pron:'kan vee faw NOO-tan tak',en:'Can we get the bill please?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence'},
-  {sv:'Det var supergott!',pron:'deh var SOO-per-yot',en:'That was delicious!',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word'},
-  {sv:'Tack, hejdå!',pron:'tak HAY-daw',en:'Thank you, goodbye!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word'},
-  {sv:'Mat / Matt',pron:'maht / mat',en:'Food (long) / Dull (short vowel)',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word'},
-  {sv:'Glas / Glass',pron:'glahs / glas',en:'Glass / Ice cream',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word'},
-  {sv:'Skål!',pron:'skawl',en:'Cheers!',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word'},
-  {sv:'Gift',pron:'yift',en:'Married / Poison (same spelling!)',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word'},
-  {sv:'Kär',pron:'chehr',en:'In love',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word'},
-  // ── BABBEL batch 3 — plans & languages ──
-  {sv:'Vill du göra något i kväll?',pron:'vil doo YUR-a NAW-got ee kvel',en:'Do you want to do something this evening?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
-  {sv:'Gärna',pron:'YEHR-na',en:"I'd love to / gladly",src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Jag måste hem',pron:'yag MOS-teh hem',en:'I have to go home',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word'},
-  {sv:'Tvätta',pron:'TVET-a',en:'To do laundry / to wash',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word'},
-  {sv:'Ska vi ta en öl runt åtta?',pron:'skah vee tah en URL roont OT-a',en:'Shall we grab a beer around eight?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
-  {sv:'Gå ut och äta',pron:'gaw oot ok EH-ta',en:'Go out and eat',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence'},
-  {sv:'Kanske',pron:'KAN-sheh',en:'Maybe / perhaps',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Vad finns det där du bor?',pron:'vah fins deh dehr doo boor',en:'What is there where you live?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
-  {sv:'En pizzeria',pron:'en pit-seh-REE-a',en:'A pizzeria',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word'},
-  {sv:'En sushirestaurang',pron:'en SOO-shee-res-taw-RANG',en:'A sushi restaurant',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word'},
-  {sv:'Inget kebabställe',pron:'IN-get keh-BAB-stel-eh',en:'No kebab place',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word'},
-  {sv:'Var i världen',pron:'vahr ee VEHR-lden',en:'Where in the world',src:'Babbel',cat:'Questions',p:0,n:0,t:'word'},
-  {sv:'Förutom',pron:'fur-OO-tom',en:'Besides / except for',src:'Babbel',cat:'Questions',p:0,n:0,t:'word'},
-  {sv:'Ingenstans',pron:'ING-en-stans',en:'Nowhere',src:'Babbel',cat:'Questions',p:0,n:0,t:'word'},
-  {sv:'Jag lär mig',pron:'yag lehr may',en:'I am learning',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word'},
-  {sv:'Det är min läxa',pron:'deh ehr min LEK-sa',en:"That's my homework",src:'Babbel',cat:'Daily life',p:0,n:0,t:'sentence'},
-  {sv:'Vad mycket du kan!',pron:'vah MYK-eh doo kan',en:'You know so much!',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence'},
-  {sv:'Fast',pron:'fast',en:'But / though / however',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Precis som',pron:'preh-SEES som',en:'Just like / exactly as',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Jag vet',pron:'yag veht',en:'I know',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  // Countries & languages
-  {sv:'Storbritannien',pron:'stor-BRIT-an-yen',en:'Great Britain',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Australien',pron:'aw-STRAH-lee-en',en:'Australia',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Nya Zeeland',pron:'newa ZEH-land',en:'New Zealand',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Kanada',pron:'KAN-a-da',en:'Canada',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Irland',pron:'EER-land',en:'Ireland',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Malta',pron:'MAL-ta',en:'Malta',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Spanien',pron:'SPAH-nee-en',en:'Spain',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Latinamerika',pron:'lah-teen-ah-MEH-ree-ka',en:'Latin America',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Brasilien',pron:'bra-SEE-lee-en',en:'Brasil',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Portugal',pron:'POR-too-gal',en:'Portugal',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Kinesiska',pron:'shee-NEH-siska',en:'Chinese (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Spanska',pron:'SPAN-ska',en:'Spanish (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  {sv:'Portugisiska',pron:'por-too-YEE-siska',en:'Portuguese (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word'},
-  // ── BABBEL batch 4 — family positions, making plans, cinema ──
-  {sv:'Tvillingar',pron:'TVIL-ing-ar',en:'Twins',src:'Babbel',cat:'Family',p:0,n:1,t:'word'},
-  {sv:'Bredvid',pron:'breh-VEED',en:'Next to / beside',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
-  {sv:'Min farfar står bredvid henne',pron:'min FAR-far stawr breh-VEED HEN-eh',en:'My paternal grandpa is standing next to her',src:'Babbel',cat:'Family',p:0,n:1,t:'sentence'},
-  {sv:'Det här / den här',pron:'deh hehr / den hehr',en:'This (ett-word) / this (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:1,t:'sentence'},
-  {sv:'Det där / den där',pron:'deh dehr / den dehr',en:'That (ett-word) / that (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:1,t:'sentence'},
-  {sv:'Dina föräldrar',pron:'DEE-na fur-EL-drar',en:'Your parents',src:'Babbel',cat:'Family',p:0,n:1,t:'word'},
-  {sv:'Min kompis',pron:'min KOM-pis',en:'My friend (informal)',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Mina föräldrar bor vid havet',pron:'MEE-na fur-EL-drar boor veed HAH-vet',en:'My parents live by the sea',src:'Babbel',cat:'Family',p:0,n:1,t:'sentence'},
-  {sv:'Vid havet',pron:'veed HAH-vet',en:'By the sea',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
-  {sv:'En utbytesstudent',pron:'en OOT-bewt-es-stoo-DENT',en:'An exchange student',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'I vår klass',pron:'ee vawr klas',en:'In our class',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Två stycken',pron:'tvaw STEW-ken',en:'Two of them / two pieces',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Just nu',pron:'yoost noo',en:'Right now',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word'},
-  {sv:'Jaså?',pron:'yah-SAW',en:'Oh really? / Is that so?',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Väldigt trevlig',pron:'VEL-digt TREV-lig',en:'Very nice / pleasant',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Jag borde prata med honom',pron:'yag BOO-reh PRAH-ta meh HON-om',en:'I should talk to him',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
-  {sv:'Man träffar sällan folk',pron:'man TREF-ar SEL-an folk',en:'You rarely meet people',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
-  {sv:'Åtminstone',pron:'awt-MIN-sto-neh',en:'At least',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Vänta',pron:'VEN-ta',en:'Wait',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Hur så?',pron:'hoor saw',en:'How so? / What do you mean?',src:'Babbel',cat:'Questions',p:0,n:1,t:'word'},
-  {sv:'Va?',pron:'vah',en:'What? / Huh? (informal)',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Vilket sammanträffande!',pron:'VIL-ket SAM-an-tref-an-deh',en:'What a coincidence!',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Ja, verkligen',pron:'yah VEHR-kli-gen',en:'Yes, really / indeed',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Okej, fortsätt',pron:'oh-KAY FORT-set',en:'Okay, continue / go on',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Bakom',pron:'BAH-kom',en:'Behind',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
-  {sv:'Tillsammans med',pron:'til-SAM-ans meh',en:'Together with',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Jag är förvirrad',pron:'yag ehr fur-VIR-ad',en:'I am confused',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Gå på bio',pron:'gaw paw BEE-oo',en:'Go to the cinema',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Jag skulle gärna gå på bio',pron:'yag SKOOL-eh YEHR-na gaw paw BEE-oo',en:"I'd love to go to the cinema",src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
-  {sv:'Jag brukar ofta',pron:'yag BROO-kar OF-ta',en:'I often tend to / I usually',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word'},
-  {sv:'Nationalmuseet',pron:'nat-see-oh-NAHL-moo-SEH-et',en:'The National Museum',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
-  {sv:'Har du lust att...?',pron:'har doo loost at',en:'Do you feel like...? / Fancy...?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
-  {sv:'Äta middag',pron:'EH-ta MID-ag',en:'To eat dinner',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word'},
-  {sv:'I helgen',pron:'ee HEL-yen',en:'At the weekend',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word'},
-  {sv:'Stora torget',pron:'STOO-ra TOR-yet',en:'The main square',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
-  {sv:'Tyvärr',pron:'tew-VEHR',en:'Unfortunately',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Har du tid på lördag kväll?',pron:'har doo teed paw LUR-dag kvel',en:'Are you free Saturday evening?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
-  {sv:'Då gör vi det!',pron:'daw yur vee deh',en:"Then we'll do that! / It's a plan!",src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
-  {sv:'När slutar du?',pron:'nehr SLOO-tar doo',en:'When do you finish?',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Det funkar',pron:'deh FOON-kar',en:'That works / that fits',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Det hinner jag inte',pron:'deh HIN-er yag IN-teh',en:"I can't make that / not enough time",src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
-  {sv:'Det tar en halvtimme',pron:'deh tahr en HALV-tim-eh',en:'It takes half an hour',src:'Babbel',cat:'Transport',p:0,n:1,t:'sentence'},
-  {sv:'Från jobbet till stan',pron:'frawn YOB-et til stahn',en:'From work to the city centre',src:'Babbel',cat:'Transport',p:0,n:1,t:'sentence'},
-  {sv:'En föreställning',pron:'en fur-eh-STEL-ning',en:'A screening / performance / show',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Den sena föreställningen',pron:'den SEH-na fur-eh-STEL-ning-en',en:'The late screening',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Ska vi ta den?',pron:'skah vee tah den',en:"Shall we see that one?",src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
-  {sv:'Innan',pron:'IN-an',en:'Before / beforehand',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word'},
-  {sv:'Det blir perfekt!',pron:'deh bleer pehr-FEKT',en:"That'll be perfect!",src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Jag messar dig',pron:'yag MES-ar day',en:"I'll message you",src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Puss!',pron:'poos',en:'Bye! / Kiss! (casual sign-off)',src:'Babbel',cat:'Greetings',p:0,n:1,t:'word'},
-  {sv:'Slutsåld',pron:'SLOOT-sawld',en:'Sold out',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Hinner du till klockan...?',pron:'HIN-er doo til KLOK-an',en:'Can you make it by...?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
-  {sv:'I så fall',pron:'ee saw fal',en:'In that case',src:'Babbel',cat:'Social',p:0,n:1,t:'word'},
-  {sv:'Nära bion',pron:'NEH-ra BEE-on',en:'Close to the cinema',src:'Babbel',cat:'Directions',p:0,n:1,t:'word'},
-  {sv:'Popcorn och godis',pron:'POP-korn ok GOO-dis',en:'Popcorn and sweets',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word'},
-  {sv:'Ring när du har slutat jobbet!',pron:'ring nehr doo har SLOO-tat YOB-et',en:'Call when you finish work!',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence'},
-
+  {sv:'Gott!',pron:'yot',en:'Good! / Tasty!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag vill ha något att äta',pron:'yag vil hah NAW-got at EH-ta',en:'I want something to eat',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'En smörgås',pron:'en SMUR-gaws',en:'A sandwich',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'plural: smörgåsar · definite: smörgåsen'},
+  {sv:'Jag dricker hellre en juice',pron:'yag DRIK-er HEL-reh en joos',en:'I\'d rather drink a juice',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Kan jag få en öl i stället för?',pron:'kan yag faw en URL ee STEL-et fur',en:'Can I have a beer instead?',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Ja, visst',pron:'yah vist',en:'Yes, of course',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag kommer strax ut med...',pron:'yag KOM-er straks oot meh',en:'I\'ll be right out with...',src:'Babbel',cat:'Daily life',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Smörgåsen dröjer lite',pron:'SMUR-gaw-sen DRUR-yer LEE-teh',en:'The sandwich will be a moment',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'Ingen fara!',pron:'ING-en FAH-ra',en:'No worries!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Vet du vad?',pron:'veht doo vah',en:'You know what?',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Hur kommer jag dit?',pron:'hoor KOM-er yag deet',en:'How do I get there?',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Kan ni rekommendera en restaurang?',pron:'kan nee reh-kom-en-DEH-ra en res-taw-RANG',en:'Can you recommend a restaurant?',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'I närheten av',pron:'ee NEHR-heh-ten av',en:'Near / in the vicinity of',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Är du här med bil?',pron:'ehr doo hehr meh beel',en:'Are you here by car?',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Finns det en buss som man kan ta?',pron:'fins deh en boos som man kan tah',en:'Is there a bus one can take?',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Det finns det',pron:'deh fins deh',en:'Yes there is',src:'Babbel',cat:'Greetings',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Var ligger stranden?',pron:'vahr LIG-er STRAN-den',en:'Where is the beach?',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Den ligger till höger',pron:'den LIG-er til HUR-ger',en:'It\'s to the right',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Det regnar i Skåne',pron:'deh REG-nar ee SKAW-neh',en:'It\'s raining in Skåne',src:'Babbel',cat:'Weather',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Det är varmt och soligt',pron:'deh ehr varmt ok SOO-lit',en:'It\'s warm and sunny',src:'Babbel',cat:'Weather',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Vart går tåget?',pron:'vart gawr TAW-get',en:'Where is the train going? (direction)',src:'Babbel',cat:'Transport',p:0,n:0,t:'word',forms:''},
+  {sv:'Var är bilen?',pron:'vahr ehr BEE-len',en:'Where is the car? (location)',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Det blåser mycket vid kusten',pron:'deh BLAW-ser MYK-eh veed KOOS-ten',en:'It\'s very windy at the coast',src:'Babbel',cat:'Weather',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Jag vill åka till...',pron:'yag vil AW-ka til',en:'I want to go to...',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Det låter bra. Tack för hjälpen!',pron:'deh LAW-ter brah. tak fur YELL-pen',en:'That sounds good. Thanks for the help!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Jag har ett par frågor',pron:'yag hahr et pahr FRAW-gor',en:'I have a couple of questions',src:'Babbel',cat:'Questions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Massiv!',pron:'ma-SEEV',en:'Awesome! (slang)',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Ingen orsak',pron:'ING-en OOR-sak',en:'You\'re welcome / No problem',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag reser i Sverige',pron:'yag REH-ser ee SVEH-ree-yeh',en:'I am travelling in Sweden',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Med tåg',pron:'meh tawg',en:'By train',src:'Babbel',cat:'Transport',p:0,n:0,t:'word',forms:''},
+  {sv:'Vad kul!',pron:'vah kool',en:'How fun!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Ha en trevlig semester!',pron:'hah en TREV-lig seh-MES-ter',en:'Have a lovely holiday!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Just det',pron:'yoost deh',en:'That\'s right / Oh yes',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Finns det ett hotell i närheten?',pron:'fins deh et hoo-TEL ee NEHR-heh-ten',en:'Is there a hotel nearby?',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Gå till höger här ute',pron:'gaw til HUR-ger hehr OO-teh',en:'Turn right out here',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Sedan rakt fram',pron:'SEH-dan rakt fram',en:'Then straight ahead',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Det är en kilometer',pron:'deh ehr en SHEE-loh-meh-ter',en:'It is one kilometre',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Hen',pron:'hen',en:'They/them (gender-neutral singular)',src:'Babbel',cat:'Pronouns',p:0,n:0,t:'word',forms:''},
+  {sv:'Hen är gullig',pron:'hen ehr GUL-ig',en:'They are cute',src:'Babbel',cat:'Pronouns',p:0,n:0,t:'word',forms:''},
+  {sv:'Känner du...?',pron:'CHEN-er doo',en:'Do you know...? (a person)',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'present: känner · past: kände · supine: känt'},
+  {sv:'Han är rolig',pron:'han ehr ROO-lig',en:'He is funny',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Hur säger man det på svenska?',pron:'hoor SEH-yer man deh paw SVEN-ska',en:'How do you say that in Swedish?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Man får inte...',pron:'man fawr IN-teh',en:'One is not allowed to... / You can\'t...',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Kan man bada här?',pron:'kan man BAH-da hehr',en:'Can one swim here?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Här får man inte röka!',pron:'hehr fawr man IN-teh RUR-ka',en:'You can\'t smoke here!',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Jag saknar',pron:'yag SAK-nar',en:'I miss (someone/something)',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:'present: saknar · past: saknade · supine: saknat'},
+  {sv:'Jag kan verkligen rekommendera det',pron:'yag kan VEHR-kli-gen reh-kom-en-DEH-ra deh',en:'I can really recommend it',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Man lär sig mycket',pron:'man lehr say MYK-eh',en:'You learn a lot',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Ta till vänster',pron:'tah til VEN-ster',en:'Turn to the left',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Gå rakt fram',pron:'gaw rakt fram',en:'Go straight ahead',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Sväng höger vid statyn',pron:'sveng HUR-ger veed STAH-tewn',en:'Turn right at the statue',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Fortsätt längs den här gatan',pron:'FORT-set lengs den hehr GAH-tan',en:'Continue along this street',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Så är du framme',pron:'saw ehr doo FRAM-eh',en:'Then you\'re there / arrived',src:'Babbel',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Vi hörs!',pron:'vee hurrs',en:'Talk soon!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Ha det bra!',pron:'hah deh brah',en:'Take care!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'God natt',pron:'good nat',en:'Good night',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'God kväll',pron:'good kvel',en:'Good evening',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Ses imorgon!',pron:'sehs ee-MOR-on',en:'See you tomorrow!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Ha en bra dag!',pron:'hah en brah dahg',en:'Have a great day!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Bibliotek',pron:'bib-lio-TEHK',en:'Library',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:'plural: bibliotek · definite: biblioteket'},
+  {sv:'Postkontor',pron:'POST-kon-toor',en:'Post office',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:'plural: postkontor · definite: postkontoret'},
+  {sv:'Naturen är fantastisk',pron:'nah-TOO-ren ehr fan-TAS-tisk',en:'The scenery is fantastic',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Hoppas att du är nöjd',pron:'HOP-as at doo ehr noyd',en:'Hope you are satisfied',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Hej!',pron:'yay',en:'Hey!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Hejsan!',pron:'YAY-san',en:'Hello there!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Hallå!',pron:'ha-LAW',en:'Hello!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Flytande',pron:'FLEW-tan-deh',en:'Fluent',src:'Podcast',cat:'Greetings',p:1,n:0,t:'word',forms:''},
+  {sv:'år',pron:'awr',en:'year(s)',src:'Podcast',cat:'Greetings',p:1,n:0,t:'word',forms:'plural: år · definite: året · plural def: åren'},
+  {sv:'gammal',pron:'GAM-al',en:'old',src:'Podcast',cat:'Greetings',p:1,n:0,t:'word',forms:'neuter: gammalt · plural: gamla · comparative: äldre · superlative: äldst'},
+  {sv:'Jag pratar',pron:'yag PRAH-tar',en:'I speak',src:'Podcast',cat:'Greetings',p:0,n:0,t:'sentence',forms:'present: pratar · past: pratade · supine: pratat'},
+  {sv:'Jag snackar (slang)',pron:'yag SNAK-ar',en:'I speak (slang)',src:'Podcast',cat:'Greetings',p:1,n:0,t:'sentence',forms:'present: snackar · past: snackade · supine: snackat'},
+  {sv:'Att fika',pron:'at FEE-ka',en:'To have coffee & a pastry',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:'present: fikar · past: fikade · supine: fikat'},
+  {sv:'Pussel',pron:'PUS-el',en:'Puzzles',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:'plural: pussel · definite: pusslet'},
+  {sv:'Att läsa',pron:'at LEH-sa',en:'To read',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:'present: läser · past: läste · supine: läst'},
+  {sv:'Föräldrar',pron:'fur-EL-drar',en:'Parents',src:'Podcast',cat:'Family',p:1,n:0,t:'word',forms:'singular: förälder · definite: föräldrarna'},
+  {sv:'Bröder',pron:'BRUR-der',en:'Brothers',src:'Podcast',cat:'Family',p:1,n:0,t:'word',forms:'singular: bror · definite: bröderna'},
+  {sv:'Systrar',pron:'SEWS-trar',en:'Sisters',src:'Podcast',cat:'Family',p:1,n:0,t:'word',forms:'singular: syster · definite: systrarna'},
+  {sv:'Genomsnittlig',pron:'yeh-nom-SNIT-lig',en:'Average',src:'Podcast',cat:'Family',p:1,n:0,t:'word',forms:'neuter: genomsnittligt · plural: genomsnittliga'},
+  {sv:'Barnfri',pron:'BARN-free',en:'Childfree',src:'Podcast',cat:'Family',p:1,n:0,t:'word',forms:'neuter: barnfritt · plural: barnfria'},
+  {sv:'Ensam',pron:'EN-sam',en:'Alone',src:'Podcast',cat:'Family',p:1,n:0,t:'word',forms:'neuter: ensamt · plural: ensamma'},
+  {sv:'En släkt',pron:'en slekt',en:'Family (relatives)',src:'Podcast',cat:'Family',p:1,n:0,t:'word',forms:'plural: släkter · definite: släkten'},
+  {sv:'Släktingar',pron:'SLEK-ting-ar',en:'Relatives',src:'Podcast',cat:'Family',p:1,n:0,t:'word',forms:'singular: släkting · definite: släktingarna'},
+  {sv:'En mormor',pron:'en MOR-mor',en:'Maternal grandma',src:'Podcast',cat:'Family',p:0,n:0,t:'word',forms:'plural: mormödrar · definite: mormor (no change)'},
+  {sv:'En morfar',pron:'en MOR-far',en:'Maternal grandpa',src:'Podcast',cat:'Family',p:0,n:0,t:'word',forms:'plural: morfäder · definite: morfar (no change)'},
+  {sv:'En farmor',pron:'en FAR-mor',en:'Paternal grandma',src:'Podcast',cat:'Family',p:0,n:0,t:'word',forms:'plural: farmödrar · definite: farmor (no change)'},
+  {sv:'En farfar',pron:'en FAR-far',en:'Paternal grandpa',src:'Podcast',cat:'Family',p:0,n:0,t:'word',forms:'plural: farfäder · definite: farfar (no change)'},
+  {sv:'En moster',pron:'en MOS-ter',en:'Maternal aunt',src:'Podcast',cat:'Family',p:0,n:0,t:'word',forms:'plural: mostrar · definite: mostern'},
+  {sv:'En morbror',pron:'en MOR-broor',en:'Maternal uncle',src:'Podcast',cat:'Family',p:0,n:0,t:'word',forms:'plural: morbröder · definite: morbror (no change)'},
+  {sv:'En faster',pron:'en FAS-ter',en:'Paternal aunt',src:'Podcast',cat:'Family',p:0,n:0,t:'word',forms:'plural: fastrar · definite: fastern'},
+  {sv:'En farbror',pron:'en FAR-broor',en:'Paternal uncle',src:'Podcast',cat:'Family',p:0,n:0,t:'word',forms:'plural: farbröder · definite: farbror (no change)'},
+  {sv:'Ett syskonbarn',pron:'et SEWS-kon-barn',en:'A niece/nephew',src:'Podcast',cat:'Family',p:1,n:0,t:'word',forms:'plural: syskonbarn · definite: syskonbarnet'},
+  {sv:'En kvinna',pron:'en KVIN-a',en:'A woman',src:'Podcast',cat:'People',p:1,n:0,t:'word',forms:'plural: kvinnor · definite: kvinnan'},
+  {sv:'En cykel',pron:'en SEW-kel',en:'A bicycle',src:'Podcast',cat:'People',p:1,n:0,t:'word',forms:'plural: cyklar · definite: cykeln'},
+  {sv:'En dator',pron:'en DAH-tor',en:'A computer',src:'Podcast',cat:'People',p:1,n:0,t:'word',forms:'plural: datorer · definite: datorn'},
+  {sv:'Snäll / snällt',pron:'snell / snelt',en:'Kind',src:'Podcast',cat:'People',p:1,n:0,t:'word',forms:'neuter: snällt · plural: snälla · comparative: snällare · superlative: snällast'},
+  {sv:'Dum / dumt',pron:'doom / domt',en:'Mean / stupid',src:'Podcast',cat:'People',p:1,n:0,t:'word',forms:'neuter: dumt · plural: dumma · comparative: dummare · superlative: dummast'},
+  {sv:'Fin / fint',pron:'feen / feent',en:'Pretty / nice',src:'Podcast',cat:'People',p:1,n:0,t:'word',forms:'neuter: fint · plural: fina · comparative: finare · superlative: finast'},
+  {sv:'Ful / fult',pron:'fool / foolt',en:'Ugly',src:'Podcast',cat:'People',p:1,n:0,t:'word',forms:'neuter: fult · plural: fula · comparative: fulare · superlative: fulast'},
+  {sv:'Hon, hennes',pron:'hoon, HEN-es',en:'She, her',src:'Podcast',cat:'People',p:1,n:0,t:'word',forms:''},
+  {sv:'De, deras',pron:'dom, DEH-ras',en:'They, their',src:'Podcast',cat:'People',p:1,n:0,t:'word',forms:''},
+  {sv:'Ni, er',pron:'nee, ehr',en:'You (plural), your',src:'Podcast',cat:'People',p:1,n:0,t:'word',forms:''},
+  {sv:'På morgonen',pron:'paw MOR-on-en',en:'In the morning',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'På förmiddagen',pron:'paw fur-MID-ah-gen',en:'Before lunch',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:''},
+  {sv:'På eftermiddagen',pron:'paw EF-ter-mid-ah-gen',en:'In the afternoon',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:''},
+  {sv:'På kvällen',pron:'paw KVEL-en',en:'In the evening',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:''},
+  {sv:'På natten',pron:'paw NAT-en',en:'At night',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:''},
+  {sv:'Att vakna',pron:'at VAK-na',en:'To wake up',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:'present: vaknar · past: vaknade · supine: vaknat'},
+  {sv:'Att äta',pron:'at EH-ta',en:'To eat',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:'present: äter · past: åt · supine: ätit'},
+  {sv:'Att jobba',pron:'at YOB-a',en:'To work',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:'present: jobbar · past: jobbade · supine: jobbat'},
+  {sv:'Att träna',pron:'at TREH-na',en:'To exercise',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:'present: tränar · past: tränade · supine: tränat'},
+  {sv:'Att laga',pron:'at LAH-ga',en:'To cook',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:'present: lagar · past: lagade · supine: lagat'},
+  {sv:'Att somna',pron:'at SOM-na',en:'To fall asleep',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:'present: somnar · past: somnade · supine: somnat'},
+  {sv:'Alltid',pron:'AL-teed',en:'Always',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Aldrig',pron:'AL-drig',en:'Never',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Oftast',pron:'OF-tast',en:'Usually',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:''},
+  {sv:'Ungefär',pron:'OON-geh-fehr',en:'Approximately',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:''},
+  {sv:'Morgontrött',pron:'MOR-on-trot',en:'Tired in the morning',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:'neuter: morgontrötthet · plural: morgontröttar'},
+  {sv:'Morgonpigg',pron:'MOR-on-pig',en:'Energized in the morning',src:'Podcast',cat:'Daily life',p:1,n:0,t:'word',forms:'neuter: morgonpigt · plural: morgonpigga'},
+  {sv:'Jag slappnar av',pron:'yag SLAP-nar av',en:'I relax',src:'Podcast',cat:'Daily life',p:1,n:0,t:'sentence',forms:'present: slappnar av · past: slappnade av · supine: slappnat av'},
+  {sv:'Jag skrollar på mobilen',pron:'yag SKROL-ar paw moo-BEE-len',en:'I scroll on my phone',src:'Podcast',cat:'Daily life',p:1,n:0,t:'sentence',forms:''},
+  {sv:'Jo',pron:'yoo',en:'Actually, yes',src:'Podcast',cat:'Questions',p:0,n:0,t:'word',forms:''},
+  {sv:'Faktiskt',pron:'FAK-tiskt',en:'Actually',src:'Podcast',cat:'Questions',p:1,n:0,t:'word',forms:''},
+  {sv:'Visst',pron:'vist',en:'Certainly',src:'Podcast',cat:'Questions',p:1,n:0,t:'word',forms:''},
+  {sv:'Heller',pron:'HEL-er',en:'Either (in negatives)',src:'Podcast',cat:'Questions',p:1,n:0,t:'word',forms:''},
+  {sv:'Alls',pron:'als',en:'At all',src:'Podcast',cat:'Questions',p:1,n:0,t:'word',forms:''},
+  {sv:'Vem',pron:'vem',en:'Who/whom',src:'Podcast',cat:'Questions',p:1,n:0,t:'word',forms:''},
+  {sv:'Vilken/vilket/vilka',pron:'VIL-ken/VIL-ket/VIL-ka',en:'Which',src:'Podcast',cat:'Questions',p:1,n:0,t:'word',forms:''},
+  {sv:'Därför att',pron:'DEHR-fur at',en:'Because',src:'Podcast',cat:'Questions',p:1,n:0,t:'word',forms:''},
+  {sv:'För att',pron:'fur at',en:'Because / in order to',src:'Podcast',cat:'Questions',p:1,n:0,t:'word',forms:''},
+  {sv:'På grund av',pron:'paw grond av',en:'Because of',src:'Podcast',cat:'Questions',p:1,n:0,t:'word',forms:''},
+  {sv:'En vinter',pron:'en VIN-ter',en:'A winter',src:'Podcast',cat:'Weather',p:0,n:0,t:'word',forms:'plural: vintrar · definite: vintern'},
+  {sv:'En sommar',pron:'en SOM-ar',en:'A summer',src:'Podcast',cat:'Weather',p:0,n:0,t:'word',forms:'plural: somrar · definite: sommaren'},
+  {sv:'En höst',pron:'en hurst',en:'Autumn/fall',src:'Podcast',cat:'Weather',p:0,n:0,t:'word',forms:'plural: höstar · definite: hösten'},
+  {sv:'Solig/soligt',pron:'SOO-lig/SOO-ligt',en:'Sunny',src:'Podcast',cat:'Weather',p:0,n:0,t:'word',forms:'neuter: soligt · plural: soliga'},
+  {sv:'Blåsig/blåsigt',pron:'BLAW-sig/BLAW-sigt',en:'Windy',src:'Podcast',cat:'Weather',p:0,n:0,t:'word',forms:'neuter: blåsigt · plural: blåsiga'},
+  {sv:'Molnig/molnigt',pron:'MOL-nig/MOL-nigt',en:'Cloudy',src:'Podcast',cat:'Weather',p:0,n:0,t:'word',forms:'neuter: molnigt · plural: molniga'},
+  {sv:'Kall/kallare/kallast',pron:'kal/KAL-areh/KAL-ast',en:'Cold/colder/coldest',src:'Podcast',cat:'Weather',p:0,n:0,t:'word',forms:'neuter: kallt · plural: kalla'},
+  {sv:'Varm/varmare/varmast',pron:'varm/VAR-mareh/VAR-mast',en:'Warm/warmer/warmest',src:'Podcast',cat:'Weather',p:0,n:0,t:'word',forms:'neuter: varmt · plural: varma'},
+  {sv:'Inomhus',pron:'IN-om-hoos',en:'Indoors',src:'Podcast',cat:'Weather',p:0,n:0,t:'word',forms:''},
+  {sv:'Utomhus',pron:'OOT-om-hoos',en:'Outdoors',src:'Podcast',cat:'Weather',p:0,n:0,t:'word',forms:''},
+  {sv:'Välkomna!',pron:'VEL-kom-na',en:'Welcome!',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'Har ni bokat bord?',pron:'har nee BOO-kat boord',en:'Have you booked a table?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Vill ni sitta inne eller ute?',pron:'vil nee SIT-a IN-eh EL-er OO-teh',en:'Inside or outside?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Följ med mig',pron:'fuly meh mig',en:'Follow me',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word',forms:'present: följer · past: följde · supine: följt'},
+  {sv:'Jag vill gärna öva min svenska',pron:'yag vil YEHR-na UR-va min SVEN-ska',en:'I\'d like to practise my Swedish',src:'Podcast',cat:'Greetings',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Är ni redo att beställa?',pron:'ehr nee REH-do at beh-STEL-a',en:'Are you ready to order?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Jag tar köttbullarna, tack',pron:'yag tahr CHET-bul-arna tak',en:'I\'ll take the meatballs, thanks',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Ingår påtår?',pron:'IN-gawr PAW-tawr',en:'Is a refill included?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'Vad rekommenderar du?',pron:'vah reh-kom-en-DEH-rar doo',en:'What do you recommend?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag skulle vilja ha...',pron:'yag SKOOL-eh VIL-ya hah',en:'I would like to have...',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Smaklig måltid!',pron:'SMAHK-lig MAWL-teed',en:'Enjoy your meal!',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'Tusen tack!',pron:'TOO-sen tak',en:'Thank you so much!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Kan vi få notan, tack?',pron:'kan vee faw NOO-tan tak',en:'Can we get the bill please?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Det var supergott!',pron:'deh var SOO-per-yot',en:'That was delicious!',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Tack, hejdå!',pron:'tak HAY-daw',en:'Thank you, goodbye!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Mat / Matt',pron:'maht / mat',en:'Food (long) / Dull (short vowel)',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word',forms:''},
+  {sv:'Glas / Glass',pron:'glahs / glas',en:'Glass / Ice cream',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word',forms:''},
+  {sv:'Skål!',pron:'skawl',en:'Cheers!',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word',forms:''},
+  {sv:'Gift',pron:'yift',en:'Married / Poison (same spelling!)',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word',forms:'adj neuter: gift · plural: gifta · note: also means poison'},
+  {sv:'Kär',pron:'chehr',en:'In love',src:'Podcast',cat:'Pronunciation',p:0,n:0,t:'word',forms:'neuter: kärt · plural: kära · comparative: kärare'},
+  {sv:'Vill du göra något i kväll?',pron:'vil doo YUR-a NAW-got ee kvel',en:'Do you want to do something this evening?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Gärna',pron:'YEHR-na',en:'I\'d love to / gladly',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag måste hem',pron:'yag MOS-teh hem',en:'I have to go home',src:'Babbel',cat:'Daily life',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Tvätta',pron:'TVET-a',en:'To do laundry / to wash',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: tvättar · past: tvättade · supine: tvättat'},
+  {sv:'Ska vi ta en öl runt åtta?',pron:'skah vee tah en URL roont OT-a',en:'Shall we grab a beer around eight?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Gå ut och äta',pron:'gaw oot ok EH-ta',en:'Go out and eat',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Kanske',pron:'KAN-sheh',en:'Maybe / perhaps',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Vad finns det där du bor?',pron:'vah fins deh dehr doo boor',en:'What is there where you live?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'En pizzeria',pron:'en pit-seh-REE-a',en:'A pizzeria',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'plural: pizzerior · definite: pizzerian'},
+  {sv:'En sushirestaurang',pron:'en SOO-shee-res-taw-RANG',en:'A sushi restaurant',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'plural: sushirestauranger · definite: sushirestaurangen'},
+  {sv:'Inget kebabställe',pron:'IN-get keh-BAB-stel-eh',en:'No kebab place',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'plural: kebabställen · definite: kebabstället'},
+  {sv:'Var i världen',pron:'vahr ee VEHR-lden',en:'Where in the world',src:'Babbel',cat:'Questions',p:0,n:0,t:'word',forms:''},
+  {sv:'Förutom',pron:'fur-OO-tom',en:'Besides / except for',src:'Babbel',cat:'Questions',p:0,n:0,t:'word',forms:''},
+  {sv:'Ingenstans',pron:'ING-en-stans',en:'Nowhere',src:'Babbel',cat:'Questions',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag lär mig',pron:'yag lehr may',en:'I am learning',src:'Babbel',cat:'Daily life',p:0,n:0,t:'sentence',forms:'present: lär sig · past: lärde sig · supine: lärt sig'},
+  {sv:'Det är min läxa',pron:'deh ehr min LEK-sa',en:'That\'s my homework',src:'Babbel',cat:'Daily life',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Vad mycket du kan!',pron:'vah MYK-eh doo kan',en:'You know so much!',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Fast',pron:'fast',en:'But / though / however',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Precis som',pron:'preh-SEES som',en:'Just like / exactly as',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag vet',pron:'yag veht',en:'I know',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:'present: vet · past: visste · supine: vetat'},
+  {sv:'Storbritannien',pron:'stor-BRIT-an-yen',en:'Great Britain',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Australien',pron:'aw-STRAH-lee-en',en:'Australia',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Nya Zeeland',pron:'newa ZEH-land',en:'New Zealand',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Kanada',pron:'KAN-a-da',en:'Canada',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Irland',pron:'EER-land',en:'Ireland',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Malta',pron:'MAL-ta',en:'Malta',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Spanien',pron:'SPAH-nee-en',en:'Spain',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Latinamerika',pron:'lah-teen-ah-MEH-ree-ka',en:'Latin America',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Brasilien',pron:'bra-SEE-lee-en',en:'Brasil',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Portugal',pron:'POR-too-gal',en:'Portugal',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Kinesiska',pron:'shee-NEH-siska',en:'Chinese (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Spanska',pron:'SPAN-ska',en:'Spanish (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Portugisiska',pron:'por-too-YEE-siska',en:'Portuguese (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Tvillingar',pron:'TVIL-ing-ar',en:'Twins',src:'Babbel',cat:'Family',p:0,n:1,t:'word',forms:'singular: tvilling · definite: tvillingarna'},
+  {sv:'Bredvid',pron:'breh-VEED',en:'Next to / beside',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
+  {sv:'Min farfar står bredvid henne',pron:'min FAR-far stawr breh-VEED HEN-eh',en:'My paternal grandpa is standing next to her',src:'Babbel',cat:'Family',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Det här / den här',pron:'deh hehr / den hehr',en:'This (ett-word) / this (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Det där / den där',pron:'deh dehr / den dehr',en:'That (ett-word) / that (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Dina föräldrar',pron:'DEE-na fur-EL-drar',en:'Your parents',src:'Babbel',cat:'Family',p:0,n:1,t:'word',forms:''},
+  {sv:'Min kompis',pron:'min KOM-pis',en:'My friend (informal)',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'plural: kompisar · definite: kompisen'},
+  {sv:'Mina föräldrar bor vid havet',pron:'MEE-na fur-EL-drar boor veed HAH-vet',en:'My parents live by the sea',src:'Babbel',cat:'Family',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Vid havet',pron:'veed HAH-vet',en:'By the sea',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
+  {sv:'En utbytesstudent',pron:'en OOT-bewt-es-stoo-DENT',en:'An exchange student',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'plural: utbytesstudenter · definite: utbytesstudenten'},
+  {sv:'I vår klass',pron:'ee vawr klas',en:'In our class',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Två stycken',pron:'tvaw STEW-ken',en:'Two of them / two pieces',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Just nu',pron:'yoost noo',en:'Right now',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Jaså?',pron:'yah-SAW',en:'Oh really? / Is that so?',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Väldigt trevlig',pron:'VEL-digt TREV-lig',en:'Very nice / pleasant',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'neuter: trevligt · plural: trevliga · comparative: trevligare'},
+  {sv:'Jag borde prata med honom',pron:'yag BOO-reh PRAH-ta meh HON-om',en:'I should talk to him',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Man träffar sällan folk',pron:'man TREF-ar SEL-an folk',en:'You rarely meet people',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Åtminstone',pron:'awt-MIN-sto-neh',en:'At least',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Vänta',pron:'VEN-ta',en:'Wait',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'present: väntar · past: väntade · supine: väntat'},
+  {sv:'Hur så?',pron:'hoor saw',en:'How so? / What do you mean?',src:'Babbel',cat:'Questions',p:0,n:1,t:'word',forms:''},
+  {sv:'Va?',pron:'vah',en:'What? / Huh? (informal)',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Vilket sammanträffande!',pron:'VIL-ket SAM-an-tref-an-deh',en:'What a coincidence!',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Ja, verkligen',pron:'yah VEHR-kli-gen',en:'Yes, really / indeed',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Okej, fortsätt',pron:'oh-KAY FORT-set',en:'Okay, continue / go on',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'present: fortsätter · past: fortsatte · supine: fortsatt'},
+  {sv:'Bakom',pron:'BAH-kom',en:'Behind',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
+  {sv:'Tillsammans med',pron:'til-SAM-ans meh',en:'Together with',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Jag är förvirrad',pron:'yag ehr fur-VIR-ad',en:'I am confused',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:'neuter: förvirrat · plural: förvirrade'},
+  {sv:'Gå på bio',pron:'gaw paw BEE-oo',en:'Go to the cinema',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'present: går · past: gick · supine: gått'},
+  {sv:'Jag skulle gärna gå på bio',pron:'yag SKOOL-eh YEHR-na gaw paw BEE-oo',en:'I\'d love to go to the cinema',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Jag brukar ofta',pron:'yag BROO-kar OF-ta',en:'I often tend to / I usually',src:'Babbel',cat:'Daily life',p:0,n:1,t:'sentence',forms:'present: brukar · past: brukade · supine: brukat'},
+  {sv:'Nationalmuseet',pron:'nat-see-oh-NAHL-moo-SEH-et',en:'The National Museum',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
+  {sv:'Har du lust att...?',pron:'har doo loost at',en:'Do you feel like...? / Fancy...?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Äta middag',pron:'EH-ta MID-ag',en:'To eat dinner',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'present: äter · past: åt · supine: ätit'},
+  {sv:'I helgen',pron:'ee HEL-yen',en:'At the weekend',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Stora torget',pron:'STOO-ra TOR-yet',en:'The main square',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:'definite: torget · plural: torg'},
+  {sv:'Tyvärr',pron:'tew-VEHR',en:'Unfortunately',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Har du tid på lördag kväll?',pron:'har doo teed paw LUR-dag kvel',en:'Are you free Saturday evening?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Då gör vi det!',pron:'daw yur vee deh',en:'Then we\'ll do that! / It\'s a plan!',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'När slutar du?',pron:'nehr SLOO-tar doo',en:'When do you finish?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Det funkar',pron:'deh FOON-kar',en:'That works / that fits',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:'present: funkar · past: funkade · supine: funkat'},
+  {sv:'Det hinner jag inte',pron:'deh HIN-er yag IN-teh',en:'I can\'t make that / not enough time',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Det tar en halvtimme',pron:'deh tahr en HALV-tim-eh',en:'It takes half an hour',src:'Babbel',cat:'Transport',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Från jobbet till stan',pron:'frawn YOB-et til stahn',en:'From work to the city centre',src:'Babbel',cat:'Transport',p:0,n:1,t:'sentence',forms:''},
+  {sv:'En föreställning',pron:'en fur-eh-STEL-ning',en:'A screening / performance / show',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'plural: föreställningar · definite: föreställningen'},
+  {sv:'Den sena föreställningen',pron:'den SEH-na fur-eh-STEL-ning-en',en:'The late screening',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Ska vi ta den?',pron:'skah vee tah den',en:'Shall we see that one?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Innan',pron:'IN-an',en:'Before / beforehand',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Det blir perfekt!',pron:'deh bleer pehr-FEKT',en:'That\'ll be perfect!',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Jag messar dig',pron:'yag MES-ar day',en:'I\'ll message you',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:'present: messar · past: messade · supine: messat'},
+  {sv:'Puss!',pron:'poos',en:'Bye! / Kiss! (casual sign-off)',src:'Babbel',cat:'Greetings',p:0,n:1,t:'word',forms:''},
+  {sv:'Slutsåld',pron:'SLOOT-sawld',en:'Sold out',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'neuter: slutsålt · plural: slutsålda'},
+  {sv:'Hinner du till klockan...?',pron:'HIN-er doo til KLOK-an',en:'Can you make it by...?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'I så fall',pron:'ee saw fal',en:'In that case',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Nära bion',pron:'NEH-ra BEE-on',en:'Close to the cinema',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
+  {sv:'Popcorn och godis',pron:'POP-korn ok GOO-dis',en:'Popcorn and sweets',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:''},
+  {sv:'Ring när du har slutat jobbet!',pron:'ring nehr doo har SLOO-tat YOB-et',en:'Call when you finish work!',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''}
 ];
 </script>
 <script>
@@ -677,11 +674,37 @@ function markCard(knew){
   qIdx++;renderCard();
 }
 
-// ── AI EXPAND ──
+// ── GEMINI KEY ──
+function saveGeminiKey(){
+  const k=document.getElementById('gemini-key-input').value.trim();
+  if(!k){alert('Please paste your API key first.');return;}
+  localStorage.setItem('sv_gemini_key',k);
+  document.getElementById('gemini-key-input').value='';
+  updateKeyStatus();
+  alert('Key saved! You can now use Smart Expand.');
+}
+function clearGeminiKey(){
+  localStorage.removeItem('sv_gemini_key');
+  updateKeyStatus();
+}
+function updateKeyStatus(){
+  const k=localStorage.getItem('sv_gemini_key');
+  const el=document.getElementById('key-status');
+  if(el) el.textContent=k?'✓ API key saved ('+k.slice(0,8)+'…)':'No key saved yet.';
+}
+updateKeyStatus();
+
+// ── AI EXPAND (Gemini) ──
 let expandedData=null;
 async function doExpand(){
   const input=document.getElementById('ai-input').value.trim();
   if(!input)return;
+  const key=localStorage.getItem('sv_gemini_key');
+  if(!key){
+    document.getElementById('ai-result').textContent='Please save your Gemini API key first (see section above).';
+    document.getElementById('ai-result').classList.add('show');
+    return;
+  }
   const spin=document.getElementById('ai-spin');
   const lbl=document.getElementById('ai-label');
   const res=document.getElementById('ai-result');
@@ -697,14 +720,16 @@ Respond ONLY with a JSON object, no markdown, no explanation:
   "pron": "pronunciation guide in simple English phonetics (CAPS for stress)",
   "en": "English translation",
   "cat": "one of: Greetings|Family|People|Daily life|Weather|Restaurant|Questions|Directions|Transport|Social|Pronouns|Pronunciation",
-  "forms": "key grammatical forms separated by · e.g. plural: hundar · definite: hunden · past tense: åt · present: äter · infinitive: att äta",
+  "forms": "key grammatical forms separated by · e.g. plural: hundar · definite: hunden · past: åt · present: äter",
   "notes": "one short grammar tip (max 15 words)"
 }
-If input is a phrase/sentence, set forms to "" and give a usage note instead.`;
+If input is a phrase or sentence, set forms to empty string.`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:400,messages:[{role:'user',content:prompt}]})});
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:400}})});
     const data=await r.json();
-    const text=data.content[0].text.replace(/```json|```/g,'').trim();
+    if(data.error){throw new Error(data.error.message);}
+    let text=data.candidates[0].content.parts[0].text.replace(/```json|```/g,'').trim();
     expandedData=JSON.parse(text);
     document.getElementById('fp-sv').textContent=expandedData.sv;
     document.getElementById('fp-pron').textContent=expandedData.pron;
@@ -714,7 +739,7 @@ If input is a phrase/sentence, set forms to "" and give a usage note instead.`;
     res.textContent='';res.classList.remove('show');
     saveBtn.style.display='block';
   }catch(e){
-    res.textContent='Could not connect to Claude API. Check your internet connection.';
+    res.textContent='Error: '+e.message+'. Check your API key or internet connection.';
     res.classList.add('show');
   }
   spin.style.display='none';lbl.textContent='Expand & generate forms';
@@ -774,58 +799,6 @@ function showScreen(name,btn){
     if(nb)nb.classList.add('on');
   }
   if(name==='quiz'&&!qItems.length)startQuiz();
-}
-
-// ── BULK EXPAND ──
-const formsCache = JSON.parse(localStorage.getItem('sv_forms') || '{}');
-// Apply cached forms to VOCAB on load
-VOCAB.forEach(v => { if(formsCache[v.sv]) v.forms = formsCache[v.sv]; });
-
-async function bulkExpand(){
-  const btn = document.getElementById('bulk-btn');
-  const prog = document.getElementById('bulk-progress');
-  const status = document.getElementById('bulk-status');
-  const bar = document.getElementById('bulk-bar');
-  
-  const toExpand = VOCAB.filter(v => (v.t||'word')==='word' && !v.forms);
-  if(!toExpand.length){ alert('All words already have forms!'); return; }
-  
-  btn.disabled = true; btn.textContent = 'Running...';
-  prog.style.display = 'block';
-  let done = 0;
-  
-  // Process in batches of 20
-  const BATCH = 20;
-  for(let i = 0; i < toExpand.length; i += BATCH){
-    const batch = toExpand.slice(i, i + BATCH);
-    const items = batch.map((v,j) => `${j+1}. sv="${v.sv}" en="${v.en}"`).join('\n');
-    const prompt = `Swedish language expert. For each word/phrase return ONLY a JSON array, no markdown:\n[{"sv":"exact input","forms":"forms separated by · e.g. plural: hundar · definite: hunden · past: åt"}]\nRules: nouns→plural+definite, verbs→present+past+supine, adjectives→neuter+plural, interjections→"". Max 70 chars.\n${items}`;
-    
-    try {
-      const r = await fetch('https://api.anthropic.com/v1/messages', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:800,messages:[{role:'user',content:prompt}]})
-      });
-      const data = await r.json();
-      const text = data.content[0].text.replace(/\`\`\`json|\`\`\`/g,'').trim();
-      const results = JSON.parse(text);
-      results.forEach(item => {
-        const v = VOCAB.find(x => x.sv === item.sv);
-        if(v && item.forms){ v.forms = item.forms; formsCache[v.sv] = item.forms; }
-      });
-      localStorage.setItem('sv_forms', JSON.stringify(formsCache));
-    } catch(e) { console.error('Batch error:', e); }
-    
-    done += batch.length;
-    const pct = Math.round(done / toExpand.length * 100);
-    bar.style.width = pct + '%';
-    status.textContent = `${done} / ${toExpand.length} words processed (${pct}%)`;
-    await new Promise(r => setTimeout(r, 300));
-  }
-  
-  btn.disabled = false; btn.textContent = 'Done! ✓ Reload browse tab to see forms';
-  renderList();
 }
 
 // ── INIT ──
