@@ -716,17 +716,7 @@ async function doExpand(){
   spin.style.display='inline-block';lbl.textContent='Analysing…';
   res.classList.remove('show');prev.classList.remove('show');saveBtn.style.display='none';
   expandedData=null;
-  const prompt=`You are a Swedish language expert. The user entered: "${input}"
-Respond ONLY with a JSON object, no markdown, no explanation:
-{
-  "sv": "canonical Swedish form",
-  "pron": "pronunciation guide in simple English phonetics (CAPS for stress)",
-  "en": "English translation",
-  "cat": "one of: Greetings|Family|People|Daily life|Weather|Restaurant|Questions|Directions|Transport|Social|Pronouns|Pronunciation",
-  "forms": "key grammatical forms separated by · e.g. plural: hundar · definite: hunden · past: åt · present: äter",
-  "notes": "one short grammar tip (max 15 words)"
-}
-If input is a phrase or sentence, set forms to empty string.`;
+  const prompt=`Return ONLY raw JSON, no text before or after, no markdown, no code blocks. Swedish word: "${input}". Output this exact structure: {"sv":"the Swedish word","pron":"pronunciation in English phonetics CAPS for stress","en":"English meaning","cat":"one of Greetings Family People Daily-life Weather Restaurant Questions Directions Transport Social Pronouns Pronunciation","forms":"grammatical forms e.g. plural: hundar · definite: hunden · past: åt · present: äter (empty string if phrase)","notes":"one grammar tip max 10 words"}`;
   try{
     const r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
       method:'POST',
@@ -736,12 +726,17 @@ If input is a phrase or sentence, set forms to empty string.`;
         'HTTP-Referer':'https://svenska-vocab.github.io',
         'X-Title':'Svenska Vocab'
       },
-      body:JSON.stringify({model:'openrouter/free',max_tokens:400,temperature:0.1,messages:[{role:'user',content:prompt}]})
+      body:JSON.stringify({model:'mistralai/mistral-7b-instruct:free',max_tokens:400,temperature:0.1,messages:[{role:'user',content:prompt}]})
     });
     const data=await r.json();
     if(data.error){throw new Error(data.error.message||JSON.stringify(data.error));}
-    let text=data.choices[0].message.content.replace(/```json|```/g,'').trim();
-    expandedData=JSON.parse(text);
+    let raw=data.choices[0].message.content;
+    // Strip markdown fences if present
+    let text=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+    // Extract JSON object even if surrounded by text
+    const jsonMatch=text.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('No JSON found in response: '+text.slice(0,80));
+    expandedData=JSON.parse(jsonMatch[0]);
     document.getElementById('fp-sv').textContent=expandedData.sv;
     document.getElementById('fp-pron').textContent=expandedData.pron;
     document.getElementById('fp-en').textContent=expandedData.en;
