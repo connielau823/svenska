@@ -223,9 +223,9 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
   <div class="add-wrap">
 
     <div class="add-section">
-      <h3>🔑 AI API key (free)</h3>
+      <h3>🔑 OpenRouter API key (free)</h3>
       <div class="add-row">
-        <label>Paste your OpenRouter API key (free, no credit card needed)</label>
+        <label>Paste your OpenRouter API key (saved to this device only)</label>
         <input type="password" id="ai-key-input" placeholder="sk-or-..." autocorrect="off" autocapitalize="off" autocomplete="off">
       </div>
       <div style="display:flex;gap:8px">
@@ -235,7 +235,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
       <div id="key-status" style="font-size:12px;color:var(--txt3);margin-top:8px">No key saved yet.</div>
       <p style="font-size:11px;color:var(--txt3);margin-top:8px">
         Get a free key at <strong>openrouter.ai</strong> → Sign in → Keys → Create key.<br>
-        Free tier: ~200 requests/day. Key stays on your device only.
+        Free tier, no credit card needed. Key stays on your device only — never share it in chat.
       </p>
     </div>
 
@@ -730,8 +730,13 @@ If input is a phrase or sentence, set forms to empty string.`;
   try{
     const r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'HTTP-Referer':'https://svenska-vocab.github.io','X-Title':'Svenska Vocab'},
-      body:JSON.stringify({model:'deepseek/deepseek-v4-flash:free',max_tokens:400,temperature:0.1,messages:[{role:'user',content:prompt}]})
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+key,
+        'HTTP-Referer':'https://svenska-vocab.github.io',
+        'X-Title':'Svenska Vocab'
+      },
+      body:JSON.stringify({model:'openrouter/free',max_tokens:400,temperature:0.1,messages:[{role:'user',content:prompt}]})
     });
     const data=await r.json();
     if(data.error){throw new Error(data.error.message||JSON.stringify(data.error));}
