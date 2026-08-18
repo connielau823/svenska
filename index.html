@@ -19,8 +19,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;background:var(--bg);color:var(--txt);overflow:hidden}
-
-/* layout */
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
 .header{padding:52px 16px 10px;background:var(--sur);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .header h1{font-size:20px;font-weight:700}
@@ -33,8 +31,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
 .tab.on{color:var(--acc2);border-bottom-color:var(--acc2)}
 .screen{display:none;flex-direction:column;flex:1;overflow:hidden}
 .screen.on{display:flex}
-
-/* filters & search */
+/* filters */
 .search-bar{padding:10px 14px 6px;background:var(--sur);border-bottom:1px solid var(--bdr);flex-shrink:0}
 .search-bar input{width:100%;background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rad2);padding:9px 14px;font-size:15px;color:var(--txt);outline:none}
 .search-bar input::placeholder{color:var(--txt3)}
@@ -49,8 +46,6 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
 .srow{display:flex;align-items:center;gap:8px;padding:6px 14px 8px;background:var(--sur);border-bottom:1px solid var(--bdr);font-size:12px;color:var(--txt2);flex-shrink:0}
 .spd{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:1.5px solid var(--bdr);color:var(--txt2);background:transparent;cursor:pointer}
 .spd.on{border-color:var(--acc2);color:var(--acc2)}
-#vlabel{font-size:11px;color:var(--txt3);margin-left:4px}
-
 /* list */
 .list-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .lshow{font-size:11px;color:var(--txt3);padding:8px 14px 4px}
@@ -75,33 +70,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
 .spkbtn{flex-shrink:0;width:40px;height:40px;border-radius:50%;background:var(--sur2);border:1.5px solid var(--bdr);color:var(--txt2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .spkbtn.playing{background:var(--acc);border-color:var(--acc);color:#fff}
 .empty{padding:60px 24px;text-align:center;color:var(--txt3);font-size:15px}
-
-/* ── ADD SCREEN ── */
-.add-wrap{flex:1;overflow-y:auto;padding:16px}
-.add-section{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:16px;margin-bottom:14px}
-.add-section h3{font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
-.add-row{margin-bottom:12px}
-.add-row label{font-size:12px;color:var(--txt3);display:block;margin-bottom:5px}
-.add-row input,.add-row select,.add-row textarea{width:100%;background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rad2);padding:10px 12px;font-size:14px;color:var(--txt);outline:none;font-family:inherit}
-.add-row textarea{min-height:70px;resize:none}
-.add-row select option{background:var(--sur)}
-.add-btn{width:100%;padding:14px;border-radius:var(--rad2);border:none;font-size:15px;font-weight:700;cursor:pointer;background:var(--acc);color:#fff;margin-top:4px}
-.add-btn:active{opacity:.8}
-.ai-btn{width:100%;padding:12px;border-radius:var(--rad2);border:1.5px solid var(--acc);font-size:14px;font-weight:600;cursor:pointer;background:transparent;color:var(--acc2);margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px}
-.ai-btn:active{opacity:.8}
-.ai-result{background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rad2);padding:12px;margin-top:10px;font-size:13px;color:var(--txt2);min-height:60px;white-space:pre-wrap;display:none}
-.ai-result.show{display:block}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--bdr);border-top-color:var(--acc2);border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.form-preview{background:var(--sur2);border:1px solid var(--acc);border-radius:var(--rad2);padding:12px;margin-top:10px;display:none}
-.form-preview.show{display:block}
-.fp-sv{font-size:18px;font-weight:700;color:var(--txt)}
-.fp-pron{font-size:12px;color:var(--acc2);font-style:italic;margin-top:2px}
-.fp-en{font-size:13px;color:var(--txt2);margin-top:4px}
-.fp-forms{margin-top:8px;font-size:12px;color:var(--txt3)}
-.custom-tag{display:inline-block;font-size:10px;background:rgba(124,111,224,.2);color:var(--acc2);border-radius:20px;padding:2px 8px;margin-left:4px}
-
-/* ── FLASHCARD QUIZ ── */
+/* flashcards */
 .quiz-wrap{flex:1;overflow-y:auto;padding:16px 16px 100px}
 .qmode-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .qmode{font-size:12px;font-weight:600;padding:7px 14px;border-radius:20px;border:1.5px solid var(--bdr);color:var(--txt2);background:transparent;cursor:pointer}
@@ -114,31 +83,26 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
 .qstat{flex:1;background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad2);padding:10px;text-align:center}
 .qstat-n{font-size:22px;font-weight:700}
 .qstat-l{font-size:11px;color:var(--txt3);margin-top:2px}
-
-/* flashcard */
-.flashcard{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:28px 20px;text-align:center;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:16px;cursor:pointer;transition:transform .15s;position:relative;overflow:hidden}
-.flashcard:active{transform:scale(.98)}
+.flashcard{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:28px 20px;text-align:center;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:16px;cursor:pointer;position:relative}
 .fc-hint{font-size:11px;color:var(--txt3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
 .fc-q{font-size:26px;font-weight:700;color:var(--txt);line-height:1.3;margin-bottom:8px}
 .fc-sub{font-size:13px;color:var(--txt3)}
+.tap-hint{font-size:12px;color:var(--txt3);margin-top:12px}
 .fc-reveal{display:none;width:100%;border-top:1px solid var(--bdr);margin-top:16px;padding-top:16px}
 .fc-reveal.show{display:block}
 .fc-ans{font-size:20px;font-weight:600;color:var(--grn);margin-bottom:6px}
 .fc-pron{font-size:13px;color:var(--acc2);font-style:italic;margin-bottom:6px}
 .fc-forms-fc{font-size:12px;color:var(--txt3);margin-top:6px}
-.tap-hint{font-size:12px;color:var(--txt3);margin-top:12px}
 .fc-actions{display:flex;gap:10px;margin-top:4px}
-.fc-btn{flex:1;padding:16px;border-radius:var(--rad2);border:none;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .1s}
-.fc-btn:active{opacity:.7}
+.fc-btn{flex:1;padding:16px;border-radius:var(--rad2);border:none;font-size:15px;font-weight:700;cursor:pointer}
 .fc-no{background:rgba(224,112,96,.2);color:var(--red)}
 .fc-yes{background:rgba(52,201,136,.2);color:var(--grn)}
-.fc-skip{background:var(--sur2);color:var(--txt2);border:1px solid var(--bdr)!important;flex:0 0 auto;padding:16px 18px}
 .qscore-screen{text-align:center;padding:40px 20px}
 .qscore-n{font-size:72px;font-weight:800;color:var(--acc2);line-height:1}
 .qscore-l{font-size:17px;color:var(--txt2);margin-top:10px}
 .qscore-s{font-size:13px;color:var(--txt3);margin-top:4px}
 .qrestart{margin-top:28px;background:var(--acc);color:#fff;padding:14px 32px;border-radius:var(--rad2);font-size:16px;font-weight:700;cursor:pointer;border:none}
-/* bottom nav */
+/* nav */
 .bnav{display:flex;background:var(--sur);border-top:1px solid var(--bdr);padding:8px 0 calc(8px + env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;z-index:20}
 .nbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;background:none;border:none;cursor:pointer;color:var(--txt3);font-size:10px;font-weight:600}
 .nbtn.on{color:var(--acc2)}
@@ -147,29 +111,27 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
 </head>
 <body>
 <div class="app">
-
 <div class="header">
   <h1>🇸🇪 <span>Svenska</span></h1>
   <div class="hstats">
-    <div class="chip"><b id="sn-total">249</b> words</div>
+    <div class="chip"><b id="sn-total">0</b> words</div>
     <div class="chip" style="color:var(--red)"><b id="sn-pr">0</b> review</div>
   </div>
 </div>
-
 <div class="tabs">
   <button class="tab on" onclick="showScreen('browse',this)">Browse</button>
   <button class="tab" onclick="showScreen('quiz',this)">Flashcards</button>
-  <button class="tab" onclick="showScreen('add',this)">+ Add</button>
 </div>
 
-<!-- ── BROWSE ── -->
+<!-- BROWSE -->
 <div id="screen-browse" class="screen on">
-  <div class="search-bar"><input type="search" placeholder="Search Swedish or English..." oninput="doSearch(this.value)" id="search-in"></div>
+  <div class="search-bar">
+    <input type="search" placeholder="Search Swedish or English..." oninput="doSearch(this.value)">
+  </div>
   <div class="fscroll" id="src-row">
     <button class="pill ba" onclick="setSrc('all',this)">All sources</button>
-    <button class="pill" onclick="setSrc('Babbel',this)" style="--c:var(--blu)">Babbel</button>
-    <button class="pill" onclick="setSrc('Podcast',this)" style="--c:var(--pod)">Podcast PDF</button>
-    <button class="pill" onclick="setSrc('Custom',this)">My words</button>
+    <button class="pill" onclick="setSrc('Babbel',this)">Babbel</button>
+    <button class="pill" onclick="setSrc('Podcast',this)">Podcast PDF</button>
   </div>
   <div class="fscroll" id="cat-row">
     <button class="pill on" onclick="setCat('all',this)">All</button>
@@ -190,14 +152,15 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
   </div>
   <div class="fscroll" id="type-row">
     <button class="pill on" onclick="setType('all',this)">All types</button>
-    <button class="pill" onclick="setType('word',this)">Words &amp; phrases</button>
+    <button class="pill" onclick="setType('word',this)">Words</button>
     <button class="pill" onclick="setType('sentence',this)">Sentences</button>
   </div>
-  <div class="srow">🔊 Speed:
+  <div class="srow">
+    🔊 Speed:
     <button class="spd" onclick="setSpd(0.6,this)">Slow</button>
     <button class="spd on" onclick="setSpd(0.85,this)">Normal</button>
     <button class="spd" onclick="setSpd(1.1,this)">Fast</button>
-    <span id="vlabel">loading voice…</span>
+    <span id="vlabel" style="font-size:11px;color:var(--txt3);margin-left:4px">loading…</span>
   </div>
   <div class="list-wrap">
     <div class="lshow" id="lshow"></div>
@@ -205,87 +168,27 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
   </div>
 </div>
 
-<!-- ── FLASHCARD QUIZ ── -->
+<!-- FLASHCARDS -->
 <div id="screen-quiz" class="screen">
-  <div class="quiz-wrap" id="quiz-wrap">
+  <div class="quiz-wrap">
     <div class="qmode-row">
       <button class="qmode on" onclick="setQMode('all',this)">All words</button>
-      <button class="qmode" onclick="setQMode('priority',this)">Review only</button>
-      <button class="qmode" onclick="setQMode('new',this)">New only</button>
-      <button class="qmode" onclick="setQMode('custom',this)">My words</button>
+      <button class="qmode" onclick="setQMode('missed',this)">&#10007; Missed words</button>
     </div>
+    <div id="missed-info" style="display:none;font-size:12px;color:var(--txt3);margin-bottom:12px;padding:8px 12px;background:var(--sur);border-radius:var(--rad2)">Words you marked as &ldquo;Didn&rsquo;t know&rdquo; this session.</div>
     <div id="qcontent"></div>
   </div>
 </div>
-
-<!-- ── ADD VOCAB ── -->
-<div id="screen-add" class="screen">
-  <div class="add-wrap">
-
-    
-      <div id="key-status" style="font-size:12px;color:var(--txt3);margin-top:8px">No key saved yet.</div>
-    </div>
-
-    <div class="add-section">
-      <h3>✨ Smart expand</h3>
-      <div class="add-row">
-        <label>Enter any Swedish word or sentence</label>
-        <input type="text" id="ai-input" placeholder="e.g. att äta, äpplet, jag går…" autocorrect="off" autocapitalize="off">
-      </div>
-      <button class="ai-btn" onclick="doExpand()">
-        <span id="ai-spin" style="display:none" class="spinner"></span>
-        <span id="ai-label">Expand &amp; generate forms</span>
-      </button>
-      <div class="ai-result" id="ai-result"></div>
-      <div class="form-preview" id="form-preview">
-        <div class="fp-sv" id="fp-sv"></div>
-        <div class="fp-pron" id="fp-pron"></div>
-        <div class="fp-en" id="fp-en"></div>
-        <div class="fp-forms" id="fp-forms"></div>
-      </div>
-      <button class="add-btn" id="save-expanded-btn" style="display:none;margin-top:12px" onclick="saveExpanded()">Add to my vocab</button>
-    </div>
-
-    <div class="add-section">
-      <h3>Manual add</h3>
-      <div class="add-row"><label>Swedish word / phrase</label><input type="text" id="m-sv" placeholder="e.g. en hund" autocorrect="off" autocapitalize="off"></div>
-      <div class="add-row"><label>Pronunciation guide</label><input type="text" id="m-pron" placeholder="e.g. en hoond" autocorrect="off" autocapitalize="off"></div>
-      <div class="add-row"><label>English meaning</label><input type="text" id="m-en" placeholder="e.g. a dog"></div>
-      <div class="add-row"><label>Extra forms (optional)</label><textarea id="m-forms" placeholder="e.g. plural: hundar · definite: hunden · past: åt"></textarea></div>
-      <div class="add-row"><label>Category</label>
-        <select id="m-cat">
-          <option>Greetings</option><option>Family</option><option>People</option>
-          <option>Daily life</option><option>Weather</option><option>Restaurant</option>
-          <option>Questions</option><option>Directions</option><option>Transport</option>
-          <option selected>Social</option><option>Pronouns</option><option>Pronunciation</option>
-        </select>
-      </div>
-      <div style="display:flex;gap:10px;margin-bottom:12px;align-items:center">
-        <label style="font-size:12px;color:var(--txt3)">Mark as review:</label>
-        <input type="checkbox" id="m-pr" style="width:20px;height:20px;cursor:pointer">
-      </div>
-      <button class="add-btn" onclick="manualAdd()">Add word</button>
-    </div>
-
-    <div class="add-section" id="custom-list-section" style="display:none">
-      <h3>My added words (<span id="custom-count">0</span>)</h3>
-      <div id="custom-list"></div>
-    </div>
-
-  </div>
 </div>
-
-</div><!-- end .app -->
 
 <nav class="bnav">
   <button class="nbtn on" id="nav-browse" onclick="showScreen('browse',this)"><span class="nicon">📚</span>Browse</button>
   <button class="nbtn" id="nav-quiz" onclick="showScreen('quiz',this)"><span class="nicon">🃏</span>Flashcards</button>
-  <button class="nbtn" id="nav-add" onclick="showScreen('add',this)"><span class="nicon">➕</span>Add</button>
 </nav>
 
 <script>
 const VOCAB=[
-  {sv:'Gott!',pron:'yot',en:'Good! / Tasty!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+{sv:'Gott!',pron:'yot',en:'Good! / Tasty!',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
   {sv:'Jag vill ha något att äta',pron:'yag vil hah NAW-got at EH-ta',en:'I want something to eat',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
   {sv:'En smörgås',pron:'en SMUR-gaws',en:'A sandwich',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'plural: smörgåsar · definite: smörgåsen'},
   {sv:'Jag dricker hellre en juice',pron:'yag DRIK-er HEL-reh en joos',en:'I\'d rather drink a juice',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
@@ -478,333 +381,328 @@ const VOCAB=[
   {sv:'Kinesiska',pron:'shee-NEH-siska',en:'Chinese (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
   {sv:'Spanska',pron:'SPAN-ska',en:'Spanish (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
   {sv:'Portugisiska',pron:'por-too-YEE-siska',en:'Portuguese (language)',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
-  {sv:'Tvillingar',pron:'TVIL-ing-ar',en:'Twins',src:'Babbel',cat:'Family',p:0,n:1,t:'word',forms:'singular: tvilling · definite: tvillingarna'},
-  {sv:'Bredvid',pron:'breh-VEED',en:'Next to / beside',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Min farfar står bredvid henne',pron:'min FAR-far stawr breh-VEED HEN-eh',en:'My paternal grandpa is standing next to her',src:'Babbel',cat:'Family',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Det här / den här',pron:'deh hehr / den hehr',en:'This (ett-word) / this (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Det där / den där',pron:'deh dehr / den dehr',en:'That (ett-word) / that (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Dina föräldrar',pron:'DEE-na fur-EL-drar',en:'Your parents',src:'Babbel',cat:'Family',p:0,n:1,t:'word',forms:''},
-  {sv:'Min kompis',pron:'min KOM-pis',en:'My friend (informal)',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'plural: kompisar · definite: kompisen'},
-  {sv:'Mina föräldrar bor vid havet',pron:'MEE-na fur-EL-drar boor veed HAH-vet',en:'My parents live by the sea',src:'Babbel',cat:'Family',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Vid havet',pron:'veed HAH-vet',en:'By the sea',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'En utbytesstudent',pron:'en OOT-bewt-es-stoo-DENT',en:'An exchange student',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'plural: utbytesstudenter · definite: utbytesstudenten'},
-  {sv:'I vår klass',pron:'ee vawr klas',en:'In our class',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Två stycken',pron:'tvaw STEW-ken',en:'Two of them / two pieces',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Just nu',pron:'yoost noo',en:'Right now',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Jaså?',pron:'yah-SAW',en:'Oh really? / Is that so?',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Väldigt trevlig',pron:'VEL-digt TREV-lig',en:'Very nice / pleasant',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'neuter: trevligt · plural: trevliga · comparative: trevligare'},
-  {sv:'Jag borde prata med honom',pron:'yag BOO-reh PRAH-ta meh HON-om',en:'I should talk to him',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Man träffar sällan folk',pron:'man TREF-ar SEL-an folk',en:'You rarely meet people',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Åtminstone',pron:'awt-MIN-sto-neh',en:'At least',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Vänta',pron:'VEN-ta',en:'Wait',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'present: väntar · past: väntade · supine: väntat'},
-  {sv:'Hur så?',pron:'hoor saw',en:'How so? / What do you mean?',src:'Babbel',cat:'Questions',p:0,n:1,t:'word',forms:''},
-  {sv:'Va?',pron:'vah',en:'What? / Huh? (informal)',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Vilket sammanträffande!',pron:'VIL-ket SAM-an-tref-an-deh',en:'What a coincidence!',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Ja, verkligen',pron:'yah VEHR-kli-gen',en:'Yes, really / indeed',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Okej, fortsätt',pron:'oh-KAY FORT-set',en:'Okay, continue / go on',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'present: fortsätter · past: fortsatte · supine: fortsatt'},
-  {sv:'Bakom',pron:'BAH-kom',en:'Behind',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Tillsammans med',pron:'til-SAM-ans meh',en:'Together with',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Jag är förvirrad',pron:'yag ehr fur-VIR-ad',en:'I am confused',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:'neuter: förvirrat · plural: förvirrade'},
-  {sv:'Gå på bio',pron:'gaw paw BEE-oo',en:'Go to the cinema',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'present: går · past: gick · supine: gått'},
-  {sv:'Jag skulle gärna gå på bio',pron:'yag SKOOL-eh YEHR-na gaw paw BEE-oo',en:'I\'d love to go to the cinema',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Jag brukar ofta',pron:'yag BROO-kar OF-ta',en:'I often tend to / I usually',src:'Babbel',cat:'Daily life',p:0,n:1,t:'sentence',forms:'present: brukar · past: brukade · supine: brukat'},
-  {sv:'Nationalmuseet',pron:'nat-see-oh-NAHL-moo-SEH-et',en:'The National Museum',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Har du lust att...?',pron:'har doo loost at',en:'Do you feel like...? / Fancy...?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Äta middag',pron:'EH-ta MID-ag',en:'To eat dinner',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'present: äter · past: åt · supine: ätit'},
-  {sv:'I helgen',pron:'ee HEL-yen',en:'At the weekend',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Stora torget',pron:'STOO-ra TOR-yet',en:'The main square',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:'definite: torget · plural: torg'},
-  {sv:'Tyvärr',pron:'tew-VEHR',en:'Unfortunately',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Har du tid på lördag kväll?',pron:'har doo teed paw LUR-dag kvel',en:'Are you free Saturday evening?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Då gör vi det!',pron:'daw yur vee deh',en:'Then we\'ll do that! / It\'s a plan!',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'När slutar du?',pron:'nehr SLOO-tar doo',en:'When do you finish?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Det funkar',pron:'deh FOON-kar',en:'That works / that fits',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:'present: funkar · past: funkade · supine: funkat'},
-  {sv:'Det hinner jag inte',pron:'deh HIN-er yag IN-teh',en:'I can\'t make that / not enough time',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Det tar en halvtimme',pron:'deh tahr en HALV-tim-eh',en:'It takes half an hour',src:'Babbel',cat:'Transport',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Från jobbet till stan',pron:'frawn YOB-et til stahn',en:'From work to the city centre',src:'Babbel',cat:'Transport',p:0,n:1,t:'sentence',forms:''},
-  {sv:'En föreställning',pron:'en fur-eh-STEL-ning',en:'A screening / performance / show',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'plural: föreställningar · definite: föreställningen'},
-  {sv:'Den sena föreställningen',pron:'den SEH-na fur-eh-STEL-ning-en',en:'The late screening',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Ska vi ta den?',pron:'skah vee tah den',en:'Shall we see that one?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Innan',pron:'IN-an',en:'Before / beforehand',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Det blir perfekt!',pron:'deh bleer pehr-FEKT',en:'That\'ll be perfect!',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Jag messar dig',pron:'yag MES-ar day',en:'I\'ll message you',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:'present: messar · past: messade · supine: messat'},
-  {sv:'Puss!',pron:'poos',en:'Bye! / Kiss! (casual sign-off)',src:'Babbel',cat:'Greetings',p:0,n:1,t:'word',forms:''},
-  {sv:'Slutsåld',pron:'SLOOT-sawld',en:'Sold out',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'neuter: slutsålt · plural: slutsålda'},
-  {sv:'Hinner du till klockan...?',pron:'HIN-er doo til KLOK-an',en:'Can you make it by...?',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'I så fall',pron:'ee saw fal',en:'In that case',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Nära bion',pron:'NEH-ra BEE-on',en:'Close to the cinema',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Popcorn och godis',pron:'POP-korn ok GOO-dis',en:'Popcorn and sweets',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:''},
-  {sv:'Ring när du har slutat jobbet!',pron:'ring nehr doo har SLOO-tat YOB-et',en:'Call when you finish work!',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''}
-];
-</script>
-<script>
-// ── CUSTOM VOCAB (localStorage) ──
-function loadCustom(){
-  try{ return JSON.parse(localStorage.getItem('sv_custom')||'[]'); }catch(e){return [];}
-}
-function saveCustom(arr){ localStorage.setItem('sv_custom',JSON.stringify(arr)); }
-let CUSTOM = loadCustom();
+  {sv:'Tvillingar',pron:'TVIL-ing-ar',en:'Twins',src:'Babbel',cat:'Family',p:0,n:0,t:'word',forms:'singular: tvilling · definite: tvillingarna'},
+  {sv:'Bredvid',pron:'breh-VEED',en:'Next to / beside',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Min farfar står bredvid henne',pron:'min FAR-far stawr breh-VEED HEN-eh',en:'My paternal grandpa is standing next to her',src:'Babbel',cat:'Family',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Det här / den här',pron:'deh hehr / den hehr',en:'This (ett-word) / this (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Det där / den där',pron:'deh dehr / den dehr',en:'That (ett-word) / that (en-word)',src:'Babbel',cat:'Pronouns',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Dina föräldrar',pron:'DEE-na fur-EL-drar',en:'Your parents',src:'Babbel',cat:'Family',p:0,n:0,t:'word',forms:''},
+  {sv:'Min kompis',pron:'min KOM-pis',en:'My friend (informal)',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'plural: kompisar · definite: kompisen'},
+  {sv:'Mina föräldrar bor vid havet',pron:'MEE-na fur-EL-drar boor veed HAH-vet',en:'My parents live by the sea',src:'Babbel',cat:'Family',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Vid havet',pron:'veed HAH-vet',en:'By the sea',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'En utbytesstudent',pron:'en OOT-bewt-es-stoo-DENT',en:'An exchange student',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'plural: utbytesstudenter · definite: utbytesstudenten'},
+  {sv:'I vår klass',pron:'ee vawr klas',en:'In our class',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Två stycken',pron:'tvaw STEW-ken',en:'Two of them / two pieces',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Just nu',pron:'yoost noo',en:'Right now',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Jaså?',pron:'yah-SAW',en:'Oh really? / Is that so?',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Väldigt trevlig',pron:'VEL-digt TREV-lig',en:'Very nice / pleasant',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'neuter: trevligt · plural: trevliga · comparative: trevligare'},
+  {sv:'Jag borde prata med honom',pron:'yag BOO-reh PRAH-ta meh HON-om',en:'I should talk to him',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Man träffar sällan folk',pron:'man TREF-ar SEL-an folk',en:'You rarely meet people',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Åtminstone',pron:'awt-MIN-sto-neh',en:'At least',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Vänta',pron:'VEN-ta',en:'Wait',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'present: väntar · past: väntade · supine: väntat'},
+  {sv:'Hur så?',pron:'hoor saw',en:'How so? / What do you mean?',src:'Babbel',cat:'Questions',p:0,n:0,t:'word',forms:''},
+  {sv:'Va?',pron:'vah',en:'What? / Huh? (informal)',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Vilket sammanträffande!',pron:'VIL-ket SAM-an-tref-an-deh',en:'What a coincidence!',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Ja, verkligen',pron:'yah VEHR-kli-gen',en:'Yes, really / indeed',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Okej, fortsätt',pron:'oh-KAY FORT-set',en:'Okay, continue / go on',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'present: fortsätter · past: fortsatte · supine: fortsatt'},
+  {sv:'Bakom',pron:'BAH-kom',en:'Behind',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Tillsammans med',pron:'til-SAM-ans meh',en:'Together with',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag är förvirrad',pron:'yag ehr fur-VIR-ad',en:'I am confused',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:'neuter: förvirrat · plural: förvirrade'},
+  {sv:'Gå på bio',pron:'gaw paw BEE-oo',en:'Go to the cinema',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'present: går · past: gick · supine: gått'},
+  {sv:'Jag skulle gärna gå på bio',pron:'yag SKOOL-eh YEHR-na gaw paw BEE-oo',en:'I\'d love to go to the cinema',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Jag brukar ofta',pron:'yag BROO-kar OF-ta',en:'I often tend to / I usually',src:'Babbel',cat:'Daily life',p:0,n:0,t:'sentence',forms:'present: brukar · past: brukade · supine: brukat'},
+  {sv:'Nationalmuseet',pron:'nat-see-oh-NAHL-moo-SEH-et',en:'The National Museum',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Har du lust att...?',pron:'har doo loost at',en:'Do you feel like...? / Fancy...?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Äta middag',pron:'EH-ta MID-ag',en:'To eat dinner',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'present: äter · past: åt · supine: ätit'},
+  {sv:'I helgen',pron:'ee HEL-yen',en:'At the weekend',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Stora torget',pron:'STOO-ra TOR-yet',en:'The main square',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:'definite: torget · plural: torg'},
+  {sv:'Tyvärr',pron:'tew-VEHR',en:'Unfortunately',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Har du tid på lördag kväll?',pron:'har doo teed paw LUR-dag kvel',en:'Are you free Saturday evening?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Då gör vi det!',pron:'daw yur vee deh',en:'Then we\'ll do that! / It\'s a plan!',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'När slutar du?',pron:'nehr SLOO-tar doo',en:'When do you finish?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Det funkar',pron:'deh FOON-kar',en:'That works / that fits',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:'present: funkar · past: funkade · supine: funkat'},
+  {sv:'Det hinner jag inte',pron:'deh HIN-er yag IN-teh',en:'I can\'t make that / not enough time',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Det tar en halvtimme',pron:'deh tahr en HALV-tim-eh',en:'It takes half an hour',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Från jobbet till stan',pron:'frawn YOB-et til stahn',en:'From work to the city centre',src:'Babbel',cat:'Transport',p:0,n:0,t:'sentence',forms:''},
+  {sv:'En föreställning',pron:'en fur-eh-STEL-ning',en:'A screening / performance / show',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'plural: föreställningar · definite: föreställningen'},
+  {sv:'Den sena föreställningen',pron:'den SEH-na fur-eh-STEL-ning-en',en:'The late screening',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Ska vi ta den?',pron:'skah vee tah den',en:'Shall we see that one?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Innan',pron:'IN-an',en:'Before / beforehand',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Det blir perfekt!',pron:'deh bleer pehr-FEKT',en:'That\'ll be perfect!',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Jag messar dig',pron:'yag MES-ar day',en:'I\'ll message you',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:'present: messar · past: messade · supine: messat'},
+  {sv:'Puss!',pron:'poos',en:'Bye! / Kiss! (casual sign-off)',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Slutsåld',pron:'SLOOT-sawld',en:'Sold out',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'neuter: slutsålt · plural: slutsålda'},
+  {sv:'Hinner du till klockan...?',pron:'HIN-er doo til KLOK-an',en:'Can you make it by...?',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'I så fall',pron:'ee saw fal',en:'In that case',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Nära bion',pron:'NEH-ra BEE-on',en:'Close to the cinema',src:'Babbel',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Popcorn och godis',pron:'POP-korn ok GOO-dis',en:'Popcorn and sweets',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'Ring när du har slutat jobbet!',pron:'ring nehr doo har SLOO-tat YOB-et',en:'Call when you finish work!',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+// ── Podcast batch 5 — comparatives & common words ──
+  {sv:'Oftast',pron:'OF-tast',en:'Usually / most often',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:'comparative: oftare · positive: ofta'},
+  {sv:'Läckert',pron:'LEK-ert',en:'Delicious / tasty',src:'Podcast',cat:'Restaurant',p:0,n:1,t:'word',forms:'base: läcker · neuter: läckert · plural: läckra'},
+  {sv:'Hur många',pron:'hoor MON-ga',en:'How many',src:'Podcast',cat:'Questions',p:0,n:1,t:'word',forms:''},
+  {sv:'Brukar',pron:'BROO-kar',en:'Usually does / tends to (habitual present)',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:'infinitive: att bruka · past: brukade · supine: brukat'},
+  {sv:'Stor / större / störst',pron:'stoor / STUH-reh / sturst',en:'Big / bigger / biggest',src:'Podcast',cat:'People',p:0,n:1,t:'word',forms:'neuter: stort · plural: stora · comparative: större · superlative: störst'},
+  {sv:'Gammal / äldre / äldst',pron:'GAM-al / EL-dreh / eldst',en:'Old / older / oldest',src:'Podcast',cat:'People',p:0,n:1,t:'word',forms:'neuter: gammalt · plural: gamla · comparative: äldre · superlative: äldst'},
+  {sv:'Än',pron:'en',en:'Than (in comparisons)',src:'Podcast',cat:'Questions',p:0,n:1,t:'word',forms:''},
+  {sv:'En vän',pron:'en ven',en:'A friend',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:'plural: vänner · definite: vännen · plural definite: vännerna'},
 
-function allVocab(){ return [...VOCAB, ...CUSTOM.map(c=>({...c,src:'Custom',n:0}))]; }
+];
 
 // ── VOICE ──
-let svVoice=null, spRate=0.85, curBtn=null;
+var svVoice=null, spRate=0.85, curBtn=null;
 function loadVoice(){
-  const vv=window.speechSynthesis.getVoices();
-  svVoice=vv.find(v=>v.lang.startsWith('sv'))||null;
-  document.getElementById('vlabel').textContent=svVoice?'('+svVoice.name+')':'(no sv voice — use Chrome)';
+  var vv=window.speechSynthesis.getVoices();
+  svVoice=vv.find(function(v){return v.lang.startsWith('sv');})||null;
+  document.getElementById('vlabel').textContent=svVoice?'('+svVoice.name+')':'(no sv voice)';
 }
 if(window.speechSynthesis){window.speechSynthesis.onvoiceschanged=loadVoice;loadVoice();}
 function speak(text,btn){
   if(!window.speechSynthesis)return;
   window.speechSynthesis.cancel();
   if(curBtn&&curBtn!==btn){curBtn.classList.remove('playing');curBtn.textContent='🔊';}
-  const u=new SpeechSynthesisUtterance(text);
+  var u=new SpeechSynthesisUtterance(text);
   if(svVoice)u.voice=svVoice;
   u.lang='sv-SE';u.rate=spRate;
   btn.classList.add('playing');btn.textContent='⏸';curBtn=btn;
-  u.onend=()=>{btn.classList.remove('playing');btn.textContent='🔊';curBtn=null;};
+  u.onend=function(){btn.classList.remove('playing');btn.textContent='🔊';curBtn=null;};
   window.speechSynthesis.speak(u);
 }
-function setSpd(r,btn){spRate=r;document.querySelectorAll('.spd').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+function setSpd(r,btn){
+  spRate=r;
+  document.querySelectorAll('.spd').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+}
 
-// ── BROWSE STATE ──
-let catF='all',srcF='all',typeF='all',searchQ='';
+// ── BROWSE ──
+var catF='all', srcF='all', typeF='all', searchQ='';
 function filtered(){
-  let items=allVocab();
-  if(catF==='priority') items=items.filter(v=>v.p);
-  else if(catF==='new') items=items.filter(v=>v.n);
-  else if(catF!=='all') items=items.filter(v=>v.cat===catF);
-  if(srcF!=='all') items=items.filter(v=>v.src===srcF);
-  if(typeF!=='all') items=items.filter(v=>(v.t||'word')===typeF);
-  if(searchQ){const q=searchQ.toLowerCase();items=items.filter(v=>v.sv.toLowerCase().includes(q)||v.en.toLowerCase().includes(q));}
+  var items=VOCAB.slice();
+  if(catF==='priority') items=items.filter(function(v){return v.p;});
+  else if(catF==='new') items=items.filter(function(v){return v.n;});
+  else if(catF!=='all') items=items.filter(function(v){return v.cat===catF;});
+  if(srcF!=='all') items=items.filter(function(v){return v.src===srcF;});
+  if(typeF!=='all') items=items.filter(function(v){return (v.t||'word')===typeF;});
+  if(searchQ){
+    var q=searchQ.toLowerCase();
+    items=items.filter(function(v){return v.sv.toLowerCase().indexOf(q)>=0||v.en.toLowerCase().indexOf(q)>=0;});
+  }
   return items;
 }
 function renderList(){
-  const items=filtered();
-  document.getElementById('lshow').textContent=`Showing ${items.length} of ${allVocab().length} entries`;
-  document.getElementById('sn-total').textContent=allVocab().length;
-  document.getElementById('sn-pr').textContent=allVocab().filter(v=>v.p).length;
-  const list=document.getElementById('vlist');
+  var items=filtered();
+  document.getElementById('lshow').textContent='Showing '+items.length+' of '+VOCAB.length+' entries';
+  document.getElementById('sn-total').textContent=VOCAB.length;
+  document.getElementById('sn-pr').textContent=VOCAB.filter(function(v){return v.p;}).length;
+  var list=document.getElementById('vlist');
   list.innerHTML='';
-  if(!items.length){list.innerHTML='<div class="empty">No entries found</div>';return;}
-  items.forEach(v=>{
-    const d=document.createElement('div');
+  if(!items.length){
+    var empty=document.createElement('div');
+    empty.className='empty';
+    empty.textContent='No entries found';
+    list.appendChild(empty);
+    return;
+  }
+  items.forEach(function(v){
+    var d=document.createElement('div');
     d.className='card'+(v.p?' pr':v.n?' nw':'');
-    const sc=v.src==='Babbel'?'sbabbel':v.src==='Podcast'?'spodcast':'sbabbel';
-    const scl=v.src==='Custom'?'background:rgba(124,111,224,.15);color:var(--acc2)':'';
-    const badge=v.p?'<span class="bdg bdg-pr">review</span>':v.n?'<span class="bdg bdg-nw">new</span>':'';
-    const formsHtml=v.forms?`<div class="forms-row">${v.forms.split('·').map(f=>f.trim()).filter(Boolean).map(f=>{const parts=f.split(':');return parts.length===2?`<span class="form-chip"><b>${parts[0].trim()}</b>: ${parts[1].trim()}</span>`:`<span class="form-chip">${f}</span>`;}).join('')}</div>`:'';
-    const safe=v.sv.replace(/'/g,"\\'");
-    d.innerHTML=`<div class="cbody"><div class="csv">${v.sv} ${badge}</div><div class="cpron">${v.pron||''}</div><div class="cen">${v.en}</div>${formsHtml}<div class="cmeta"><span class="stag ${sc}" style="${scl}">${v.src}</span><span class="ctag">${v.cat}</span></div></div><button class="spkbtn" onclick="speak('${safe}',this)">🔊</button>`;
+    // source tag
+    var sc=v.src==='Babbel'?'sbabbel':'spodcast';
+    // badge
+    var badge='';
+    if(v.p) badge='<span class="bdg bdg-pr">review</span>';
+    else if(v.n) badge='<span class="bdg bdg-nw">new</span>';
+    // forms chips
+    var formsHtml='';
+    if(v.forms&&v.forms.length>0){
+      var chips='';
+      var parts=v.forms.split('\u00b7');
+      for(var i=0;i<parts.length;i++){
+        var part=parts[i].trim();
+        if(!part) continue;
+        var colon=part.indexOf(':');
+        if(colon>0){
+          chips+='<span class="form-chip"><b>'+part.slice(0,colon).trim()+'</b>: '+part.slice(colon+1).trim()+'</span>';
+        } else {
+          chips+='<span class="form-chip">'+part+'</span>';
+        }
+      }
+      formsHtml='<div class="forms-row">'+chips+'</div>';
+    }
+    // body
+    var body=document.createElement('div');
+    body.className='cbody';
+    body.innerHTML=
+      '<div class="csv">'+v.sv+' '+badge+'</div>'+
+      '<div class="cpron">'+v.pron+'</div>'+
+      '<div class="cen">'+v.en+'</div>'+
+      formsHtml+
+      '<div class="cmeta"><span class="stag '+sc+'">'+v.src+'</span><span class="ctag">'+v.cat+'</span></div>';
+    // speak button
+    var btn=document.createElement('button');
+    btn.className='spkbtn';
+    btn.textContent='🔊';
+    btn.setAttribute('data-sv',v.sv);
+    btn.onclick=function(){speak(this.getAttribute('data-sv'),this);};
+    d.appendChild(body);
+    d.appendChild(btn);
     list.appendChild(d);
   });
 }
-function setCat(f,btn){catF=f;document.querySelectorAll('#cat-row .pill').forEach(b=>b.classList.remove('on','pr','nw'));btn.classList.add(f==='priority'?'pr':f==='new'?'nw':'on');renderList();}
-function setSrc(f,btn){srcF=f;document.querySelectorAll('#src-row .pill').forEach(b=>b.classList.remove('on','ba','po'));btn.classList.add(f==='Podcast'?'po':'ba');renderList();}
+function setCat(f,btn){
+  catF=f;
+  document.querySelectorAll('#cat-row .pill').forEach(function(b){b.classList.remove('on','pr','nw');});
+  btn.classList.add(f==='priority'?'pr':f==='new'?'nw':'on');
+  renderList();
+}
+function setSrc(f,btn){
+  srcF=f;
+  document.querySelectorAll('#src-row .pill').forEach(function(b){b.classList.remove('on','ba','po');});
+  btn.classList.add(f==='Podcast'?'po':'ba');
+  renderList();
+}
+function setType(f,btn){
+  typeF=f;
+  document.querySelectorAll('#type-row .pill').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  renderList();
+}
 function doSearch(q){searchQ=q;renderList();}
-function setType(f,btn){typeF=f;document.querySelectorAll('#type-row .pill').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderList();}
 
 // ── FLASHCARDS ──
-let qItems=[],qIdx=0,qCorrect=0,qWrong=0,qMode='all',qRevealed=false;
-function setQMode(m,btn){qMode=m;document.querySelectorAll('.qmode').forEach(b=>b.classList.remove('on'));btn.classList.add('on');startQuiz();}
+var qItems=[], qIdx=0, qCorrect=0, qWrong=0, qMode='all', qRevealed=false;
+var missedWords=[]; // words marked "didn't know" this session
+
+function setQMode(m,btn){
+  qMode=m;
+  document.querySelectorAll('.qmode').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  var info=document.getElementById('missed-info');
+  if(info) info.style.display=(m==='missed'?'block':'none');
+  startQuiz();
+}
 function startQuiz(){
-  let pool=allVocab();
-  if(qMode==='priority') pool=pool.filter(v=>v.p);
-  else if(qMode==='new') pool=pool.filter(v=>v.n);
-  else if(qMode==='custom') pool=CUSTOM;
-  qItems=[...pool].sort(()=>Math.random()-.5);
-  qIdx=0;qCorrect=0;qWrong=0;renderCard();
+  var pool;
+  if(qMode==='missed'){
+    pool=missedWords.slice();
+    if(!pool.length){
+      var wrap=document.getElementById('qcontent');
+      wrap.innerHTML='<div class="empty" style="padding:40px">No missed words yet.<br>Complete a round first!</div>';
+      return;
+    }
+  } else {
+    pool=VOCAB.slice();
+  }
+  // Shuffle
+  qItems=pool.sort(function(){return Math.random()-.5;});
+  qIdx=0;qCorrect=0;qWrong=0;
+  renderCard();
 }
 function renderCard(){
-  const wrap=document.getElementById('qcontent');
-  if(!qItems.length){wrap.innerHTML='<div class="empty" style="padding:40px">No words in this set yet.</div>';return;}
+  var wrap=document.getElementById('qcontent');
+  if(!qItems.length){
+    wrap.innerHTML='<div class="empty" style="padding:40px">No words in this set.</div>';
+    return;
+  }
   if(qIdx>=qItems.length){
-    const pct=qItems.length?Math.round(qCorrect/qItems.length*100):0;
-    wrap.innerHTML=`<div class="qscore-screen"><div class="qscore-n">${pct}%</div><div class="qscore-l">${qCorrect} / ${qItems.length} known</div><div class="qscore-s">${pct>=80?'Excellent! 🎉':pct>=60?'Good work! 💪':'Keep going! 📚'}</div><button class="qrestart" onclick="startQuiz()">Try again</button></div>`;
+    var pct=Math.round(qCorrect/qItems.length*100);
+    var emoji=pct>=80?'Excellent! 🎉':pct>=60?'Good work! 💪':'Keep going! 📚';
+    var missedBtn='';
+    if(missedWords.length){
+      missedBtn='<button class="qrestart" style="background:var(--red);margin-top:8px" onclick="practiceMissed()">Practice '+missedWords.length+' missed</button>';
+    }
+    wrap.innerHTML='<div class="qscore-screen"><div class="qscore-n">'+pct+'%</div><div class="qscore-l">'+qCorrect+' / '+qItems.length+' known</div><div class="qscore-s">'+emoji+'</div><button class="qrestart" onclick="startQuiz()">Try again</button>'+missedBtn+'</div>';
     return;
   }
   qRevealed=false;
-  const v=qItems[qIdx];
-  const pips=qItems.slice(0,Math.min(qItems.length,30)).map((_,i)=>`<div class="qpip${i<qIdx?' done':i===qIdx?' cur':''}"></div>`).join('');
-  const formsHtml=v.forms?`<div class="fc-forms-fc">${v.forms}</div>`:'';
-  wrap.innerHTML=`
-  <div class="qstats">
-    <div class="qstat"><div class="qstat-n" style="color:var(--grn)">${qCorrect}</div><div class="qstat-l">known</div></div>
-    <div class="qstat"><div class="qstat-n" style="color:var(--txt3)">${qItems.length-qIdx}</div><div class="qstat-l">left</div></div>
-    <div class="qstat"><div class="qstat-n" style="color:var(--red)">${qWrong}</div><div class="qstat-l">missed</div></div>
-  </div>
-  <div class="qprog">${pips}</div>
-  <div class="flashcard" onclick="revealCard()" id="fc-card">
-    <div class="fc-hint">Translate to Swedish</div>
-    <div class="fc-q">${v.en}</div>
-    <div class="fc-sub">${v.cat} · ${v.src}</div>
-    <div class="tap-hint">Tap to reveal</div>
-    <div class="fc-reveal" id="fc-reveal">
-      <div class="fc-ans">${v.sv}</div>
-      <div class="fc-pron">${v.pron||''}</div>
-      ${formsHtml}
-      <button onclick="event.stopPropagation();speak('${v.sv.replace(/'/g,"\\'")}',this)" style="margin-top:10px;background:var(--sur2);border:1px solid var(--bdr);border-radius:20px;padding:6px 16px;color:var(--txt2);cursor:pointer;font-size:13px">🔊 Listen</button>
-    </div>
-  </div>
-  <div class="fc-actions" id="fc-actions" style="display:none">
-    <button class="fc-btn fc-no" onclick="markCard(false)">✗ Didn't know</button>
-    <button class="fc-btn fc-yes" onclick="markCard(true)">✓ Got it</button>
-  </div>`;
+  var v=qItems[qIdx];
+  var total=Math.min(qItems.length,30);
+  var pips='';
+  for(var i=0;i<total;i++) pips+='<div class="qpip'+(i<qIdx?' done':i===qIdx?' cur':'')+'"></div>';
+  var formsHtml=v.forms?'<div class="fc-forms-fc">'+v.forms+'</div>':'';
+  var html='';
+  html+='<div class="qstats">';
+  html+='<div class="qstat"><div class="qstat-n" style="color:var(--grn)">'+qCorrect+'</div><div class="qstat-l">known</div></div>';
+  html+='<div class="qstat"><div class="qstat-n" style="color:var(--txt3)">'+(qItems.length-qIdx)+'</div><div class="qstat-l">left</div></div>';
+  html+='<div class="qstat"><div class="qstat-n" style="color:var(--red)">'+qWrong+'</div><div class="qstat-l">missed</div></div>';
+  html+='</div>';
+  html+='<div class="qprog">'+pips+'</div>';
+  html+='<div class="flashcard" id="fc-card" onclick="revealCard()">';
+  html+='<div class="fc-hint">Translate to Swedish</div>';
+  html+='<div class="fc-q">'+v.en+'</div>';
+  html+='<div class="fc-sub">'+v.cat+' &middot; '+v.src+'</div>';
+  html+='<div class="tap-hint">Tap to reveal</div>';
+  html+='<div class="fc-reveal" id="fc-reveal">';
+  html+='<div class="fc-ans">'+v.sv+'</div>';
+  html+='<div class="fc-pron">'+v.pron+'</div>';
+  html+=formsHtml;
+  html+='<button id="fc-speak-btn" style="margin-top:10px;background:var(--sur2);border:1px solid var(--bdr);border-radius:20px;padding:6px 16px;color:var(--txt2);cursor:pointer;font-size:13px">🔊 Listen</button>';
+  html+='</div></div>';
+  html+='<div class="fc-actions" id="fc-actions" style="display:none">';
+  html+='<button class="fc-btn fc-no" onclick="markCard(false)">&#10007; Did not know</button>';
+  html+='<button class="fc-btn fc-yes" onclick="markCard(true)">&#10003; Got it</button>';
+  html+='</div>';
+  wrap.innerHTML=html;
+  // attach speak to listen button after render
+  var speakBtn=document.getElementById('fc-speak-btn');
+  if(speakBtn){
+    var sv=v.sv;
+    speakBtn.onclick=function(e){e.stopPropagation();speak(sv,this);};
+  }
 }
 function revealCard(){
   if(qRevealed)return;
   qRevealed=true;
   document.getElementById('fc-reveal').classList.add('show');
   document.getElementById('fc-actions').style.display='flex';
-  const card=document.getElementById('fc-card');
-  card.querySelector('.tap-hint').style.display='none';
+  document.getElementById('fc-card').querySelector('.tap-hint').style.display='none';
+}
+function practiceMissed(){
+  var btn=document.querySelector('.qmode[onclick*="missed"]');
+  if(btn) setQMode('missed', btn);
 }
 function markCard(knew){
-  if(knew)qCorrect++;else qWrong++;
-  qIdx++;renderCard();
-}
-
-// ── CHROME BUILT-IN AI (Gemini Nano) ──
-let aiSession = null;
-let expandedData = null;
-
-async function initAI() {
-  const statusEl = document.getElementById('ai-status');
-  try {
-    if (!window.ai || !window.ai.languageModel) {
-      statusEl.textContent = '⚠️ On-device AI not available. Use Chrome on Android or desktop, or use Manual Add below.';
-      statusEl.style.color = 'var(--red)';
-      return false;
-    }
-    const caps = await window.ai.languageModel.capabilities();
-    if (caps.available === 'no') {
-      statusEl.textContent = '⚠️ Gemini Nano not available on this device.';
-      statusEl.style.color = 'var(--red)';
-      return false;
-    }
-    if (caps.available === 'after-download') {
-      statusEl.textContent = '⏬ Downloading Gemini Nano model... this may take a few minutes on first use.';
-      statusEl.style.color = 'var(--gold)';
-    }
-    aiSession = await window.ai.languageModel.create({
-      systemPrompt: 'You are a Swedish language expert. Always respond with raw JSON only, no markdown, no explanation.'
-    });
-    statusEl.textContent = '✓ On-device Gemini Nano ready — no API key needed!';
-    statusEl.style.color = 'var(--grn)';
-    return true;
-  } catch(e) {
-    statusEl.textContent = '⚠️ Could not load on-device AI: ' + e.message;
-    statusEl.style.color = 'var(--red)';
-    return false;
-  }
-}
-initAI();
-
-async function doExpand(){
-  const input=document.getElementById('ai-input').value.trim();
-  if(!input)return;
-  const spin=document.getElementById('ai-spin');
-  const lbl=document.getElementById('ai-label');
-  const res=document.getElementById('ai-result');
-  const prev=document.getElementById('form-preview');
-  const saveBtn=document.getElementById('save-expanded-btn');
-  spin.style.display='inline-block';lbl.textContent='Analysing…';
-  res.classList.remove('show');prev.classList.remove('show');saveBtn.style.display='none';
-  expandedData=null;
-
-  if(!aiSession){
-    const ok = await initAI();
-    if(!ok){
-      res.textContent='On-device AI not available. Please use Manual Add below instead.';
-      res.classList.add('show');
-      spin.style.display='none';lbl.textContent='Expand & generate forms';
-      return;
+  if(!knew){
+    qWrong++;
+    // Add to missed pile if not already there
+    var v=qItems[qIdx];
+    var alreadyMissed=missedWords.some(function(m){return m.sv===v.sv;});
+    if(!alreadyMissed) missedWords.push(v);
+    // Update missed button label
+    var btn=document.querySelector('.qmode[onclick*="missed"]');
+    if(btn) btn.textContent='\u2717 Missed ('+missedWords.length+')';
+  } else {
+    qCorrect++;
+    // If practicing missed words and got it right, remove from missed
+    if(qMode==='missed'){
+      var sv=qItems[qIdx].sv;
+      missedWords=missedWords.filter(function(m){return m.sv!==sv;});
+      var btn=document.querySelector('.qmode[onclick*="missed"]');
+      if(btn) btn.textContent=missedWords.length?'\u2717 Missed ('+missedWords.length+')':'\u2717 Missed words';
     }
   }
-
-  const prompt=`Swedish input: "${input}". Return ONLY this JSON, no other text: {"sv":"canonical Swedish form","pron":"pronunciation in English phonetics CAPS for stress","en":"English meaning","cat":"one of Greetings Family People Daily-life Weather Restaurant Questions Directions Transport Social Pronouns Pronunciation","forms":"grammatical forms e.g. plural: hundar · definite: hunden · past: åt · present: äter (empty string if sentence/phrase)","notes":"one grammar tip max 10 words"}`;
-
-  try{
-    const raw = await aiSession.prompt(prompt);
-    const text = raw.replace(/\`\`\`json\s*/gi,'').replace(/\`\`\`\s*/g,'').trim();
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if(!jsonMatch) throw new Error('Unexpected response: '+text.slice(0,60));
-    expandedData = JSON.parse(jsonMatch[0]);
-    document.getElementById('fp-sv').textContent=expandedData.sv;
-    document.getElementById('fp-pron').textContent=expandedData.pron;
-    document.getElementById('fp-en').textContent=expandedData.en;
-    document.getElementById('fp-forms').textContent=expandedData.forms+(expandedData.notes?'\n💡 '+expandedData.notes:'');
-    prev.classList.add('show');
-    res.textContent='';res.classList.remove('show');
-    saveBtn.style.display='block';
-  }catch(e){
-    res.textContent='Error: '+e.message+'. Check your API key or internet connection.';
-    res.classList.add('show');
-  }
-  spin.style.display='none';lbl.textContent='Expand & generate forms';
-}
-function saveExpanded(){
-  if(!expandedData)return;
-  const entry={sv:expandedData.sv,pron:expandedData.pron,en:expandedData.en,cat:expandedData.cat||'Social',forms:expandedData.forms||'',p:0,n:1,src:'Custom'};
-  CUSTOM.push(entry);saveCustom(CUSTOM);
-  document.getElementById('ai-input').value='';
-  document.getElementById('form-preview').classList.remove('show');
-  document.getElementById('save-expanded-btn').style.display='none';
-  expandedData=null;
-  renderCustomList();
-  document.getElementById('sn-total').textContent=allVocab().length;
-  alert('Added: '+entry.sv);
-}
-function manualAdd(){
-  const sv=document.getElementById('m-sv').value.trim();
-  const en=document.getElementById('m-en').value.trim();
-  if(!sv||!en){alert('Please fill in at least Swedish and English fields.');return;}
-  const entry={
-    sv,pron:document.getElementById('m-pron').value.trim(),
-    en,cat:document.getElementById('m-cat').value,
-    forms:document.getElementById('m-forms').value.trim(),
-    p:document.getElementById('m-pr').checked?1:0,n:1,src:'Custom'
-  };
-  CUSTOM.push(entry);saveCustom(CUSTOM);
-  ['m-sv','m-pron','m-en','m-forms'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('m-pr').checked=false;
-  renderCustomList();
-  document.getElementById('sn-total').textContent=allVocab().length;
-  alert('Added: '+sv);
-}
-function deleteCustom(i){
-  if(!confirm('Remove "'+CUSTOM[i].sv+'"?'))return;
-  CUSTOM.splice(i,1);saveCustom(CUSTOM);renderCustomList();
-  document.getElementById('sn-total').textContent=allVocab().length;
-}
-function renderCustomList(){
-  const sec=document.getElementById('custom-list-section');
-  const list=document.getElementById('custom-list');
-  document.getElementById('custom-count').textContent=CUSTOM.length;
-  if(!CUSTOM.length){sec.style.display='none';return;}
-  sec.style.display='block';
-  list.innerHTML=CUSTOM.map((v,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bdr)"><div style="flex:1"><div style="font-weight:600;font-size:14px">${v.sv}</div><div style="font-size:12px;color:var(--txt3)">${v.en}</div></div><button onclick="deleteCustom(${i})" style="background:rgba(224,112,96,.15);border:none;border-radius:var(--rad2);padding:6px 12px;color:var(--red);cursor:pointer;font-size:13px">Remove</button></div>`).join('');
+  qIdx++;
+  renderCard();
 }
 
 // ── NAV ──
 function showScreen(name,btn){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+  document.querySelectorAll('.nbtn').forEach(function(b){b.classList.remove('on');});
   document.getElementById('screen-'+name).classList.add('on');
   if(btn){
     btn.classList.add('on');
-    const nb=document.getElementById('nav-'+name);
+    var nb=document.getElementById('nav-'+name);
     if(nb)nb.classList.add('on');
   }
   if(name==='quiz'&&!qItems.length)startQuiz();
 }
 
 // ── INIT ──
-document.getElementById('sn-total').textContent=allVocab().length;
-document.getElementById('sn-pr').textContent=allVocab().filter(v=>v.p).length;
+document.getElementById('sn-total').textContent=VOCAB.length;
+document.getElementById('sn-pr').textContent=VOCAB.filter(function(v){return v.p;}).length;
 renderList();
-renderCustomList();
 </script>
 </body>
 </html>
