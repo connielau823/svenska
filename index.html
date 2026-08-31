@@ -171,11 +171,13 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
 <!-- FLASHCARDS -->
 <div id="screen-quiz" class="screen">
   <div class="quiz-wrap">
+    <div style="padding:10px 0 4px;font-size:12px;color:var(--txt3)">Cards are shown based on spaced repetition &mdash; new and due cards first.</div>
     <div class="qmode-row">
-      <button class="qmode on" onclick="setQMode('all',this)">All words</button>
-      <button class="qmode" onclick="setQMode('missed',this)">&#10007; Missed words</button>
+      <button class="qmode on" onclick="setQMode('due',this)" id="btn-due">&#9200; Due now (0)</button>
+      <button class="qmode" onclick="setQMode('all',this)">All words</button>
+      <button class="qmode" onclick="setQMode('missed',this)">&#10007; Missed</button>
     </div>
-    <div id="missed-info" style="display:none;font-size:12px;color:var(--txt3);margin-bottom:12px;padding:8px 12px;background:var(--sur);border-radius:var(--rad2)">Words you marked as &ldquo;Didn&rsquo;t know&rdquo; this session.</div>
+    <div id="missed-info" style="display:none;font-size:12px;color:var(--txt3);margin-bottom:8px;padding:8px 12px;background:var(--sur);border-radius:var(--rad2)">Words you marked as &ldquo;Didn&rsquo;t know&rdquo; this session.</div>
     <div id="qcontent"></div>
   </div>
 </div>
@@ -790,121 +792,256 @@ function setType(f,btn){
 }
 function doSearch(q){searchQ=q;renderList();}
 
-// ── FLASHCARDS ──
-var qItems=[], qIdx=0, qCorrect=0, qWrong=0, qMode='all', qRevealed=false;
-var missedWords=[]; // words marked "didn't know" this session
+// ── SPACED REPETITION (SM-2) ──
+// Each card state: {interval, easeFactor, due, reps}
+// interval: days until next review
+// easeFactor: multiplier (starts 2.5)
+// due: timestamp (ms) when card is next due
+// reps: number of successful reviews
 
-function setQMode(m,btn){
-  qMode=m;
-  document.querySelectorAll('.qmode').forEach(function(b){b.classList.remove('on');});
+var SRS_KEY = 'sv_srs_v1';
+var srsData = {};
+
+function loadSRS(){
+  try { srsData = JSON.parse(localStorage.getItem(SRS_KEY) || '{}'); }
+  catch(e){ srsData = {}; }
+}
+function saveSRS(){ localStorage.setItem(SRS_KEY, JSON.stringify(srsData)); }
+
+function getCard(sv){
+  if(!srsData[sv]) srsData[sv] = {interval:0, ef:2.5, due:0, reps:0};
+  return srsData[sv];
+}
+
+// SM-2 algorithm: quality 0-5 (we use 0=fail, 3=hard, 4=good, 5=easy)
+function reviewCard(sv, quality){
+  var c = getCard(sv);
+  var now = Date.now();
+
+  if(quality < 3){
+    // Fail: reset repetitions, review soon
+    c.reps = 0;
+    c.interval = 1;
+  } else {
+    // SM-2 interval calculation
+    if(c.reps === 0) c.interval = 1;
+    else if(c.reps === 1) c.interval = 6;
+    else c.interval = Math.round(c.interval * c.ef);
+
+    // Update ease factor
+    c.ef = c.ef + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+    if(c.ef < 1.3) c.ef = 1.3;
+    c.reps++;
+  }
+
+  // Set due date
+  c.due = now + c.interval * 24 * 60 * 60 * 1000;
+  srsData[sv] = c;
+  saveSRS();
+}
+
+function isDue(sv){
+  var c = getCard(sv);
+  return Date.now() >= c.due;
+}
+
+function getDueCount(){
+  return VOCAB.filter(function(v){ return isDue(v.sv); }).length;
+}
+
+function getIntervalLabel(sv){
+  var c = getCard(sv);
+  if(c.reps === 0) return 'New';
+  var days = Math.round((c.due - Date.now()) / (24*60*60*1000));
+  if(days <= 0) return 'Due now';
+  if(days === 1) return 'Tomorrow';
+  return 'In ' + days + ' days';
+}
+
+// ── FLASHCARDS ──
+var qItems=[], qIdx=0, qCorrect=0, qWrong=0, qMode='due', qRevealed=false;
+var missedWords=[];
+
+loadSRS();
+
+function updateDueBtn(){
+  var btn = document.querySelector('.qmode[onclick*="due"]');
+  if(btn){
+    var n = getDueCount();
+    btn.textContent = '\u23F0 Due now (' + n + ')';
+  }
+}
+
+function setQMode(m, btn){
+  qMode = m;
+  document.querySelectorAll('.qmode').forEach(function(b){ b.classList.remove('on'); });
   btn.classList.add('on');
-  var info=document.getElementById('missed-info');
-  if(info) info.style.display=(m==='missed'?'block':'none');
+  var info = document.getElementById('missed-info');
+  if(info) info.style.display = (m==='missed' ? 'block' : 'none');
   startQuiz();
 }
+
 function startQuiz(){
   var pool;
-  if(qMode==='missed'){
-    pool=missedWords.slice();
+  if(qMode === 'due'){
+    pool = VOCAB.filter(function(v){ return isDue(v.sv); });
+    // Sort: new cards first, then by due date
+    pool.sort(function(a, b){
+      var ca = getCard(a.sv), cb = getCard(b.sv);
+      if(ca.reps === 0 && cb.reps > 0) return -1;
+      if(cb.reps === 0 && ca.reps > 0) return 1;
+      return ca.due - cb.due;
+    });
+  } else if(qMode === 'missed'){
+    pool = missedWords.slice();
     if(!pool.length){
-      var wrap=document.getElementById('qcontent');
-      wrap.innerHTML='<div class="empty" style="padding:40px">No missed words yet.<br>Complete a round first!</div>';
+      var wrap = document.getElementById('qcontent');
+      wrap.innerHTML = '<div class="empty" style="padding:40px">No missed words yet.<br>Complete a round first!</div>';
       return;
     }
   } else {
-    pool=VOCAB.slice();
+    // All — shuffle
+    pool = VOCAB.slice().sort(function(){ return Math.random() - 0.5; });
   }
-  // Shuffle
-  qItems=pool.sort(function(){return Math.random()-.5;});
-  qIdx=0;qCorrect=0;qWrong=0;
+  qItems = pool;
+  qIdx = 0; qCorrect = 0; qWrong = 0;
   renderCard();
 }
+
 function renderCard(){
-  var wrap=document.getElementById('qcontent');
+  var wrap = document.getElementById('qcontent');
   if(!qItems.length){
-    wrap.innerHTML='<div class="empty" style="padding:40px">No words in this set.</div>';
+    var dueCount = getDueCount();
+    wrap.innerHTML =
+      '<div class="qscore-screen">'
+      + '<div class="qscore-n">🎉</div>'
+      + '<div class="qscore-l">No cards due right now!</div>'
+      + '<div class="qscore-s">Check back later or study all words.</div>'
+      + '<button class="qrestart" onclick="setQMode(\'all\', document.querySelector(\'.qmode[onclick*=all]\'))">Study all words</button>'
+      + '</div>';
     return;
   }
-  if(qIdx>=qItems.length){
-    var pct=Math.round(qCorrect/qItems.length*100);
-    var emoji=pct>=80?'Excellent! 🎉':pct>=60?'Good work! 💪':'Keep going! 📚';
-    var missedBtn='';
-    if(missedWords.length){
-      missedBtn='<button class="qrestart" style="background:var(--red);margin-top:8px" onclick="practiceMissed()">Practice '+missedWords.length+' missed</button>';
-    }
-    wrap.innerHTML='<div class="qscore-screen"><div class="qscore-n">'+pct+'%</div><div class="qscore-l">'+qCorrect+' / '+qItems.length+' known</div><div class="qscore-s">'+emoji+'</div><button class="qrestart" onclick="startQuiz()">Try again</button>'+missedBtn+'</div>';
+  if(qIdx >= qItems.length){
+    var pct = Math.round(qCorrect / qItems.length * 100);
+    var emoji = pct>=80 ? 'Excellent! \uD83C\uDF89' : pct>=60 ? 'Good work! \uD83D\uDCAA' : 'Keep going! \uD83D\uDCDA';
+    var missedBtn = missedWords.length
+      ? '<button class="qrestart" style="background:var(--red);margin-top:8px" onclick="practiceMissed()">Practice ' + missedWords.length + ' missed</button>'
+      : '';
+    wrap.innerHTML =
+      '<div class="qscore-screen">'
+      + '<div class="qscore-n">' + pct + '%</div>'
+      + '<div class="qscore-l">' + qCorrect + ' / ' + qItems.length + ' correct</div>'
+      + '<div class="qscore-s">' + emoji + '</div>'
+      + '<button class="qrestart" onclick="startQuiz()">Review again</button>'
+      + missedBtn
+      + '</div>';
+    updateDueBtn();
     return;
   }
-  qRevealed=false;
-  var v=qItems[qIdx];
-  var total=Math.min(qItems.length,30);
-  var pips='';
-  for(var i=0;i<total;i++) pips+='<div class="qpip'+(i<qIdx?' done':i===qIdx?' cur':'')+'"></div>';
-  var formsHtml=v.forms?'<div class="fc-forms-fc">'+v.forms+'</div>':'';
-  var html='';
-  html+='<div class="qstats">';
-  html+='<div class="qstat"><div class="qstat-n" style="color:var(--grn)">'+qCorrect+'</div><div class="qstat-l">known</div></div>';
-  html+='<div class="qstat"><div class="qstat-n" style="color:var(--txt3)">'+(qItems.length-qIdx)+'</div><div class="qstat-l">left</div></div>';
-  html+='<div class="qstat"><div class="qstat-n" style="color:var(--red)">'+qWrong+'</div><div class="qstat-l">missed</div></div>';
-  html+='</div>';
-  html+='<div class="qprog">'+pips+'</div>';
-  html+='<div class="flashcard" id="fc-card" onclick="revealCard()">';
-  html+='<div class="fc-hint">Translate to Swedish</div>';
-  html+='<div class="fc-q">'+v.en+'</div>';
-  html+='<div class="fc-sub">'+v.cat+' &middot; '+v.src+'</div>';
-  html+='<div class="tap-hint">Tap to reveal</div>';
-  html+='<div class="fc-reveal" id="fc-reveal">';
-  html+='<div class="fc-ans">'+v.sv+'</div>';
-  html+='<div class="fc-pron">'+v.pron+'</div>';
-  html+=formsHtml;
-  html+='<button id="fc-speak-btn" style="margin-top:10px;background:var(--sur2);border:1px solid var(--bdr);border-radius:20px;padding:6px 16px;color:var(--txt2);cursor:pointer;font-size:13px">🔊 Listen</button>';
-  html+='</div></div>';
-  html+='<div class="fc-actions" id="fc-actions" style="display:none">';
-  html+='<button class="fc-btn fc-no" onclick="markCard(false)">&#10007; Did not know</button>';
-  html+='<button class="fc-btn fc-yes" onclick="markCard(true)">&#10003; Got it</button>';
-  html+='</div>';
-  wrap.innerHTML=html;
-  // attach speak to listen button after render
-  var speakBtn=document.getElementById('fc-speak-btn');
+
+  qRevealed = false;
+  var v = qItems[qIdx];
+  var card = getCard(v.sv);
+  var total = Math.min(qItems.length, 40);
+  var pips = '';
+  for(var i=0; i<total; i++){
+    pips += '<div class="qpip' + (i<qIdx?' done':i===qIdx?' cur':'') + '"></div>';
+  }
+  var formsHtml = v.forms ? '<div class="fc-forms-fc">' + v.forms + '</div>' : '';
+  var intervalLabel = getIntervalLabel(v.sv);
+  var isNew = card.reps === 0;
+
+  var html = '';
+  html += '<div class="qstats">';
+  html += '<div class="qstat"><div class="qstat-n" style="color:var(--grn)">' + qCorrect + '</div><div class="qstat-l">correct</div></div>';
+  html += '<div class="qstat"><div class="qstat-n" style="color:var(--txt3)">' + (qItems.length-qIdx) + '</div><div class="qstat-l">left</div></div>';
+  html += '<div class="qstat"><div class="qstat-n" style="color:var(--red)">' + qWrong + '</div><div class="qstat-l">missed</div></div>';
+  html += '</div>';
+  html += '<div class="qprog">' + pips + '</div>';
+  html += '<div class="flashcard" id="fc-card" onclick="revealCard()">';
+  html += '<div class="fc-hint">' + (isNew ? '\u2728 New card' : '\uD83D\uDD01 ' + intervalLabel) + '</div>';
+  html += '<div class="fc-q">' + v.en + '</div>';
+  html += '<div class="fc-sub">' + v.cat + ' &middot; ' + v.src + '</div>';
+  html += '<div class="tap-hint">Tap to reveal</div>';
+  html += '<div class="fc-reveal" id="fc-reveal">';
+  html += '<div class="fc-ans">' + v.sv + '</div>';
+  html += '<div class="fc-pron">' + v.pron + '</div>';
+  html += formsHtml;
+  html += '<button id="fc-speak-btn" style="margin-top:10px;background:var(--sur2);border:1px solid var(--bdr);border-radius:20px;padding:6px 16px;color:var(--txt2);cursor:pointer;font-size:13px">\uD83D\uDD0A Listen</button>';
+  html += '</div></div>';
+  // SRS rating buttons (shown after reveal)
+  html += '<div class="fc-actions" id="fc-actions" style="display:none">';
+  html += '<button class="fc-btn fc-no" onclick="markCard(0)">\u2717 Didn\'t know</button>';
+  html += '<button class="fc-btn" style="background:rgba(240,180,41,.2);color:var(--gold)" onclick="markCard(3)">Hard</button>';
+  html += '<button class="fc-btn fc-yes" onclick="markCard(5)">\u2713 Got it</button>';
+  html += '</div>';
+  // Next interval preview (shown after reveal)
+  html += '<div id="interval-preview" style="display:none;text-align:center;font-size:11px;color:var(--txt3);margin-top:8px;gap:8px;justify-content:space-around;display:none">';
+  html += '</div>';
+  wrap.innerHTML = html;
+
+  // Attach speak button
+  var speakBtn = document.getElementById('fc-speak-btn');
   if(speakBtn){
-    var sv=v.sv;
-    speakBtn.onclick=function(e){e.stopPropagation();speak(sv,this);};
+    var sv = v.sv;
+    speakBtn.onclick = function(e){ e.stopPropagation(); speak(sv, this); };
   }
 }
+
 function revealCard(){
-  if(qRevealed)return;
-  qRevealed=true;
+  if(qRevealed) return;
+  qRevealed = true;
   document.getElementById('fc-reveal').classList.add('show');
-  document.getElementById('fc-actions').style.display='flex';
-  document.getElementById('fc-card').querySelector('.tap-hint').style.display='none';
+  document.getElementById('fc-actions').style.display = 'flex';
+  document.getElementById('fc-card').querySelector('.tap-hint').style.display = 'none';
+
+  // Show interval preview for each button
+  var v = qItems[qIdx];
+  var c = getCard(v.sv);
+  var preview = document.getElementById('interval-preview');
+  if(preview){
+    var intervals = [
+      {q:0, label:'\u2717', next:'Tomorrow'},
+      {q:3, label:'Hard', next: c.reps===0?'6 days':'~'+(Math.round(Math.max(c.interval,1)*Math.max(c.ef+0.1-(5-3)*(0.08+(5-3)*0.02),1.3)))+'d'},
+      {q:5, label:'\u2713', next: c.reps===0?'6 days':'~'+(Math.round(c.interval*c.ef))+'d'},
+    ];
+    var html='<div style="display:flex;justify-content:space-around;width:100%;margin-top:6px">';
+    intervals.forEach(function(iv){
+      html += '<span style="font-size:10px;color:var(--txt3)">' + iv.next + '</span>';
+    });
+    html += '</div>';
+    preview.innerHTML = html;
+    preview.style.display = 'flex';
+  }
 }
-function practiceMissed(){
-  var btn=document.querySelector('.qmode[onclick*="missed"]');
-  if(btn) setQMode('missed', btn);
-}
-function markCard(knew){
-  if(!knew){
+
+function markCard(quality){
+  var v = qItems[qIdx];
+  reviewCard(v.sv, quality);
+
+  if(quality < 3){
     qWrong++;
-    // Add to missed pile if not already there
-    var v=qItems[qIdx];
-    var alreadyMissed=missedWords.some(function(m){return m.sv===v.sv;});
+    var alreadyMissed = missedWords.some(function(m){ return m.sv === v.sv; });
     if(!alreadyMissed) missedWords.push(v);
-    // Update missed button label
-    var btn=document.querySelector('.qmode[onclick*="missed"]');
-    if(btn) btn.textContent='\u2717 Missed ('+missedWords.length+')';
+    var btn = document.querySelector('.qmode[onclick*="missed"]');
+    if(btn) btn.textContent = '\u2717 Missed (' + missedWords.length + ')';
   } else {
     qCorrect++;
-    // If practicing missed words and got it right, remove from missed
-    if(qMode==='missed'){
-      var sv=qItems[qIdx].sv;
-      missedWords=missedWords.filter(function(m){return m.sv!==sv;});
-      var btn=document.querySelector('.qmode[onclick*="missed"]');
-      if(btn) btn.textContent=missedWords.length?'\u2717 Missed ('+missedWords.length+')':'\u2717 Missed words';
+    if(qMode === 'missed'){
+      missedWords = missedWords.filter(function(m){ return m.sv !== v.sv; });
+      var btn2 = document.querySelector('.qmode[onclick*="missed"]');
+      if(btn2) btn2.textContent = missedWords.length ? '\u2717 Missed ('+missedWords.length+')' : '\u2717 Missed';
     }
   }
   qIdx++;
   renderCard();
 }
+
+function practiceMissed(){
+  var btn = document.querySelector('.qmode[onclick*="missed"]');
+  if(btn) setQMode('missed', btn);
+}
+
 
 // ── NAV ──
 function showScreen(name,btn){
@@ -924,6 +1061,7 @@ function showScreen(name,btn){
 document.getElementById('sn-total').textContent=VOCAB.length;
 document.getElementById('sn-pr').textContent=VOCAB.filter(function(v){return v.p;}).length;
 renderList();
+updateDueBtn();
 </script>
 </body>
 </html>
