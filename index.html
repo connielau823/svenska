@@ -173,8 +173,8 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
   <div class="quiz-wrap">
     <div style="padding:10px 0 4px;font-size:12px;color:var(--txt3)">Cards are shown based on spaced repetition &mdash; new and due cards first.</div>
     <div class="qmode-row">
-      <button class="qmode on" onclick="setQMode('due',this)" id="btn-due">&#9200; Due now (0)</button>
-      <button class="qmode" onclick="setQMode('all',this)">All words</button>
+      <button class="qmode" onclick="setQMode('due',this)" id="btn-due">&#9200; Due now (0)</button>
+      <button class="qmode on" onclick="setQMode('all',this)">All words</button>
       <button class="qmode" onclick="setQMode('missed',this)">&#10007; Missed</button>
     </div>
     <div id="missed-info" style="display:none;font-size:12px;color:var(--txt3);margin-bottom:8px;padding:8px 12px;background:var(--sur);border-radius:var(--rad2)">Words you marked as &ldquo;Didn&rsquo;t know&rdquo; this session.</div>
@@ -859,7 +859,7 @@ function getIntervalLabel(sv){
 }
 
 // ── FLASHCARDS ──
-var qItems=[], qIdx=0, qCorrect=0, qWrong=0, qMode='due', qRevealed=false;
+var qItems=[], qIdx=0, qCorrect=0, qWrong=0, qMode='all', qRevealed=false;
 var missedWords=[];
 
 loadSRS();
@@ -899,10 +899,14 @@ function startQuiz(){
       wrap.innerHTML = '<div class="empty" style="padding:40px">No missed words yet.<br>Complete a round first!</div>';
       return;
     }
+    // Shuffle missed too
+    pool = pool.sort(function(){ return Math.random() - 0.5; });
   } else {
     // All — shuffle
     pool = VOCAB.slice().sort(function(){ return Math.random() - 0.5; });
   }
+  // Always shuffle due cards too
+  if(qMode === 'due') pool = pool.sort(function(){ return Math.random() - 0.5; });
   qItems = pool;
   qIdx = 0; qCorrect = 0; qWrong = 0;
   renderCard();
