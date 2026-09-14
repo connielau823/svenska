@@ -102,6 +102,34 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
 .qscore-l{font-size:17px;color:var(--txt2);margin-top:10px}
 .qscore-s{font-size:13px;color:var(--txt3);margin-top:4px}
 .qrestart{margin-top:28px;background:var(--acc);color:#fff;padding:14px 32px;border-radius:var(--rad2);font-size:16px;font-weight:700;cursor:pointer;border:none}
+
+.verb-card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:20px;margin-bottom:14px}
+.verb-inf{font-size:22px;font-weight:700;color:var(--acc2);margin-bottom:4px}
+.verb-en{font-size:13px;color:var(--txt3);margin-bottom:16px}
+.verb-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.verb-label{font-size:12px;color:var(--txt2);width:70px;flex-shrink:0}
+.verb-input{flex:1;background:var(--sur2);border:1.5px solid var(--bdr);border-radius:var(--rad2);padding:10px 12px;font-size:15px;color:var(--txt);outline:none;font-family:inherit}
+.verb-input:focus{border-color:var(--acc)}
+.verb-input.correct{border-color:var(--grn);background:rgba(52,201,136,.08)}
+.verb-input.wrong{border-color:var(--red);background:rgba(224,112,96,.08)}
+.verb-input.revealed{border-color:var(--acc2);color:var(--acc2)}
+.verb-check{width:100%;padding:13px;border-radius:var(--rad2);border:none;font-size:15px;font-weight:700;cursor:pointer;background:var(--acc);color:#fff;margin-top:6px}
+.verb-next{width:100%;padding:13px;border-radius:var(--rad2);border:1.5px solid var(--bdr);font-size:15px;font-weight:700;cursor:pointer;background:transparent;color:var(--txt);margin-top:8px}
+.verb-score{text-align:center;padding:30px 20px}
+
+.verb-card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:20px;margin-bottom:14px}
+.verb-inf{font-size:22px;font-weight:700;color:var(--acc2);margin-bottom:4px}
+.verb-en{font-size:13px;color:var(--txt3);margin-bottom:16px}
+.verb-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.verb-label{font-size:12px;color:var(--txt2);width:70px;flex-shrink:0}
+.verb-input{flex:1;background:var(--sur2);border:1.5px solid var(--bdr);border-radius:var(--rad2);padding:10px 12px;font-size:15px;color:var(--txt);outline:none;font-family:inherit}
+.verb-input:focus{border-color:var(--acc)}
+.verb-input.correct{border-color:var(--grn);background:rgba(52,201,136,.08)}
+.verb-input.wrong{border-color:var(--red);background:rgba(224,112,96,.08)}
+.verb-input.revealed{border-color:var(--acc2);color:var(--acc2)}
+.verb-check{width:100%;padding:13px;border-radius:var(--rad2);border:none;font-size:15px;font-weight:700;cursor:pointer;background:var(--acc);color:#fff;margin-top:6px}
+.verb-score{text-align:center;padding:30px 20px}
+
 /* nav */
 .bnav{display:flex;background:var(--sur);border-top:1px solid var(--bdr);padding:8px 0 calc(8px + env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;z-index:20}
 .nbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;background:none;border:none;cursor:pointer;color:var(--txt3);font-size:10px;font-weight:600}
@@ -121,6 +149,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
 <div class="tabs">
   <button class="tab on" onclick="showScreen('browse',this)">Browse</button>
   <button class="tab" onclick="showScreen('quiz',this)">Flashcards</button>
+  <button class="tab" onclick="showScreen('verbs',this)">Verbs</button>
 </div>
 
 <!-- BROWSE -->
@@ -181,12 +210,39 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
     <div id="qcontent"></div>
   </div>
 </div>
+
+<!-- VERB QUIZ -->
+<div id="screen-verbs" class="screen">
+  <div style="padding:12px 14px 6px;background:var(--sur);border-bottom:1px solid var(--bdr);flex-shrink:0">
+    <div style="font-size:12px;color:var(--txt3);margin-bottom:8px">Given the infinitive, type all conjugated forms. Loose matching — accents optional.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap" id="vquiz-mode-row">
+      <button class="qmode on" onclick="setVMode('inf-to-forms',this)">Forms from infinitive</button>
+      <button class="qmode" onclick="setVMode('forms-to-inf',this)">Infinitive from form</button>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:14px 14px 100px" id="vquiz-wrap">
+    <div id="vquiz-content"></div>
+  </div>
+</div>
+
 </div>
 
 <nav class="bnav">
   <button class="nbtn on" id="nav-browse" onclick="showScreen('browse',this)"><span class="nicon">📚</span>Browse</button>
   <button class="nbtn" id="nav-quiz" onclick="showScreen('quiz',this)"><span class="nicon">🃏</span>Flashcards</button>
+  <button class="nbtn" id="nav-verbs" onclick="showScreen('verbs',this)"><span class="nicon">📝</span>Verbs</button>
 </nav>
+
+<!-- VERB QUIZ -->
+<div id="screen-verbs" class="screen">
+  <div class="quiz-wrap">
+    <div class="qmode-row">
+      <button class="qmode on" onclick="setVMode('conjugate',this)">Fill in the form</button>
+      <button class="qmode" onclick="setVMode('identify',this)">What does it mean?</button>
+    </div>
+    <div id="verb-content"></div>
+  </div>
+</div>
 
 <script>
 const VOCAB=[
@@ -579,96 +635,106 @@ const VOCAB=[
   {sv:'Jag är vid statyn',pron:'yag ehr veed STAH-tewn',en:'I am by the statue',src:'Podcast',cat:'Directions',p:0,n:0,t:'sentence',forms:''}
 ,
 // -- Podcast lessons 12-15: shopping, time, verbs, prepositions --
-  {sv:'Ursäkta',pron:'ur-SEK-ta',en:'Excuse me',src:'Podcast',cat:'Greetings',p:0,n:1,t:'word',forms:''},
-  {sv:'Var finns...?',pron:'vahr fins',en:'Where is/are...?',src:'Podcast',cat:'Questions',p:0,n:1,t:'word',forms:''},
-  {sv:'Nötterna',pron:'NUR-ter-na',en:'The nuts (definite plural)',src:'Podcast',cat:'Restaurant',p:0,n:1,t:'word',forms:'singular: en nöt · plural: nötter · def plural: nötterna'},
-  {sv:'Mjölken',pron:'MYUL-ken',en:'The milk (definite)',src:'Podcast',cat:'Restaurant',p:0,n:1,t:'word',forms:'indefinite: mjölk · definite: mjölken'},
-  {sv:'Har ni mer... eller är det slut?',pron:'har nee mehr... EL-er ehr deh sloot',en:'Do you have more... or are you all out?',src:'Podcast',cat:'Restaurant',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Var hittar jag...?',pron:'vahr HIT-ar yag',en:'Where can I find...?',src:'Podcast',cat:'Questions',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Havremjölk',pron:'HAH-vreh-myulk',en:'Oat milk',src:'Podcast',cat:'Restaurant',p:0,n:1,t:'word',forms:''},
-  {sv:'I vilken gång?',pron:'ee VIL-ken gong',en:'In which aisle?',src:'Podcast',cat:'Questions',p:0,n:1,t:'sentence',forms:''},
-  {sv:'En gång',pron:'en gong',en:'An aisle / a time / a corridor',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:'plural: gångar · definite: gången'},
-  {sv:'Säljer ni...?',pron:'SEL-yer nee',en:'Do you sell...?',src:'Podcast',cat:'Questions',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Glutenfria produkter',pron:'GLOO-ten-free-a pro-DOOK-ter',en:'Gluten-free products',src:'Podcast',cat:'Restaurant',p:0,n:1,t:'word',forms:''},
-  {sv:'Längst bak',pron:'lengst bahk',en:'At the very back',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Jag kan visa dig',pron:'yag kan VEE-sa deg',en:'I can show you',src:'Podcast',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Jag ska kolla, ett ögonblick',pron:'yag skah KOL-a et UR-gon-blik',en:'I will check, just one moment',src:'Podcast',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Nummerlapparna',pron:'NUM-er-lap-ar-na',en:'The number tickets (deli queue)',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:'singular: nummerlapp · plural: nummerlappar'},
-  {sv:'Kölapparna',pron:'CHUR-lap-ar-na',en:'The queue tickets',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:'singular: kölappp · plural: kölappar'},
-  {sv:'Kan jag få smaka?',pron:'kan yag faw SMAH-ka',en:'Can I taste?',src:'Podcast',cat:'Restaurant',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Ska jag skiva den?',pron:'skah yag SHEE-va den',en:'Should I slice it?',src:'Podcast',cat:'Restaurant',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Något annat?',pron:'NAW-got AN-at',en:'Anything else?',src:'Podcast',cat:'Restaurant',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Vill du ha något mer?',pron:'vil doo hah NAW-got mehr',en:'Would you like anything more?',src:'Podcast',cat:'Restaurant',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Var det bra så?',pron:'vahr deh brah saw',en:'Was that all? / Is that okay?',src:'Podcast',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Är du medlem?',pron:'ehr doo MEH-lem',en:'Are you a member?',src:'Podcast',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Personnummer',pron:'pehr-SHON-num-er',en:'Personal identity number',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'En bonuscheck',pron:'en BOO-nus-shek',en:'A bonus voucher/check',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Det blir... kronor',pron:'deh bleer... KROO-nor',en:'That will be... kronor',src:'Podcast',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Kvitto?',pron:'KVIT-oh',en:'Receipt?',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:'plural: kvitton · definite: kvittot'},
-  {sv:'Nej, det behövs inte',pron:'nay deh beh-HUVS IN-teh',en:'No, that is not necessary',src:'Podcast',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Detsamma!',pron:'deh-SAM-a',en:'Likewise! / Same to you!',src:'Podcast',cat:'Greetings',p:0,n:1,t:'word',forms:''},
-  {sv:'Den här varan scannas inte',pron:'den hehr VAH-ran SKAN-as IN-teh',en:'This item is not scanning',src:'Podcast',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Jag tror att priset är fel',pron:'yag troor at PREE-set ehr fehl',en:'I think the price is wrong',src:'Podcast',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Kan jag returnera den här?',pron:'kan yag reh-tur-NEH-ra den hehr',en:'Can I return this?',src:'Podcast',cat:'Social',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Fel växel',pron:'fehl VEK-sel',en:'Wrong change',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:''},
-  {sv:'Gick sönder',pron:'yik SUN-der',en:'Broke / broke down (past)',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:'present: går sönder · past: gick sönder'},
-  {sv:'Vad är klockan?',pron:'vah ehr KLOK-an',en:'What time is it?',src:'Podcast',cat:'Questions',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Hur mycket är klockan?',pron:'hoor MYK-eh ehr KLOK-an',en:'What time is it? (lit. how much is the clock)',src:'Podcast',cat:'Questions',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Vilken tid?',pron:'VIL-ken teed',en:'What time?',src:'Podcast',cat:'Questions',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Noll',pron:'nol',en:'Zero',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Tretton',pron:'TRET-on',en:'Thirteen',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Fjorton',pron:'FYOOR-ton',en:'Fourteen',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Femton',pron:'FEM-ton',en:'Fifteen',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Sexton',pron:'SEKS-ton',en:'Sixteen',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Sjutton',pron:'SHUT-on',en:'Seventeen',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Arton',pron:'AR-ton',en:'Eighteen',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Nitton',pron:'NIT-on',en:'Nineteen',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Tjugo',pron:'SHOO-go',en:'Twenty',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Tjugoett',pron:'SHOO-go-et',en:'Twenty-one',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Tjugotvå',pron:'SHOO-go-tvaw',en:'Twenty-two',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Halv',pron:'halv',en:'Half (used in time: halv två = 1:30)',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Kvart',pron:'kvart',en:'Quarter (kvart över = quarter past)',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Prick',pron:'prik',en:'Exactly / on the dot',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Strax',pron:'straks',en:'Shortly / in a moment',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'För... sen',pron:'fur... sehn',en:'...ago (för tre dagar sen = 3 days ago)',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'En sekund',pron:'en seh-KOOND',en:'A second',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:'plural: sekunder · definite: sekunden'},
-  {sv:'Två sekunder',pron:'tvaw seh-KOON-der',en:'Two seconds',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Om',pron:'om',en:'In (future time: om en timme = in an hour)',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:''},
-  {sv:'Att komma',pron:'at KOM-a',en:'To come',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:'present: kommer · past: kom · supine: kommit'},
-  {sv:'Att gå',pron:'at gaw',en:'To go / walk',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:'present: går · past: gick · supine: gått'},
-  {sv:'Att åka',pron:'at AW-ka',en:'To go / travel (by vehicle)',src:'Podcast',cat:'Transport',p:0,n:1,t:'word',forms:'present: åker · past: åkte · supine: åkt'},
-  {sv:'Att säga',pron:'at SEH-ya',en:'To say',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:'present: säger · past: sa · supine: sagt'},
-  {sv:'Att prata',pron:'at PRAH-ta',en:'To talk / speak',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:'present: pratar · past: pratade · supine: pratat'},
-  {sv:'Att se',pron:'at seh',en:'To see',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:'present: ser · past: såg · supine: sett'},
-  {sv:'Att ge',pron:'at yeh',en:'To give',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:'present: ger · past: gav · supine: gett'},
-  {sv:'Att få',pron:'at faw',en:'To get / receive / be allowed',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:'present: får · past: fick · supine: fått'},
-  {sv:'Att sova',pron:'at SOO-va',en:'To sleep',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:'present: sover · past: sov · supine: sovit'},
-  {sv:'Att gilla',pron:'at YIL-a',en:'To like (informal)',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:'present: gillar · past: gillade · supine: gillat'},
-  {sv:'Att tycka',pron:'at TYK-a',en:'To think / have an opinion',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:'present: tycker · past: tyckte · supine: tyckt'},
-  {sv:'Att tänka',pron:'at TEN-ka',en:'To think (process/reflect)',src:'Podcast',cat:'Social',p:0,n:1,t:'word',forms:'present: tänker · past: tänkte · supine: tänkt'},
-  {sv:'Att vilja',pron:'at VIL-ya',en:'To want',src:'Podcast',cat:'Daily life',p:0,n:1,t:'word',forms:'present: vill · past: ville · supine: velat'},
-  {sv:'Under',pron:'OON-der',en:'Under / below',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Över',pron:'UR-ver',en:'Over / above',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Ovanför',pron:'OO-van-fur',en:'Above (position)',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Framför',pron:'FRAM-fur',en:'In front of',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Mellan',pron:'MEL-an',en:'Between / among',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Bland',pron:'bland',en:'Among (mixed in with)',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Innanför',pron:'IN-an-fur',en:'Inside of',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Utanför',pron:'OO-tan-fur',en:'Outside of',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Till vänster om',pron:'til VEN-ster om',en:'To the left of',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'Till höger om',pron:'til HUR-ger om',en:'To the right of',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'I huset',pron:'ee HOO-set',en:'In the house / at home',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'I kyrkan',pron:'ee SHEER-kan',en:'At church',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'I skolan',pron:'ee SKOO-lan',en:'At school',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'I Sverige',pron:'ee SVEH-ree-yeh',en:'In Sweden',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'På gymmet',pron:'paw YIM-et',en:'At the gym',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'På sjukhuset',pron:'paw SHOOK-hoo-set',en:'At the hospital',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'På stan',pron:'paw stahn',en:'In town / downtown',src:'Podcast',cat:'Directions',p:0,n:1,t:'word',forms:''},
-  {sv:'På bussen',pron:'paw BUS-en',en:'On the bus',src:'Podcast',cat:'Transport',p:0,n:1,t:'word',forms:''},
-  {sv:'Jag är vid statyn',pron:'yag ehr veed STAH-tewn',en:'I am by the statue',src:'Podcast',cat:'Directions',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Jag är ute',pron:'yag ehr OO-teh',en:'I am outside',src:'Podcast',cat:'Directions',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Jag är inne',pron:'yag ehr IN-eh',en:'I am inside',src:'Podcast',cat:'Directions',p:0,n:1,t:'sentence',forms:''},
-  {sv:'Flytta bordet mer till vänster',pron:'FLYT-a BOR-det mehr til VEN-ster',en:'Move the table more to the left',src:'Podcast',cat:'Directions',p:0,n:1,t:'sentence',forms:''}
+  {sv:'Ursäkta',pron:'ur-SEK-ta',en:'Excuse me',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Var finns...?',pron:'vahr fins',en:'Where is/are...?',src:'Podcast',cat:'Questions',p:0,n:0,t:'word',forms:''},
+  {sv:'Nötterna',pron:'NUR-ter-na',en:'The nuts (definite plural)',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word',forms:'singular: en nöt · plural: nötter · def plural: nötterna'},
+  {sv:'Mjölken',pron:'MYUL-ken',en:'The milk (definite)',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word',forms:'indefinite: mjölk · definite: mjölken'},
+  {sv:'Har ni mer... eller är det slut?',pron:'har nee mehr... EL-er ehr deh sloot',en:'Do you have more... or are you all out?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Var hittar jag...?',pron:'vahr HIT-ar yag',en:'Where can I find...?',src:'Podcast',cat:'Questions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Havremjölk',pron:'HAH-vreh-myulk',en:'Oat milk',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'I vilken gång?',pron:'ee VIL-ken gong',en:'In which aisle?',src:'Podcast',cat:'Questions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'En gång',pron:'en gong',en:'An aisle / a time / a corridor',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:'plural: gångar · definite: gången'},
+  {sv:'Säljer ni...?',pron:'SEL-yer nee',en:'Do you sell...?',src:'Podcast',cat:'Questions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Glutenfria produkter',pron:'GLOO-ten-free-a pro-DOOK-ter',en:'Gluten-free products',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'Längst bak',pron:'lengst bahk',en:'At the very back',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag kan visa dig',pron:'yag kan VEE-sa deg',en:'I can show you',src:'Podcast',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Jag ska kolla, ett ögonblick',pron:'yag skah KOL-a et UR-gon-blik',en:'I will check, just one moment',src:'Podcast',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Nummerlapparna',pron:'NUM-er-lap-ar-na',en:'The number tickets (deli queue)',src:'Podcast',cat:'Social',p:0,n:0,t:'word',forms:'singular: nummerlapp · plural: nummerlappar'},
+  {sv:'Kölapparna',pron:'CHUR-lap-ar-na',en:'The queue tickets',src:'Podcast',cat:'Social',p:0,n:0,t:'word',forms:'singular: kölappp · plural: kölappar'},
+  {sv:'Kan jag få smaka?',pron:'kan yag faw SMAH-ka',en:'Can I taste?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Ska jag skiva den?',pron:'skah yag SHEE-va den',en:'Should I slice it?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Något annat?',pron:'NAW-got AN-at',en:'Anything else?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Vill du ha något mer?',pron:'vil doo hah NAW-got mehr',en:'Would you like anything more?',src:'Podcast',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Var det bra så?',pron:'vahr deh brah saw',en:'Was that all? / Is that okay?',src:'Podcast',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Är du medlem?',pron:'ehr doo MEH-lem',en:'Are you a member?',src:'Podcast',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Personnummer',pron:'pehr-SHON-num-er',en:'Personal identity number',src:'Podcast',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'En bonuscheck',pron:'en BOO-nus-shek',en:'A bonus voucher/check',src:'Podcast',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Det blir... kronor',pron:'deh bleer... KROO-nor',en:'That will be... kronor',src:'Podcast',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Kvitto?',pron:'KVIT-oh',en:'Receipt?',src:'Podcast',cat:'Social',p:0,n:0,t:'word',forms:'plural: kvitton · definite: kvittot'},
+  {sv:'Nej, det behövs inte',pron:'nay deh beh-HUVS IN-teh',en:'No, that is not necessary',src:'Podcast',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Detsamma!',pron:'deh-SAM-a',en:'Likewise! / Same to you!',src:'Podcast',cat:'Greetings',p:0,n:0,t:'word',forms:''},
+  {sv:'Den här varan scannas inte',pron:'den hehr VAH-ran SKAN-as IN-teh',en:'This item is not scanning',src:'Podcast',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Jag tror att priset är fel',pron:'yag troor at PREE-set ehr fehl',en:'I think the price is wrong',src:'Podcast',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Kan jag returnera den här?',pron:'kan yag reh-tur-NEH-ra den hehr',en:'Can I return this?',src:'Podcast',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Fel växel',pron:'fehl VEK-sel',en:'Wrong change',src:'Podcast',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Gick sönder',pron:'yik SUN-der',en:'Broke / broke down (past)',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:'present: går sönder · past: gick sönder'},
+  {sv:'Vad är klockan?',pron:'vah ehr KLOK-an',en:'What time is it?',src:'Podcast',cat:'Questions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Hur mycket är klockan?',pron:'hoor MYK-eh ehr KLOK-an',en:'What time is it? (lit. how much is the clock)',src:'Podcast',cat:'Questions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Vilken tid?',pron:'VIL-ken teed',en:'What time?',src:'Podcast',cat:'Questions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Noll',pron:'nol',en:'Zero',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Tretton',pron:'TRET-on',en:'Thirteen',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Fjorton',pron:'FYOOR-ton',en:'Fourteen',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Femton',pron:'FEM-ton',en:'Fifteen',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Sexton',pron:'SEKS-ton',en:'Sixteen',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Sjutton',pron:'SHUT-on',en:'Seventeen',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Arton',pron:'AR-ton',en:'Eighteen',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Nitton',pron:'NIT-on',en:'Nineteen',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Tjugo',pron:'SHOO-go',en:'Twenty',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Tjugoett',pron:'SHOO-go-et',en:'Twenty-one',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Tjugotvå',pron:'SHOO-go-tvaw',en:'Twenty-two',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Halv',pron:'halv',en:'Half (used in time: halv två = 1:30)',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Kvart',pron:'kvart',en:'Quarter (kvart över = quarter past)',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Prick',pron:'prik',en:'Exactly / on the dot',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Strax',pron:'straks',en:'Shortly / in a moment',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'För... sen',pron:'fur... sehn',en:'...ago (för tre dagar sen = 3 days ago)',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'En sekund',pron:'en seh-KOOND',en:'A second',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:'plural: sekunder · definite: sekunden'},
+  {sv:'Två sekunder',pron:'tvaw seh-KOON-der',en:'Two seconds',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Om',pron:'om',en:'In (future time: om en timme = in an hour)',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Att komma',pron:'at KOM-a',en:'To come',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:'present: kommer · past: kom · supine: kommit'},
+  {sv:'Att gå',pron:'at gaw',en:'To go / walk',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:'present: går · past: gick · supine: gått'},
+  {sv:'Att åka',pron:'at AW-ka',en:'To go / travel (by vehicle)',src:'Podcast',cat:'Transport',p:0,n:0,t:'word',forms:'present: åker · past: åkte · supine: åkt'},
+  {sv:'Att säga',pron:'at SEH-ya',en:'To say',src:'Podcast',cat:'Social',p:0,n:0,t:'word',forms:'present: säger · past: sa · supine: sagt'},
+  {sv:'Att prata',pron:'at PRAH-ta',en:'To talk / speak',src:'Podcast',cat:'Social',p:0,n:0,t:'word',forms:'present: pratar · past: pratade · supine: pratat'},
+  {sv:'Att se',pron:'at seh',en:'To see',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:'present: ser · past: såg · supine: sett'},
+  {sv:'Att ge',pron:'at yeh',en:'To give',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:'present: ger · past: gav · supine: gett'},
+  {sv:'Att få',pron:'at faw',en:'To get / receive / be allowed',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:'present: får · past: fick · supine: fått'},
+  {sv:'Att sova',pron:'at SOO-va',en:'To sleep',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:'present: sover · past: sov · supine: sovit'},
+  {sv:'Att gilla',pron:'at YIL-a',en:'To like (informal)',src:'Podcast',cat:'Social',p:0,n:0,t:'word',forms:'present: gillar · past: gillade · supine: gillat'},
+  {sv:'Att tycka',pron:'at TYK-a',en:'To think / have an opinion',src:'Podcast',cat:'Social',p:0,n:0,t:'word',forms:'present: tycker · past: tyckte · supine: tyckt'},
+  {sv:'Att tänka',pron:'at TEN-ka',en:'To think (process/reflect)',src:'Podcast',cat:'Social',p:0,n:0,t:'word',forms:'present: tänker · past: tänkte · supine: tänkt'},
+  {sv:'Att vilja',pron:'at VIL-ya',en:'To want',src:'Podcast',cat:'Daily life',p:0,n:0,t:'word',forms:'present: vill · past: ville · supine: velat'},
+  {sv:'Under',pron:'OON-der',en:'Under / below',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Över',pron:'UR-ver',en:'Over / above',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Ovanför',pron:'OO-van-fur',en:'Above (position)',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Framför',pron:'FRAM-fur',en:'In front of',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Mellan',pron:'MEL-an',en:'Between / among',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Bland',pron:'bland',en:'Among (mixed in with)',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Innanför',pron:'IN-an-fur',en:'Inside of',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Utanför',pron:'OO-tan-fur',en:'Outside of',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Till vänster om',pron:'til VEN-ster om',en:'To the left of',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Till höger om',pron:'til HUR-ger om',en:'To the right of',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'I huset',pron:'ee HOO-set',en:'In the house / at home',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'I kyrkan',pron:'ee SHEER-kan',en:'At church',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'I skolan',pron:'ee SKOO-lan',en:'At school',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'I Sverige',pron:'ee SVEH-ree-yeh',en:'In Sweden',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'På gymmet',pron:'paw YIM-et',en:'At the gym',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'På sjukhuset',pron:'paw SHOOK-hoo-set',en:'At the hospital',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'På stan',pron:'paw stahn',en:'In town / downtown',src:'Podcast',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'På bussen',pron:'paw BUS-en',en:'On the bus',src:'Podcast',cat:'Transport',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag är vid statyn',pron:'yag ehr veed STAH-tewn',en:'I am by the statue',src:'Podcast',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Jag är ute',pron:'yag ehr OO-teh',en:'I am outside',src:'Podcast',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Jag är inne',pron:'yag ehr IN-eh',en:'I am inside',src:'Podcast',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Flytta bordet mer till vänster',pron:'FLYT-a BOR-det mehr til VEN-ster',en:'Move the table more to the left',src:'Podcast',cat:'Directions',p:0,n:0,t:'sentence',forms:''}
+,
+// -- Verb notes batch --
+  {sv:'Att ta',pron:'at tah',en:'To take',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: tar · past: tog · supine: tagit'},
+  {sv:'Att ha',pron:'at hah',en:'To have',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: har · past: hade · supine: haft'},
+  {sv:'Att kunna',pron:'at KUN-a',en:'To be able to / can',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: kan · past: kunde · supine: kunnat'},
+  {sv:'Att omfatta',pron:'at om-FAT-a',en:'To include / comprise',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'present: omfattar · past: omfattade · supine: omfattat'},
+  {sv:'Att tala',pron:'at TAH-la',en:'To speak / talk (formal)',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'present: talar · past: talade · supine: talat'},
+  {sv:'Att heta',pron:'at HEH-ta',en:'To be called / named',src:'Babbel',cat:'Greetings',p:0,n:0,t:'word',forms:'present: heter · past: hette · supine: hetat'},
+  {sv:'Att bo',pron:'at boo',en:'To live / reside',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: bor · past: bodde · supine: bott'},
+  {sv:'Att cykla',pron:'at SEWK-la',en:'To cycle / ride a bike',src:'Babbel',cat:'Transport',p:0,n:0,t:'word',forms:'present: cyklar · past: cyklade · supine: cyklat'}
 
 ];
 
@@ -1047,6 +1113,491 @@ function practiceMissed(){
 }
 
 
+
+// ── VERB QUIZ ──
+var VERBS=[
+  {inf:'att komma',en:'to come',pres:'kommer',past:'kom',sup:'kommit'},
+  {inf:'att ga',en:'to go / walk',pres:'gar',past:'gick',sup:'gatt'},
+  {inf:'att aka',en:'to travel (vehicle)',pres:'aker',past:'akte',sup:'akt'},
+  {inf:'att saga',en:'to say',pres:'sager',past:'sa',sup:'sagt'},
+  {inf:'att prata',en:'to talk',pres:'pratar',past:'pratade',sup:'pratat'},
+  {inf:'att se',en:'to see',pres:'ser',past:'sag',sup:'sett'},
+  {inf:'att ge',en:'to give',pres:'ger',past:'gav',sup:'gett'},
+  {inf:'att fa',en:'to get / receive',pres:'far',past:'fick',sup:'fatt'},
+  {inf:'att ata',en:'to eat',pres:'ater',past:'at',sup:'atit'},
+  {inf:'att sova',en:'to sleep',pres:'sover',past:'sov',sup:'sovit'},
+  {inf:'att gilla',en:'to like (informal)',pres:'gillar',past:'gillade',sup:'gillat'},
+  {inf:'att tycka',en:'to think (opinion)',pres:'tycker',past:'tyckte',sup:'tyckt'},
+  {inf:'att tanka',en:'to think (process)',pres:'tanker',past:'tankte',sup:'tankt'},
+  {inf:'att vilja',en:'to want',pres:'vill',past:'ville',sup:'velat'},
+  {inf:'att lasa',en:'to read',pres:'laser',past:'laste',sup:'last'},
+  {inf:'att ta',en:'to take',pres:'tar',past:'tog',sup:'tagit'},
+  {inf:'att fika',en:'to have coffee and a pastry',pres:'fikar',past:'fikade',sup:'fikat'},
+  {inf:'att ha',en:'to have',pres:'har',past:'hade',sup:'haft'},
+  {inf:'att kunna',en:'to be able to',pres:'kan',past:'kunde',sup:'kunnat'},
+  {inf:'att tala',en:'to speak (formal)',pres:'talar',past:'talade',sup:'talat'},
+  {inf:'att heta',en:'to be called',pres:'heter',past:'hette',sup:'hetat'},
+  {inf:'att bo',en:'to live / reside',pres:'bor',past:'bodde',sup:'bott'},
+  {inf:'att cykla',en:'to cycle',pres:'cyklar',past:'cyklade',sup:'cyklat'},
+// -- Babbel restaurant/opinions + Textbook geography/student life --
+  {sv:'Gravlaxen',pron:'GRAV-lak-sen',en:'The gravlax (cured salmon, definite)',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'indefinite: gravlax · definite: gravlaxen'},
+  {sv:'Köttbullarna',pron:'CHET-bul-ar-na',en:'The meatballs (definite plural)',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'singular: köttbulle · plural: köttbullar · def pl: köttbullarna'},
+  {sv:'Förstås',pron:'fur-STAWS',en:'Of course / naturally',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag skulle vilja ha gravlax med potatis',pron:'yag SKOOL-eh VIL-ya hah GRAV-laks meh poo-TAH-tis',en:'I would like gravlax with potatoes',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Ostkaka',pron:'OST-kah-ka',en:'Swedish cheesecake (traditional dessert)',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'definite: ostkakan'},
+  {sv:'Till efterrätt',pron:'til EF-ter-ret',en:'For dessert',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'En förrätt',pron:'en fur-RET',en:'A starter / appetiser',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'plural: förrätter · definite: förrätten'},
+  {sv:'Efterrätter',pron:'EF-ter-ret-er',en:'Desserts (plural)',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'singular: efterrätt · definite pl: efterrätterna'},
+  {sv:'Det är jämnt',pron:'deh ehr yemnt',en:'That is even / all square / no change needed',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Har ni hunnit titta på menyn?',pron:'har nee HUN-it TIT-a paw meh-NEWN',en:'Have you had time to look at the menu?',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Då kan vi ta båda',pron:'daw kan vee tah BAW-da',en:'Then we can have both',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Den ska jag ta till förrätt!',pron:'den skah yag tah til fur-RET',en:'I will have that as a starter!',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Smakade det bra?',pron:'SMAH-ka-deh deh brah',en:'Did it taste good?',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Då tar jag den, tack!',pron:'daw tahr yag den tak',en:'Then I will have that, thanks!',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Makrillen',pron:'ma-KRIL-en',en:'The mackerel (definite)',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'indefinite: makrill · definite: makrillen'},
+  {sv:'Min favorit',pron:'min fah-voh-REET',en:'My favourite',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'plural: favoriter · definite: favoriten'},
+  {sv:'Vad betyder...?',pron:'vah beh-TEW-der',en:'What does... mean?',src:'Babbel',cat:'Questions',p:0,n:0,t:'word',forms:'present: betyder · past: betydde · supine: betytt'},
+  {sv:'Förbjudet',pron:'fur-BYOO-det',en:'Forbidden / prohibited',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'base: förbjuden · neuter: förbjudet · plural: förbjudna'},
+  {sv:'Det betyder att man inte får göra något',pron:'deh beh-TEW-der at man IN-teh fawr YUR-a NAW-got',en:'It means that one is not allowed to do something',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Vet du vad det heter på engelska?',pron:'veht doo vah deh HEH-ter paw ENG-el-ska',en:'Do you know what it is called in English?',src:'Babbel',cat:'Questions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Valfri dryck',pron:'VAL-free drewk',en:'Optional/free drink of choice',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'Ingår',pron:'IN-gawr',en:'Is included / included in the price',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'present: ingår · past: ingick · supine: ingått'},
+  {sv:'Jag gillar vilt',pron:'yag YIL-ar vilt',en:'I like game (wild meat)',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Vilt',pron:'vilt',en:'Game / wild meat',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'För söt',pron:'fur surt',en:'Too sweet',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag tar bara kaffe på maten',pron:'yag tahr BAH-ra KAF-eh paw MAH-ten',en:'I will just have coffee with the meal',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Ett saftigt grönsaksspett',pron:'et SAF-tigt GRURN-saks-spet',en:'A juicy vegetable skewer',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'Saftigt',pron:'SAF-tigt',en:'Juicy / succulent',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:'base: saftig · neuter: saftigt · plural: saftiga'},
+  {sv:'Starkt',pron:'starkt',en:'Strong (neuter form)',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'base: stark · neuter: starkt · plural: starka'},
+  {sv:'Är kaffet starkt?',pron:'ehr KAF-et starkt',en:'Is the coffee strong?',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Snygg',pron:'snyg',en:'Good-looking / handsome / nice',src:'Babbel',cat:'People',p:0,n:0,t:'word',forms:'neuter: snyggt · plural: snygga · comparative: snyggare'},
+  {sv:'Tänk att...',pron:'tenk at',en:'Just think that... / imagine that...',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Sur',pron:'soor',en:'Sour / grumpy',src:'Babbel',cat:'People',p:0,n:0,t:'word',forms:'neuter: surt · plural: sura · comparative: surare'},
+  {sv:'Det var otroligt gott',pron:'deh vahr oo-TROO-ligt yot',en:'That was incredibly tasty',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Otroligt',pron:'oo-TROO-ligt',en:'Incredibly / unbelievably',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Jag har inga pengar kvar',pron:'yag har ING-a PENG-ar kvahr',en:'I have no money left',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Snål',pron:'snawl',en:'Stingy / tight with money',src:'Babbel',cat:'People',p:0,n:0,t:'word',forms:'neuter: snålt · plural: snåla · comparative: snålare'},
+  {sv:'Jag bjuder',pron:'yag BYOO-der',en:'I am treating / it is my treat',src:'Babbel',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Typ',pron:'tewp',en:'Like / sort of / around (filler word)',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Söt och sur',pron:'surt ok soor',en:'Sweet and sour',src:'Babbel',cat:'Restaurant',p:0,n:0,t:'word',forms:''},
+  {sv:'Billig och dyr',pron:'BIL-ig ok dewr',en:'Cheap and expensive',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'billig neuter: billigt · dyr neuter: dyrt'},
+  {sv:'Stark och svag',pron:'stark ok svahg',en:'Strong and weak',src:'Babbel',cat:'Social',p:0,n:0,t:'word',forms:'stark neuter: starkt · svag neuter: svagt'},
+  {sv:'Ligger',pron:'LIG-er',en:'Is located / lies',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:'infinitive: att ligga · past: låg · supine: legat'},
+  {sv:'En del av',pron:'en dehl av',en:'A part of',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Färöarna',pron:'FEH-rur-ar-na',en:'The Faroe Islands',src:'Textbook',cat:'Social',p:0,n:0,t:'word',forms:''},
+  {sv:'Invånare',pron:'in-VAW-na-reh',en:'Inhabitants / residents',src:'Textbook',cat:'Social',p:0,n:0,t:'word',forms:'singular: invånare · definite pl: invånarna'},
+  {sv:'Till ytan',pron:'til EW-tan',en:'In terms of area / by area',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Skillnader',pron:'SHIL-na-der',en:'Differences',src:'Textbook',cat:'Social',p:0,n:0,t:'word',forms:'singular: skillnad · definite: skillnaden'},
+  {sv:'Samer',pron:'SAH-mer',en:'Sami people (indigenous)',src:'Textbook',cat:'Social',p:0,n:0,t:'word',forms:'singular: same · definite: samen'},
+  {sv:'Städer',pron:'STEH-der',en:'Cities',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:'singular: stad · definite pl: städerna'},
+  {sv:'Byar',pron:'BEW-ar',en:'Villages',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:'singular: by · definite: byn · def pl: byarna'},
+  {sv:'Smalt',pron:'smalt',en:'Narrow (neuter)',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:'base: smal · neuter: smalt · plural: smala'},
+  {sv:'I norr',pron:'ee nor',en:'In the north',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Midnattssolen',pron:'mid-NATS-soo-len',en:'The midnight sun',src:'Textbook',cat:'Weather',p:0,n:0,t:'word',forms:''},
+  {sv:'Häruppe',pron:'hehr-UP-eh',en:'Up here / in this northern place',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Järvar',pron:'YEHR-var',en:'Wolverines',src:'Textbook',cat:'Social',p:0,n:0,t:'word',forms:'singular: järv · definite: järven'},
+  {sv:'Björnar',pron:'BYUR-nar',en:'Bears',src:'Textbook',cat:'Social',p:0,n:0,t:'word',forms:'singular: björn · definite: björnen'},
+  {sv:'Vargar',pron:'VAR-gar',en:'Wolves',src:'Textbook',cat:'Social',p:0,n:0,t:'word',forms:'singular: varg · definite: vargen'},
+  {sv:'I söder',pron:'ee SUR-der',en:'In the south',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Klimatet',pron:'kli-MAH-tet',en:'The climate (definite)',src:'Textbook',cat:'Weather',p:0,n:0,t:'word',forms:'indefinite: klimat · definite: klimatet'},
+  {sv:'Mildare',pron:'MIL-da-reh',en:'Milder (comparative)',src:'Textbook',cat:'Weather',p:0,n:0,t:'word',forms:'base: mild · comparative: mildare · superlative: mildast'},
+  {sv:'Vegetationen',pron:'veh-geh-tah-SHOO-nen',en:'The vegetation (definite)',src:'Textbook',cat:'Social',p:0,n:0,t:'word',forms:'indefinite: vegetation'},
+  {sv:'Rikare',pron:'REE-ka-reh',en:'Richer (comparative)',src:'Textbook',cat:'Social',p:0,n:0,t:'word',forms:'base: rik · comparative: rikare · superlative: rikast'},
+  {sv:'Glaciärer',pron:'gla-see-EH-rer',en:'Glaciers',src:'Textbook',cat:'Weather',p:0,n:0,t:'word',forms:'singular: glaciär · definite: glaciären'},
+  {sv:'Fjäll',pron:'fyel',en:'Mountains / fells (Swedish highlands)',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:'singular: fjäll · definite: fjället · plural: fjäll'},
+  {sv:'Det högsta berget',pron:'deh HUG-sta BER-yet',en:'The highest mountain',src:'Textbook',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Älvar',pron:'EL-var',en:'Rivers',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:'singular: älv · definite: älven'},
+  {sv:'Sjöar',pron:'SHUR-ar',en:'Lakes',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:'singular: sjö · definite: sjön'},
+  {sv:'Ett skogsland',pron:'et SKOGS-land',en:'A forest country',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'Procent',pron:'pro-SENT',en:'Percent',src:'Textbook',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Täckt av skog',pron:'tekt av skoog',en:'Covered by forest',src:'Textbook',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Turister',pron:'too-RIS-ter',en:'Tourists',src:'Textbook',cat:'Social',p:0,n:0,t:'word',forms:'singular: turist · definite: turisten'},
+  {sv:'Vackert land',pron:'VAK-ert land',en:'Beautiful country',src:'Textbook',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'En studentlägenhet',pron:'en stoo-DENT-leh-gen-heht',en:'A student apartment',src:'Textbook',cat:'Daily life',p:0,n:0,t:'word',forms:'definite: studentlägenheten'},
+  {sv:'Nära universitetet',pron:'NEH-ra oo-ni-ver-si-TEH-tet',en:'Near the university',src:'Textbook',cat:'Directions',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Går på föreläsningar',pron:'gawr paw FUR-eh-leh-sning-ar',en:'Attends lectures',src:'Textbook',cat:'Daily life',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Studerar i biblioteket',pron:'stoo-DEH-rar ee bib-lio-TEH-ket',en:'Studies in the library',src:'Textbook',cat:'Daily life',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Skriver en uppsats',pron:'SHKREE-ver en UP-sats',en:'Writes an essay',src:'Textbook',cat:'Daily life',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Vissa dagar',pron:'VIS-a DAH-gar',en:'Some days / certain days',src:'Textbook',cat:'Daily life',p:0,n:0,t:'word',forms:''},
+  {sv:'Måste gå upp',pron:'MOS-teh gaw up',en:'Must get up',src:'Textbook',cat:'Daily life',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Är inte morgonpigg',pron:'ehr IN-teh MOR-on-pig',en:'Is not a morning person',src:'Textbook',cat:'Daily life',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Tar tunnelbanan',pron:'tahr TUN-el-bah-nan',en:'Takes the subway/metro',src:'Textbook',cat:'Transport',p:0,n:0,t:'sentence',forms:'singular: tunnelbana · definite: tunnelbanan'},
+  {sv:'Går på bio',pron:'gawr paw BEE-oo',en:'Goes to the cinema',src:'Textbook',cat:'Social',p:0,n:0,t:'sentence',forms:''},
+  {sv:'Ser på teve',pron:'sehr paw TEH-veh',en:'Watches TV',src:'Textbook',cat:'Daily life',p:0,n:0,t:'sentence',forms:''},
+  {sv:'På Söder',pron:'paw SUR-der',en:'In Södermalm (Stockholm district)',src:'Textbook',cat:'Directions',p:0,n:0,t:'word',forms:''},
+  {sv:'En föreläsning',pron:'en FUR-eh-leh-sning',en:'A lecture',src:'Textbook',cat:'Daily life',p:0,n:0,t:'word',forms:'plural: föreläsningar · definite: föreläsningen'},
+  {sv:'En uppsats',pron:'en UP-sats',en:'An essay',src:'Textbook',cat:'Daily life',p:0,n:0,t:'word',forms:'plural: uppsatser · definite: uppsatsen'}
+,
+// -- Verb bank from notes --
+  {sv:'Att komma',pron:'at KOM-a',en:'To come',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: kommer · past: kom · supine: kommit'},
+  {sv:'Att gå',pron:'at gaw',en:'To go / walk',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: går · past: gick · supine: gått'},
+  {sv:'Att åka',pron:'at AW-ka',en:'To travel / go by vehicle',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: åker · past: åkte · supine: åkt'},
+  {sv:'Att säga',pron:'at SEH-ya',en:'To say',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: säger · past: sa · supine: sagt'},
+  {sv:'Att prata',pron:'at PRAH-ta',en:'To talk / speak',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: pratar · past: pratade · supine: pratat'},
+  {sv:'Att se',pron:'at seh',en:'To see',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: ser · past: såg · supine: sett'},
+  {sv:'Att ge',pron:'at yeh',en:'To give',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: ger · past: gav · supine: gett'},
+  {sv:'Att få',pron:'at faw',en:'To get / receive / be allowed',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: får · past: fick · supine: fått'},
+  {sv:'Att äta',pron:'at EH-ta',en:'To eat',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: äter · past: åt · supine: ätit'},
+  {sv:'Att sova',pron:'at SOO-va',en:'To sleep',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: sover · past: sov · supine: sovit'},
+  {sv:'Att gilla',pron:'at YIL-a',en:'To like (informal)',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: gillar · past: gillade · supine: gillat'},
+  {sv:'Att tycka',pron:'at TYK-a',en:'To think / have an opinion',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: tycker · past: tyckte · supine: tyckt'},
+  {sv:'Att tänka',pron:'at TEN-ka',en:'To think / reflect',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: tänker · past: tänkte · supine: tänkt'},
+  {sv:'Att vilja',pron:'at VIL-ya',en:'To want',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: vill · past: ville · supine: velat'},
+  {sv:'Att läsa',pron:'at LEH-sa',en:'To read',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: läser · past: läste · supine: läst'},
+  {sv:'Att ha',pron:'at hah',en:'To have',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: har · past: hade · supine: haft'},
+  {sv:'Att ta',pron:'at tah',en:'To take',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: tar · past: tog · supine: tagit'},
+  {sv:'Att kunna',pron:'at KON-a',en:'To be able to / can',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: kan · past: kunde · supine: kunnat'},
+  {sv:'Att omfatta',pron:'at om-FAT-a',en:'To include / encompass',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: omfattar · past: omfattade · supine: omfattat'},
+  {sv:'Att tala',pron:'at TAH-la',en:'To speak / talk (formal)',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: talar · past: talade · supine: talat'},
+  {sv:'Att heta',pron:'at HEH-ta',en:'To be called / named',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: heter · past: hette · supine: hetat'},
+  {sv:'Att bo',pron:'at boo',en:'To live / reside',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: bor · past: bodde · supine: bott'},
+  {sv:'Att cykla',pron:'at SEW-kla',en:'To cycle / ride a bike',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: cyklar · past: cyklade · supine: cyklat'},
+  {sv:'Att fika',pron:'at FEE-ka',en:'To have coffee and a pastry',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: fikar · past: fikade · supine: fikat'}
+
+];
+
+function normSv(s){
+  return s.toLowerCase().trim()
+    .replace(/[\u00e5\u00e4]/g,'a').replace(/\u00f6/g,'o');
+}
+function matchSv(input,correct){
+  return input.toLowerCase().trim()===correct.toLowerCase().trim()
+    || normSv(input)===normSv(correct);
+}
+
+var vMode='conjugate',vItems=[],vIdx=0,vCorrect=0,vWrong=0;
+
+function setVMode(m,btn){
+  vMode=m;
+  document.querySelectorAll('#screen-verbs .qmode').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  startVerbQuiz();
+}
+
+function startVerbQuiz(){
+  vItems=VERBS.slice().sort(function(){return Math.random()-.5;});
+  vIdx=0;vCorrect=0;vWrong=0;
+  renderVerb();
+}
+
+function vStats(){
+  return '<div class="qstats">'
+    +'<div class="qstat"><div class="qstat-n" style="color:var(--grn)">'+vCorrect+'</div><div class="qstat-l">correct</div></div>'
+    +'<div class="qstat"><div class="qstat-n" style="color:var(--txt3)">'+(vItems.length-vIdx)+'</div><div class="qstat-l">left</div></div>'
+    +'<div class="qstat"><div class="qstat-n" style="color:var(--red)">'+vWrong+'</div><div class="qstat-l">missed</div></div>'
+    +'</div>';
+}
+
+function vPips(){
+  var total=Math.min(vItems.length,30),p='';
+  for(var i=0;i<total;i++) p+='<div class="qpip'+(i<vIdx?' done':i===vIdx?' cur':'')+'"></div>';
+  return '<div class="qprog">'+p+'</div>';
+}
+
+function renderVerb(){
+  var wrap=document.getElementById('verb-content');
+  if(!vItems.length){wrap.innerHTML='<div class="empty" style="padding:40px">No verbs found.</div>';return;}
+  if(vIdx>=vItems.length){
+    var pct=Math.round(vCorrect/vItems.length*100);
+    var msg=pct>=80?'Excellent!':pct>=60?'Good work!':'Keep going!';
+    wrap.innerHTML='<div class="verb-score"><div class="qscore-n">'+pct+'%</div>'
+      +'<div class="qscore-l">'+vCorrect+' / '+vItems.length+' correct</div>'
+      +'<div class="qscore-s">'+msg+'</div>'
+      +'<button class="qrestart" onclick="startVerbQuiz()">Try again</button></div>';
+    return;
+  }
+  var v=vItems[vIdx];
+  if(vMode==='conjugate'){
+    wrap.innerHTML=vStats()+vPips()
+      +'<div class="verb-card">'
+        +'<div class="verb-inf">'+v.inf+'</div>'
+        +'<div class="verb-en">'+v.en+'</div>'
+        +'<div class="verb-row"><span class="verb-label">Present</span>'
+          +'<input class="verb-input" id="vi-pres" placeholder="presens..." autocorrect="off" autocapitalize="off" spellcheck="false">'
+        +'</div>'
+        +'<div class="verb-row"><span class="verb-label">Past</span>'
+          +'<input class="verb-input" id="vi-past" placeholder="preteritum..." autocorrect="off" autocapitalize="off" spellcheck="false">'
+        +'</div>'
+        +'<div class="verb-row"><span class="verb-label">Supine</span>'
+          +'<input class="verb-input" id="vi-sup" placeholder="supinum..." autocorrect="off" autocapitalize="off" spellcheck="false">'
+        +'</div>'
+        +'<button class="verb-check" id="vc-btn" onclick="checkVerb()">Check</button>'
+      +'</div>';
+    setTimeout(function(){
+      var ids=['vi-pres','vi-past','vi-sup'];
+      var el=document.getElementById('vi-pres');
+      if(el) el.focus();
+      ids.forEach(function(id,i){
+        var inp=document.getElementById(id);
+        if(!inp) return;
+        inp.addEventListener('keydown',function(e){
+          if(e.key==='Enter'){
+            if(i<ids.length-1){var n=document.getElementById(ids[i+1]);if(n)n.focus();}
+            else checkVerb();
+          }
+        });
+      });
+    },80);
+  } else {
+    var forms=[
+      {form:v.pres,label:'Present tense'},
+      {form:v.past,label:'Past tense'},
+      {form:v.sup, label:'Supine'}
+    ];
+    var picked=forms[Math.floor(Math.random()*forms.length)];
+    wrap.innerHTML=vStats()+vPips()
+      +'<div class="verb-card">'
+        +'<div class="verb-inf" style="color:var(--txt)">'+picked.form+'</div>'
+        +'<div class="verb-en">'+picked.label+' &mdash; write the infinitive</div>'
+        +'<div class="verb-row"><span class="verb-label">Infinitive</span>'
+          +'<input class="verb-input" id="vi-inf" placeholder="att..." autocorrect="off" autocapitalize="off" spellcheck="false">'
+        +'</div>'
+        +'<button class="verb-check" id="vc-btn" onclick="checkVerbId()">Check</button>'
+      +'</div>';
+    setTimeout(function(){
+      var el=document.getElementById('vi-inf');
+      if(el){
+        el.focus();
+        el.addEventListener('keydown',function(e){if(e.key==='Enter') checkVerbId();});
+      }
+    },80);
+    wrap.setAttribute('data-vinf',v.inf);
+    wrap.setAttribute('data-ven',v.en);
+  }
+}
+
+function checkVerb(){
+  var v=vItems[vIdx];
+  var pres=document.getElementById('vi-pres');
+  var past=document.getElementById('vi-past');
+  var sup=document.getElementById('vi-sup');
+  if(!pres||!past||!sup) return;
+  var ok1=matchSv(pres.value,v.pres);
+  var ok2=matchSv(past.value,v.past);
+  var ok3=matchSv(sup.value,v.sup);
+  pres.className='verb-input '+(ok1?'correct':'wrong');
+  past.className='verb-input '+(ok2?'correct':'wrong');
+  sup.className ='verb-input '+(ok3?'correct':'wrong');
+  if(!ok1){pres.value=v.pres;pres.className='verb-input revealed';}
+  if(!ok2){past.value=v.past;past.className='verb-input revealed';}
+  if(!ok3){sup.value=v.sup;sup.className='verb-input revealed';}
+  if(ok1&&ok2&&ok3) vCorrect++; else vWrong++;
+  pres.disabled=true;past.disabled=true;sup.disabled=true;
+  var btn=document.getElementById('vc-btn');
+  if(btn){btn.textContent='Next \u2192';btn.onclick=function(){vIdx++;renderVerb();};}
+}
+
+function checkVerbId(){
+  var wrap=document.getElementById('verb-content');
+  var correctInf=wrap.getAttribute('data-vinf');
+  var correctEn=wrap.getAttribute('data-ven');
+  var inp=document.getElementById('vi-inf');
+  if(!inp||!correctInf) return;
+  var ok=matchSv(inp.value,correctInf);
+  inp.className='verb-input '+(ok?'correct':'wrong');
+  if(!ok){inp.value=correctInf+' ('+correctEn+')';inp.className='verb-input revealed';}
+  if(ok) vCorrect++; else vWrong++;
+  inp.disabled=true;
+  var btn=document.getElementById('vc-btn');
+  if(btn){btn.textContent='Next \u2192';btn.onclick=function(){vIdx++;renderVerb();};}
+}
+
+
+// ── VERB QUIZ ──
+var VERBS = [];
+var vMode = 'inf-to-forms';
+var vIdx = 0, vScore = 0, vTotal = 0, vAnswered = false;
+var vItems = [];
+
+function buildVerbList(){
+  VERBS = [];
+  VOCAB.forEach(function(v){
+    if(v.sv.indexOf('Att ') !== 0) return;
+    if(!v.forms || v.forms.length === 0) return;
+    // Parse forms: "present: X · past: Y · supine: Z"
+    var parts = v.forms.split('\u00b7');
+    var formMap = {};
+    parts.forEach(function(p){
+      p = p.trim();
+      var colon = p.indexOf(':');
+      if(colon > 0){
+        var key = p.slice(0, colon).trim().toLowerCase();
+        var val = p.slice(colon+1).trim();
+        formMap[key] = val;
+      }
+    });
+    if(formMap['present'] || formMap['past']){
+      VERBS.push({
+        inf: v.sv,
+        en: v.en,
+        pron: v.pron,
+        present: formMap['present'] || '',
+        past: formMap['past'] || '',
+        supine: formMap['supine'] || ''
+      });
+    }
+  });
+  return VERBS;
+}
+
+function setVMode(m, btn){
+  vMode = m;
+  document.querySelectorAll('#vquiz-mode-row .qmode').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  startVerbQuiz();
+}
+
+function startVerbQuiz(){
+  buildVerbList();
+  vItems = VERBS.slice().sort(function(){ return Math.random() - 0.5; });
+  vIdx = 0; vScore = 0; vTotal = 0; vAnswered = false;
+  renderVerbCard();
+}
+
+function looseMatch(input, correct){
+  if(!input || !correct) return false;
+  function norm(s){
+    return s.toLowerCase().trim()
+      .replace(/aa/g,'\u00e5').replace(/ae/g,'\u00e4').replace(/oe/g,'\u00f6')
+      .replace(/[^a-z\u00e5\u00e4\u00f6]/g,'');
+  }
+  return norm(input) === norm(correct);
+}
+
+function renderVerbCard(){
+  var wrap = document.getElementById('vquiz-content');
+  if(!vItems.length){
+    wrap.innerHTML = '<div class="empty" style="padding:40px">No verbs with conjugation data found.</div>';
+    return;
+  }
+  if(vIdx >= vItems.length){
+    var pct = vItems.length > 0 ? Math.round(vScore / vTotal * 100) : 0;
+    var emoji = pct >= 80 ? 'Excellent! \uD83C\uDF89' : pct >= 60 ? 'Good work! \uD83D\uDCAA' : 'Keep going! \uD83D\uDCDA';
+    wrap.innerHTML =
+      '<div class="qscore-screen">'
+      + '<div class="qscore-n">' + pct + '%</div>'
+      + '<div class="qscore-l">' + vScore + ' / ' + vTotal + ' correct</div>'
+      + '<div class="qscore-s">' + emoji + '</div>'
+      + '<button class="qrestart" onclick="startVerbQuiz()">Try again</button>'
+      + '</div>';
+    return;
+  }
+
+  vAnswered = false;
+  var v = vItems[vIdx];
+  var pips = '';
+  var total = Math.min(vItems.length, 30);
+  for(var i=0; i<total; i++){
+    pips += '<div class="qpip' + (i<vIdx?' done':i===vIdx?' cur':'') + '"></div>';
+  }
+
+  var html = '';
+  html += '<div class="qprog">' + pips + '</div>';
+  html += '<div style="background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:20px 16px;margin-bottom:12px">';
+
+  if(vMode === 'inf-to-forms'){
+    html += '<div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Fill in the forms</div>';
+    html += '<div style="font-size:22px;font-weight:700;color:var(--txt);margin-bottom:4px">' + v.inf + '</div>';
+    html += '<div style="font-size:13px;color:var(--txt2);margin-bottom:16px">' + v.en + '</div>';
+    if(v.present) html += '<div style="margin-bottom:10px"><label style="font-size:11px;color:var(--txt3);display:block;margin-bottom:4px">PRESENT</label><input id="v-present" type="text" autocorrect="off" autocapitalize="off" placeholder="present tense..." style="width:100%;background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rad2);padding:10px 12px;font-size:16px;color:var(--txt);outline:none"></div>';
+    if(v.past) html += '<div style="margin-bottom:10px"><label style="font-size:11px;color:var(--txt3);display:block;margin-bottom:4px">PAST</label><input id="v-past" type="text" autocorrect="off" autocapitalize="off" placeholder="past tense..." style="width:100%;background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rad2);padding:10px 12px;font-size:16px;color:var(--txt);outline:none"></div>';
+    if(v.supine) html += '<div style="margin-bottom:10px"><label style="font-size:11px;color:var(--txt3);display:block;margin-bottom:4px">SUPINE</label><input id="v-supine" type="text" autocorrect="off" autocapitalize="off" placeholder="supine..." style="width:100%;background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rad2);padding:10px 12px;font-size:16px;color:var(--txt);outline:none"></div>';
+  } else {
+    // Show a random form, ask for infinitive
+    var forms = [];
+    if(v.present) forms.push({label:'Present', val:v.present});
+    if(v.past) forms.push({label:'Past', val:v.past});
+    if(v.supine) forms.push({label:'Supine', val:v.supine});
+    var pick = forms[Math.floor(Math.random() * forms.length)];
+    html += '<div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">What is the infinitive?</div>';
+    html += '<div style="font-size:13px;color:var(--acc2);margin-bottom:6px">' + pick.label + '</div>';
+    html += '<div style="font-size:28px;font-weight:700;color:var(--txt);margin-bottom:4px">' + pick.val + '</div>';
+    html += '<div style="font-size:13px;color:var(--txt2);margin-bottom:16px">' + v.en + '</div>';
+    html += '<input id="v-inf-ans" type="text" autocorrect="off" autocapitalize="off" placeholder="att ..." style="width:100%;background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rad2);padding:10px 12px;font-size:16px;color:var(--txt);outline:none">';
+    // Store the picked form for checking
+    html += '<input type="hidden" id="v-picked-val" value="' + pick.val + '">';
+  }
+
+  html += '</div>';
+  html += '<div id="vquiz-feedback" style="display:none;margin-bottom:12px;padding:12px 14px;border-radius:var(--rad2);font-size:14px"></div>';
+  html += '<div style="display:flex;gap:8px">';
+  html += '<button class="fc-btn fc-yes" id="v-check-btn" onclick="checkVerb()" style="flex:2">Check</button>';
+  html += '<button class="fc-btn" style="background:var(--sur2);color:var(--txt2);flex:1" onclick="skipVerb()">Skip</button>';
+  html += '</div>';
+  html += '<div style="text-align:center;margin-top:10px;font-size:12px;color:var(--txt3)">' + (vIdx+1) + ' of ' + vItems.length + ' &nbsp;&middot;&nbsp; Score: ' + vScore + '/' + vTotal + '</div>';
+
+  wrap.innerHTML = html;
+
+  // Focus first input
+  var firstInput = document.getElementById('v-present') || document.getElementById('v-inf-ans');
+  if(firstInput) setTimeout(function(){ firstInput.focus(); }, 100);
+
+  // Allow Enter key to check
+  wrap.querySelectorAll('input[type=text]').forEach(function(inp){
+    inp.addEventListener('keydown', function(e){ if(e.key==='Enter') checkVerb(); });
+  });
+}
+
+function checkVerb(){
+  if(vAnswered) { nextVerb(); return; }
+  vAnswered = true;
+  var v = vItems[vIdx];
+  var correct = true;
+  var feedback = '';
+
+  if(vMode === 'inf-to-forms'){
+    var fields = [
+      {id:'v-present', correct:v.present, label:'Present'},
+      {id:'v-past', correct:v.past, label:'Past'},
+      {id:'v-supine', correct:v.supine, label:'Supine'},
+    ];
+    var fieldResults = [];
+    fields.forEach(function(f){
+      var inp = document.getElementById(f.id);
+      if(!inp || !f.correct) return;
+      var ok = looseMatch(inp.value, f.correct);
+      inp.style.borderColor = ok ? 'var(--grn)' : 'var(--red)';
+      inp.style.background = ok ? 'rgba(52,201,136,.08)' : 'rgba(224,112,96,.08)';
+      if(!ok){
+        correct = false;
+        fieldResults.push(f.label + ': <b style="color:var(--grn)">' + f.correct + '</b>');
+      }
+      inp.readOnly = true;
+    });
+    feedback = correct
+      ? '\u2713 All correct!'
+      : '\u2717 Corrections: ' + fieldResults.join(' &nbsp;&middot;&nbsp; ');
+  } else {
+    var inp2 = document.getElementById('v-inf-ans');
+    var ok2 = looseMatch(inp2 ? inp2.value : '', v.inf) || looseMatch(inp2 ? inp2.value : '', v.inf.replace('Att ','att '));
+    if(inp2){
+      inp2.style.borderColor = ok2 ? 'var(--grn)' : 'var(--red)';
+      inp2.style.background = ok2 ? 'rgba(52,201,136,.08)' : 'rgba(224,112,96,.08)';
+      inp2.readOnly = true;
+    }
+    correct = ok2;
+    feedback = ok2 ? '\u2713 Correct!' : '\u2717 Answer: <b style="color:var(--grn)">' + v.inf + '</b>';
+  }
+
+  vTotal++;
+  if(correct) vScore++;
+
+  var fb = document.getElementById('vquiz-feedback');
+  if(fb){
+    fb.style.display = 'block';
+    fb.style.background = correct ? 'rgba(52,201,136,.12)' : 'rgba(224,112,96,.12)';
+    fb.style.color = correct ? 'var(--grn)' : 'var(--red)';
+    fb.innerHTML = feedback;
+  }
+
+  var btn = document.getElementById('v-check-btn');
+  if(btn){ btn.textContent = 'Next \u2192'; btn.className = 'fc-btn'; btn.style.background='var(--sur2)'; btn.style.color='var(--txt2)'; btn.style.flex='2'; }
+}
+
+function skipVerb(){ vAnswered = true; nextVerb(); }
+function nextVerb(){ vIdx++; vAnswered = false; renderVerbCard(); }
+
+
 // ── NAV ──
 function showScreen(name,btn){
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on');});
@@ -1059,6 +1610,7 @@ function showScreen(name,btn){
     if(nb)nb.classList.add('on');
   }
   if(name==='quiz'&&!qItems.length)startQuiz();
+  if(name==='verbs')startVerbQuiz();
 }
 
 // ── INIT ──
