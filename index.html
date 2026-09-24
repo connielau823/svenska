@@ -63,6 +63,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
 .stag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
 .sbabbel{background:rgba(74,159,212,.15);color:var(--blu)}
 .spodcast{background:rgba(82,183,136,.15);color:var(--pod)}
+.stextbook{background:rgba(163,94,249,.15);color:#a35ef9}
 .ctag{font-size:10px;color:var(--txt3)}
 .bdg{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
 .bdg-pr{background:rgba(224,112,96,.15);color:var(--red)}
@@ -161,6 +162,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text'
     <button class="pill ba" onclick="setSrc('all',this)">All sources</button>
     <button class="pill" onclick="setSrc('Babbel',this)">Babbel</button>
     <button class="pill" onclick="setSrc('Podcast',this)">Podcast PDF</button>
+    <button class="pill" onclick="setSrc('Textbook',this)">Textbook</button>
   </div>
   <div class="fscroll" id="cat-row">
     <button class="pill on" onclick="setCat('all',this)">All</button>
@@ -796,7 +798,7 @@ function renderList(){
     var d=document.createElement('div');
     d.className='card'+(v.p?' pr':v.n?' nw':'');
     // source tag
-    var sc=v.src==='Babbel'?'sbabbel':'spodcast';
+    var sc=v.src==='Babbel'?'sbabbel':v.src==='Textbook'?'stextbook':'spodcast';
     // badge
     var badge='';
     if(v.p) badge='<span class="bdg bdg-pr">review</span>';
@@ -1229,30 +1231,119 @@ var VERBS=[
   {sv:'En uppsats',pron:'en UP-sats',en:'An essay',src:'Textbook',cat:'Daily life',p:0,n:0,t:'word',forms:'plural: uppsatser · definite: uppsatsen'}
 ,
 // -- Verb bank from notes --
-  {sv:'Att komma',pron:'at KOM-a',en:'To come',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: kommer · past: kom · supine: kommit'},
-  {sv:'Att gå',pron:'at gaw',en:'To go / walk',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: går · past: gick · supine: gått'},
-  {sv:'Att åka',pron:'at AW-ka',en:'To travel / go by vehicle',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: åker · past: åkte · supine: åkt'},
-  {sv:'Att säga',pron:'at SEH-ya',en:'To say',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: säger · past: sa · supine: sagt'},
-  {sv:'Att prata',pron:'at PRAH-ta',en:'To talk / speak',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: pratar · past: pratade · supine: pratat'},
-  {sv:'Att se',pron:'at seh',en:'To see',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: ser · past: såg · supine: sett'},
-  {sv:'Att ge',pron:'at yeh',en:'To give',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: ger · past: gav · supine: gett'},
-  {sv:'Att få',pron:'at faw',en:'To get / receive / be allowed',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: får · past: fick · supine: fått'},
-  {sv:'Att äta',pron:'at EH-ta',en:'To eat',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: äter · past: åt · supine: ätit'},
-  {sv:'Att sova',pron:'at SOO-va',en:'To sleep',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: sover · past: sov · supine: sovit'},
-  {sv:'Att gilla',pron:'at YIL-a',en:'To like (informal)',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: gillar · past: gillade · supine: gillat'},
-  {sv:'Att tycka',pron:'at TYK-a',en:'To think / have an opinion',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: tycker · past: tyckte · supine: tyckt'},
-  {sv:'Att tänka',pron:'at TEN-ka',en:'To think / reflect',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: tänker · past: tänkte · supine: tänkt'},
-  {sv:'Att vilja',pron:'at VIL-ya',en:'To want',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: vill · past: ville · supine: velat'},
-  {sv:'Att läsa',pron:'at LEH-sa',en:'To read',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: läser · past: läste · supine: läst'},
-  {sv:'Att ha',pron:'at hah',en:'To have',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: har · past: hade · supine: haft'},
-  {sv:'Att ta',pron:'at tah',en:'To take',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: tar · past: tog · supine: tagit'},
-  {sv:'Att kunna',pron:'at KON-a',en:'To be able to / can',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: kan · past: kunde · supine: kunnat'},
-  {sv:'Att omfatta',pron:'at om-FAT-a',en:'To include / encompass',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: omfattar · past: omfattade · supine: omfattat'},
-  {sv:'Att tala',pron:'at TAH-la',en:'To speak / talk (formal)',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: talar · past: talade · supine: talat'},
-  {sv:'Att heta',pron:'at HEH-ta',en:'To be called / named',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: heter · past: hette · supine: hetat'},
-  {sv:'Att bo',pron:'at boo',en:'To live / reside',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: bor · past: bodde · supine: bott'},
-  {sv:'Att cykla',pron:'at SEW-kla',en:'To cycle / ride a bike',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: cyklar · past: cyklade · supine: cyklat'},
-  {sv:'Att fika',pron:'at FEE-ka',en:'To have coffee and a pastry',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: fikar · past: fikade · supine: fikat'}
+  {sv:'Att komma',pron:'at KOM-a',en:'To come',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: kommer · past: kom · supine: kommit'},
+  {sv:'Att gå',pron:'at gaw',en:'To go / walk',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: går · past: gick · supine: gått'},
+  {sv:'Att åka',pron:'at AW-ka',en:'To travel / go by vehicle',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: åker · past: åkte · supine: åkt'},
+  {sv:'Att säga',pron:'at SEH-ya',en:'To say',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: säger · past: sa · supine: sagt'},
+  {sv:'Att prata',pron:'at PRAH-ta',en:'To talk / speak',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: pratar · past: pratade · supine: pratat'},
+  {sv:'Att se',pron:'at seh',en:'To see',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: ser · past: såg · supine: sett'},
+  {sv:'Att ge',pron:'at yeh',en:'To give',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: ger · past: gav · supine: gett'},
+  {sv:'Att få',pron:'at faw',en:'To get / receive / be allowed',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: får · past: fick · supine: fått'},
+  {sv:'Att äta',pron:'at EH-ta',en:'To eat',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: äter · past: åt · supine: ätit'},
+  {sv:'Att sova',pron:'at SOO-va',en:'To sleep',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: sover · past: sov · supine: sovit'},
+  {sv:'Att gilla',pron:'at YIL-a',en:'To like (informal)',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: gillar · past: gillade · supine: gillat'},
+  {sv:'Att tycka',pron:'at TYK-a',en:'To think / have an opinion',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: tycker · past: tyckte · supine: tyckt'},
+  {sv:'Att tänka',pron:'at TEN-ka',en:'To think / reflect',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: tänker · past: tänkte · supine: tänkt'},
+  {sv:'Att vilja',pron:'at VIL-ya',en:'To want',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: vill · past: ville · supine: velat'},
+  {sv:'Att läsa',pron:'at LEH-sa',en:'To read',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: läser · past: läste · supine: läst'},
+  {sv:'Att ha',pron:'at hah',en:'To have',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: har · past: hade · supine: haft'},
+  {sv:'Att ta',pron:'at tah',en:'To take',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: tar · past: tog · supine: tagit'},
+  {sv:'Att kunna',pron:'at KON-a',en:'To be able to / can',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: kan · past: kunde · supine: kunnat'},
+  {sv:'Att omfatta',pron:'at om-FAT-a',en:'To include / encompass',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: omfattar · past: omfattade · supine: omfattat'},
+  {sv:'Att tala',pron:'at TAH-la',en:'To speak / talk (formal)',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: talar · past: talade · supine: talat'},
+  {sv:'Att heta',pron:'at HEH-ta',en:'To be called / named',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: heter · past: hette · supine: hetat'},
+  {sv:'Att bo',pron:'at boo',en:'To live / reside',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: bor · past: bodde · supine: bott'},
+  {sv:'Att cykla',pron:'at SEW-kla',en:'To cycle / ride a bike',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: cyklar · past: cyklade · supine: cyklat'},
+  {sv:'Att fika',pron:'at FEE-ka',en:'To have coffee and a pastry',src:'Babbel',cat:'Daily life',p:0,n:0,t:'word',forms:'present: fikar · past: fikade · supine: fikat'}
+,
+// -- Textbook + Babbel batch 7 --
+  {sv:'Att uppträda',pron:'at OOP-treh-da',en:'To perform / behave',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:'present: uppträder · past: uppträdde · supine: uppträtt'},
+  {sv:'En tågstation',pron:'en TAWG-sta-shoon',en:'A train station',src:'Textbook',cat:'Transport',p:0,n:1,t:'word',forms:'plural: tågstationer · definite: tågstationen'},
+  {sv:'En flygplats',pron:'en FLEWG-plats',en:'An airport',src:'Textbook',cat:'Transport',p:0,n:1,t:'word',forms:'plural: flygplatser · definite: flygplatsen'},
+  {sv:'Försenat',pron:'fur-SEH-nat',en:'Delayed (neuter)',src:'Textbook',cat:'Transport',p:0,n:1,t:'word',forms:'base: försenad · neuter: försenat · plural: försenade'},
+  {sv:'Väntar',pron:'VEN-tar',en:'Waiting / waits',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:'infinitive: att vänta · past: väntade · supine: väntat'},
+  {sv:'I nästan',pron:'ee NES-tan',en:'Almost / nearly',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Orolig',pron:'oo-ROO-lig',en:'Worried / anxious',src:'Textbook',cat:'Social',p:0,n:1,t:'word',forms:'neuter: oroligt · plural: oroliga'},
+  {sv:'Missar flyget',pron:'MIS-ar FLEW-yet',en:'Misses the flight',src:'Textbook',cat:'Transport',p:0,n:1,t:'sentence',forms:'infinitive: att missa · past: missade'},
+  {sv:'Har tur',pron:'har toor',en:'Is lucky / has luck',src:'Textbook',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Hela',pron:'HEH-la',en:'Whole / entire',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Flygresan',pron:'FLEWG-reh-san',en:'The flight / the air journey',src:'Textbook',cat:'Transport',p:0,n:1,t:'word',forms:'indefinite: flygresa · plural: flygresor'},
+  {sv:'Ganska',pron:'GAN-ska',en:'Quite / rather / fairly',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Snabbt',pron:'snapt',en:'Quickly / fast (adverb)',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:'adjective: snabb · neuter: snabbt · plural: snabba'},
+  {sv:'En fiol',pron:'en fee-OOL',en:'A violin',src:'Textbook',cat:'Social',p:0,n:1,t:'word',forms:'plural: fioler · definite: fiolen'},
+  {sv:'Andas ut',pron:'AN-das oot',en:'Breathe out / relax (exhale)',src:'Textbook',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Sista plan',pron:'SIS-ta plahn',en:'Last flight / last plan',src:'Textbook',cat:'Transport',p:0,n:1,t:'word',forms:''},
+  {sv:'Somnar direkt',pron:'SOM-nar dee-REKT',en:'Falls asleep immediately',src:'Textbook',cat:'Daily life',p:0,n:1,t:'sentence',forms:''},
+  {sv:'En sköna säng',pron:'en SHUR-na seng',en:'A comfortable bed',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Tidigt',pron:'TEE-digt',en:'Early',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Nästa måndag',pron:'NES-ta MON-dag',en:'Next Monday',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'En vecka',pron:'en VEK-a',en:'A week',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:'plural: veckor · definite: veckan'},
+  {sv:'En månad',pron:'en MAW-nad',en:'A month',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:'plural: månader · definite: månaden'},
+  {sv:'En afton',pron:'en AF-ton',en:'An evening (formal/literary)',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:'plural: aftnar · definite: aftonen'},
+  {sv:'Ett dygn',pron:'et dewgn',en:'24 hours / a full day-and-night',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:'plural: dygn · definite: dygnet'},
+  {sv:'I morse',pron:'ee MOR-seh',en:'This morning (earlier today)',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Igår',pron:'ee-GAWR',en:'Yesterday',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Imorgon',pron:'ee-MOR-on',en:'Tomorrow',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Imorgon bitti',pron:'ee-MOR-on BIT-ee',en:'Tomorrow morning (early)',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Idag',pron:'ee-DAHG',en:'Today',src:'Textbook',cat:'Daily life',p:0,n:1,t:'word',forms:''},
+  {sv:'Hur lång tid tar det?',pron:'hoor long teed tar deh',en:'How long does it take?',src:'Textbook',cat:'Questions',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Hur många gånger?',pron:'hoor MON-ga YONG-er',en:'How many times?',src:'Textbook',cat:'Questions',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Vilken sorts',pron:'VIL-ken sorts',en:'What kind of / what type of',src:'Textbook',cat:'Questions',p:0,n:1,t:'word',forms:''},
+  {sv:'Mot',pron:'moot',en:'Towards / against',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
+  {sv:'Att byta',pron:'at BEW-ta',en:'To change / switch / transfer',src:'Babbel',cat:'Transport',p:0,n:1,t:'word',forms:'present: byter · past: bytte · supine: bytt'},
+  {sv:'Skatteverket',pron:'SKAT-eh-vehr-ket',en:'The Swedish Tax Agency',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Mittemot',pron:'MIT-eh-moot',en:'Opposite / across from',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:''},
+  {sv:'Mittemot varandra',pron:'MIT-eh-moot va-RAN-dra',en:'Opposite each other',src:'Babbel',cat:'Directions',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Mellan husen',pron:'MEL-an HOO-sen',en:'Between the houses',src:'Babbel',cat:'Directions',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Över staden',pron:'UR-ver STAH-den',en:'Over / above the city',src:'Babbel',cat:'Directions',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Vid sjön',pron:'veed shurn',en:'By the lake',src:'Babbel',cat:'Directions',p:0,n:1,t:'sentence',forms:''},
+  {sv:'En hamn',pron:'en hamn',en:'A harbour / port',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:'plural: hamnar · definite: hamnen'},
+  {sv:'En bro',pron:'en broo',en:'A bridge',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:'plural: broar · definite: bron'},
+  {sv:'Har ni gått över bron?',pron:'har nee got UR-ver BROO-n',en:'Have you walked across the bridge?',src:'Babbel',cat:'Directions',p:0,n:1,t:'sentence',forms:''},
+  {sv:'På tal om det',pron:'paw tahl om deh',en:'Speaking of that / on that note',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:''},
+  {sv:'Ett sparkonto',pron:'et SPAR-kon-too',en:'A savings account',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'plural: sparkonton · definite: sparkontot'},
+  {sv:'Hör av dig!',pron:'hur av deg',en:'Be in touch! / Contact me!',src:'Babbel',cat:'Greetings',p:0,n:1,t:'sentence',forms:''},
+  {sv:'En bensinmack',pron:'en ben-SEEN-mak',en:'A petrol station / gas station',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:'plural: bensinmackar · definite: bensinmacken'},
+  {sv:'En spårvagn',pron:'en SPAWR-vagn',en:'A tram',src:'Babbel',cat:'Transport',p:0,n:1,t:'word',forms:'plural: spårvagnar · definite: spårvagnen'},
+  {sv:'En färja',pron:'en FEHR-ya',en:'A ferry',src:'Babbel',cat:'Transport',p:0,n:1,t:'word',forms:'plural: färjor · definite: färjan'},
+  {sv:'Ett smultronställe',pron:'et SMOOL-tron-stel-eh',en:'A favourite hidden spot (lit. wild strawberry place)',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'plural: smultronställen'},
+  {sv:'Solnedgången',pron:'SOOL-ned-gong-en',en:'The sunset',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'indefinite: solnedgång'},
+  {sv:'En hållplats',pron:'en HOL-plats',en:'A bus/tram stop',src:'Babbel',cat:'Transport',p:0,n:1,t:'word',forms:'plural: hållplatser · definite: hållplatsen'},
+  {sv:'Hur många hållplatser?',pron:'hoor MON-ga HOL-plat-ser',en:'How many stops?',src:'Babbel',cat:'Questions',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Ingen aning',pron:'ING-en AH-ning',en:'No idea',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Att bjuda på',pron:'at BYOO-da paw',en:'To treat / to serve / to offer food',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'present: bjuder · past: bjöd · supine: bjudit'},
+  {sv:'En smörgåstårta',pron:'en SMUR-gaws-tor-ta',en:'A Swedish sandwich cake',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'plural: smörgåstårtor · definite: smörgåstårtan'},
+  {sv:'Att laga',pron:'at LAH-ga',en:'To cook / to fix',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'present: lagar · past: lagade · supine: lagat'},
+  {sv:'En lapp',pron:'en lap',en:'A note / a slip of paper',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'plural: lappar · definite: lappen'},
+  {sv:'Räkor',pron:'REK-or',en:'Prawns / shrimp',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'singular: räka · definite: räkorna'},
+  {sv:'En citron',pron:'en sit-ROON',en:'A lemon',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'plural: citroner · definite: citronen'},
+  {sv:'Att orka',pron:'at OR-ka',en:'To have energy to / to manage to',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: orkar · past: orkade · supine: orkat'},
+  {sv:'Att baka',pron:'at BAH-ka',en:'To bake',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'present: bakar · past: bakade · supine: bakat'},
+  {sv:'Att skriva upp',pron:'at SKREE-va op',en:'To write down / note down',src:'Babbel',cat:'Daily life',p:0,n:1,t:'word',forms:'present: skriver upp · past: skrev upp · supine: skrivit upp'},
+  {sv:'En kokbok',pron:'en KOOK-book',en:'A cookbook',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'plural: kokböcker · definite: kokboken'},
+  {sv:'En vindruva',pron:'en VEEN-droo-va',en:'A grape',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'plural: vindruvor · definite: vindruvan'},
+  {sv:'Majonnäs',pron:'ma-yoo-NES',en:'Mayonnaise',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:''},
+  {sv:'Lax',pron:'laks',en:'Salmon',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'definite: laxen'},
+  {sv:'En lök',pron:'en lurk',en:'An onion',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'plural: lökar · definite: löken'},
+  {sv:'Tomater',pron:'too-MAH-ter',en:'Tomatoes',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'singular: tomat · definite: tomaten'},
+  {sv:'Att prenumerera på',pron:'at preh-noo-meh-REH-ra paw',en:'To subscribe to',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'present: prenumererar · past: prenumererade · supine: prenumererat'},
+  {sv:'En tidning',pron:'en TEED-ning',en:'A newspaper',src:'Babbel',cat:'Social',p:0,n:1,t:'word',forms:'plural: tidningar · definite: tidningen'},
+  {sv:'Sätta igång',pron:'SET-a ee-GONG',en:'To get started / to kick off',src:'Babbel',cat:'Daily life',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Att skala',pron:'at SKAH-la',en:'To peel',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'present: skalar · past: skalade · supine: skalat'},
+  {sv:'Att hacka',pron:'at HAK-a',en:'To chop',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'present: hackar · past: hackade · supine: hackat'},
+  {sv:'Att smöra',pron:'at SMUR-a',en:'To butter / to grease',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'present: smör · past: smorde · supine: smort'},
+  {sv:'En brödskiva',pron:'en BRUD-shee-va',en:'A slice of bread',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'plural: brödskivor · definite: brödskivan'},
+  {sv:'En fyllning',pron:'en FYL-ning',en:'A filling',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'plural: fyllningar · definite: fyllningen'},
+  {sv:'Leverpastej',pron:'LEH-ver-pas-tay',en:'Liver pâté',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:''},
+  {sv:'Onyttig',pron:'oo-NYT-ig',en:'Unhealthy / bad for you',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'neuter: onyttigt · plural: onyttiga'},
+  {sv:'En sallad',pron:'en SAL-ad',en:'A salad',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'plural: sallader · definite: salladen'},
+  {sv:'Det är katastrof!',pron:'deh ehr ka-ta-STROOF',en:'It is a disaster!',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'En grönsaksavdelning',pron:'en GRUN-saks-av-del-ning',en:'A vegetable section / produce aisle',src:'Babbel',cat:'Directions',p:0,n:1,t:'word',forms:'definite: grönsaksavdelningen'},
+  {sv:'Glöm inte!',pron:'glurm IN-teh',en:'Don\'t forget!',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Saltet',pron:'SAL-tet',en:'The salt (definite)',src:'Babbel',cat:'Restaurant',p:0,n:1,t:'word',forms:'indefinite: salt'},
+  {sv:'Jag undrade bara',pron:'yag OON-dra-deh BAH-ra',en:'I was just wondering',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Det är klart att',pron:'deh ehr klart at',en:'Of course there is / obviously',src:'Babbel',cat:'Social',p:0,n:1,t:'sentence',forms:''},
+  {sv:'Men hallå!',pron:'men ha-LAW',en:'Hey! / Come on! / What!',src:'Babbel',cat:'Greetings',p:0,n:1,t:'sentence',forms:''}
 
 ];
 
